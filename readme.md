@@ -1,0 +1,68 @@
+# Messagerie - Template PHP/MySQL
+
+
+Système de messagerie avec authentification, posts et likes, 100% personnalisable.
+
+## ✨ Fonctionnalités
+
+- ✅ **Authentification sécurisée** (inscription/connexion)
+- 📝 **Création de posts** avec markdown de base
+- ❤️ **Système de likes** interactif
+- 🔒 **Gestion de profil** (changement mot de passe)
+- 📱 **Design responsive** et moderne
+- 🎨 **Personnalisation facile** via variables CSS
+
+## 🚀 Installation
+
+### Prérequis
+- PHP 7.4+
+- MySQL 5.7+
+- Serveur web (Apache/Nginx)
+
+### Étapes
+1. **Cloner le dépôt** :
+   ```bash
+   git clone https://github.com/berru-g/messagerie-collegues.git
+
+    Configurer la base de données :
+    sql
+
+CREATE DATABASE messagerie_collegues;
+USE messagerie_collegues;
+SOURCE /chemin/vers/schema.sql;
+
+Configurer les variables :
+bash
+
+cp includes/config.dist.php includes/config.php
+
+Modifiez config.php avec vos identifiants DB.
+
+Lancer le serveur :
+bash
+
+    php -S localhost:8000
+
+
+🔧 Troubleshooting
+
+Problème : Erreur SQL avec emojis
+Solution : Exécuter :
+sql
+
+ALTER DATABASE messagerie_collegues 
+CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+Problème : Page blanche
+Solution : Activer les logs dans config.php :
+php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
+MIT License - Libre d'utilisation et modification
+
+Les PR sont les bienvenues ! Ouvrez une issue pour discuter des améliorations.
+
+Développé avec ❤️ par berru-g et bcp chatgpt
