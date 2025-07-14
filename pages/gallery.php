@@ -18,34 +18,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
         'application/json' => 'json'
     ];
     
-    $fileType = $_FILES['uploaded_file']['type'];
-    $fileExtension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+    // Debug: Vérifiez ce qui est reçu
+    error_log(print_r($_FILES, true));
     
-    // Vérification du type de fichier
+    $fileType = $_FILES['uploaded_file']['type'];
+    $fileExtension = strtolower(pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION));
+    
+    // Vérification plus robuste du type de fichier
+    $valid = false;
     if (array_key_exists($fileType, $allowedTypes)) {
+        $valid = true;
+    } else {
+        // Fallback pour certains navigateurs qui ne renvoient pas le bon type MIME
+        $allowedExtensions = ['csv', 'xlsx', 'xls', 'json'];
+        if (in_array($fileExtension, $allowedExtensions)) {
+            $valid = true;
+            // Mappage manuel des extensions
+            $typeMap = [
+                'csv' => 'csv',
+                'xlsx' => 'excel',
+                'xls' => 'excel',
+                'json' => 'json'
+            ];
+            $fileType = $typeMap[$fileExtension];
+        }
+    }
+    
+    if ($valid) {
         $uploadDir = '../uploads/' . $user['id'] . '/';
         
-        // Créer le répertoire si inexistant
         if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+            if (!mkdir($uploadDir, 0755, true)) {
+                $_SESSION['error_message'] = "Erreur: Impossible de créer le dossier de destination.";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit;
+            }
         }
         
-        $fileName = uniqid() . '.' . $fileExtension;
+        $originalName = basename($_FILES['uploaded_file']['name']);
+        $safeName = preg_replace('/[^a-zA-Z0-9-_\.]/', '', $originalName);
+        $fileName = uniqid() . '_' . $safeName;
         $filePath = $uploadDir . $fileName;
         
         if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $filePath)) {
-            // Enregistrement en base de données
-            $stmt = $pdo->prepare("INSERT INTO user_files (user_id, file_name, file_path, file_type) VALUES (?, ?, ?, ?)");
+            // Enregistrement avec statut public par défaut
+            $stmt = $pdo->prepare("INSERT INTO user_files 
+                                 (user_id, file_name, file_path, file_type, is_public) 
+                                 VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([
                 $user['id'],
-                $_FILES['uploaded_file']['name'],
+                $originalName,
                 $filePath,
-                $allowedTypes[$fileType]
+                $allowedTypes[$fileType] ?? $fileType,
+                1 // Public par défaut
             ]);
             
             $_SESSION['success_message'] = "Fichier uploadé avec succès!";
         } else {
-            $_SESSION['error_message'] = "Erreur lors de l'upload du fichier.";
+            $errorMsg = "Erreur lors de l'upload. Code: " . $_FILES['uploaded_file']['error'];
+            // Codes d'erreur PHP
+            $uploadErrors = [
+                1 => 'Taille maximale dépassée',
+                2 => 'Taille maximale formulaire dépassée',
+                3 => 'Upload partiel',
+                4 => 'Aucun fichier',
+                6 => 'Dossier temporaire manquant',
+                7 => 'Échec écriture disque',
+                8 => 'Extension PHP bloquée'
+            ];
+            $_SESSION['error_message'] = $uploadErrors[$_FILES['uploaded_file']['error']] ?? $errorMsg;
         }
     } else {
         $_SESSION['error_message'] = "Type de fichier non supporté. Formats acceptés: CSV, Excel, JSON.";
@@ -82,20 +123,25 @@ require_once '../includes/header.php';
         <div class="file-gallery">
             <!-- Case pour uploader un nouveau fichier -->
             <div class="file-card upload-card">
-                <form method="post" enctype="multipart/form-data" class="upload-form">
-                    <label for="file-upload" class="upload-label">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Ajouter un fichier</span>
-                        <input type="file" id="file-upload" name="uploaded_file" accept=".csv,.xlsx,.xls,.json" required>
-                    </label>
-                    <div class="file-types">
-                        <span class="badge badge-csv">CSV</span>
-                        <span class="badge badge-excel">Excel</span>
-                        <span class="badge badge-json">JSON</span>
-                    </div>
-                    <!--<button type="submit" class="btn btn-primary mt-2">Uploader</button>-->
-                </form>
-            </div>
+    <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+        <label for="file-upload" class="upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Ajouter un fichier</span>
+            <input type="file" id="file-upload" name="uploaded_file" 
+                   accept=".csv,.xlsx,.xls,.json" required>
+        </label>
+        <div class="form-group form-check mt-2">
+            <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
+            <label class="form-check-label" for="make-public">Rendre public</label>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2 w-100">Uploader</button>
+        <div class="file-types mt-2">
+            <span class="badge badge-csv">CSV</span>
+            <span class="badge badge-excel">Excel</span>
+            <span class="badge badge-json">JSON</span>
+        </div>
+    </form>
+</div>
             
             <!-- Affichage des fichiers existants -->
             <?php foreach ($userFiles as $file): ?>
@@ -142,11 +188,12 @@ require_once '../includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de la suppression de fichiers
-    document.querySelectorAll('.delete-file').forEach(button => {
-        button.addEventListener('click', function(e) {
+    // Gestion de la suppression
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.delete-file')) {
             e.preventDefault();
-            const fileId = this.getAttribute('data-file-id');
+            const button = e.target.closest('.delete-file');
+            const fileId = button.getAttribute('data-file-id');
             
             if (confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?')) {
                 fetch('../includes/delete_file.php', {
@@ -156,22 +203,68 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: 'file_id=' + fileId
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
-                        this.closest('.file-card').remove();
+                        button.closest('.file-card').remove();
                     } else {
-                        alert('Erreur lors de la suppression: ' + data.message);
+                        alert('Erreur: ' + (data.message || 'Action échouée'));
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Une erreur est survenue');
+                    alert('Erreur réseau - Veuillez réessayer');
                 });
             }
-        });
+        }
+        
+        // Gestion du partage public/privé
+        if (e.target.closest('.toggle-share')) {
+            const button = e.target.closest('.toggle-share');
+            const fileId = button.getAttribute('data-file-id');
+            
+            fetch('../includes/toggle_share.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'file_id=' + fileId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = button.querySelector('i');
+                    if (data.is_public) {
+                        button.classList.remove('btn-secondary');
+                        button.classList.add('btn-success');
+                        icon.classList.remove('fa-lock');
+                        icon.classList.add('fa-lock-open');
+                        button.title = 'Public';
+                    } else {
+                        button.classList.remove('btn-success');
+                        button.classList.add('btn-secondary');
+                        icon.classList.remove('fa-lock-open');
+                        icon.classList.add('fa-lock');
+                        button.title = 'Privé';
+                    }
+                }
+            });
+        }
     });
+
+    // Feedback visuel pendant l'upload
+    const uploadForm = document.getElementById('uploadForm');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> En cours...';
+        });
+    }
 });
 </script>
-
+<script src="../assets/js/script.js"></script>
 <?php require_once '../includes/footer.php'; ?>

@@ -2,7 +2,6 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utiliser isLoggedIn()
 
-// Le reste de votre code...
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,7 +26,6 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                         <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i> <?= htmlspecialchars($user['username']) ?></a>
                         <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de passe</a>
                         <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-                    
                     <?php endif; ?>
                 </div>
             </div>
