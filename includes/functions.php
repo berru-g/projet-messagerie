@@ -61,4 +61,73 @@ function hasLiked($user_id, $comment_id) {
     $stmt->execute([$user_id, $comment_id]);
     return $stmt->rowCount() > 0;
 }
+
+// fonction de visualisation des uploads
+function displayCsvFile($filePath) {
+    $html = '<table class="table table-bordered table-striped">';
+    
+    if (($handle = fopen($filePath, "r")) !== FALSE) {
+        $firstRow = true;
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $html .= '<tr>';
+            foreach ($data as $cell) {
+                if ($firstRow) {
+                    $html .= '<th>' . htmlspecialchars($cell) . '</th>';
+                } else {
+                    $html .= '<td>' . htmlspecialchars($cell) . '</td>';
+                }
+            }
+            $html .= '</tr>';
+            $firstRow = false;
+        }
+        fclose($handle);
+    }
+    
+    $html .= '</table>';
+    return $html;
+}
+
+function displayExcelFile($filePath) {
+    require_once '../vendor/autoload.php';
+    $html = '<table class="table table-bordered table-striped">';
+    
+    try {
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+        $worksheet = $spreadsheet->getActiveSheet();
+        
+        foreach ($worksheet->getRowIterator() as $row) {
+            $html .= '<tr>';
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false);
+            
+            foreach ($cellIterator as $cell) {
+                $value = $cell->getFormattedValue();
+                if ($row->getRowIndex() == 1) {
+                    $html .= '<th>' . htmlspecialchars($value) . '</th>';
+                } else {
+                    $html .= '<td>' . htmlspecialchars($value) . '</td>';
+                }
+            }
+            $html .= '</tr>';
+        }
+    } catch (Exception $e) {
+        return '<div class="alert alert-danger">Erreur Excel: ' . htmlspecialchars($e->getMessage()) . '</div>';
+    }
+    
+    $html .= '</table>';
+    return $html;
+}
+
+function displayJsonFile($filePath) {
+    $json = file_get_contents($filePath);
+    $data = json_decode($json, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return '<div class="alert alert-danger">Erreur JSON: ' . json_last_error_msg() . '</div>';
+    }
+    
+    return '<pre>' . htmlspecialchars(print_r($data, true)) . '</pre>';
+}
+
 ?>
+

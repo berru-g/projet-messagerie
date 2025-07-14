@@ -29,3 +29,19 @@ CREATE TABLE likes (
     FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
     UNIQUE KEY (user_id, comment_id)
 );
+
+
+-- table des uploads
+CREATE TABLE user_files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    file_type ENUM('csv', 'excel', 'json', 'googlesheet') NOT NULL,
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+-- permettre le partage des uploads 
+ALTER TABLE user_files 
+ADD COLUMN is_public BOOLEAN DEFAULT FALSE,
+ADD COLUMN share_token VARCHAR(32) NULL;

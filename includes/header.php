@@ -11,6 +11,8 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
     <title><?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
     <header class="fixed-header">
@@ -21,12 +23,10 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                 </button>
                 <div class="dropdown-content">
                     <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i> Profil</a>
+                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i> <?= htmlspecialchars($user['username']) ?></a>
                         <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de passe</a>
                         <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-                    <?php else: ?>
-                        <a href="<?= BASE_URL ?>/pages/login.php"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-                        <a href="<?= BASE_URL ?>/pages/register.php"><i class="fas fa-user-plus"></i> Inscription</a>
+                    
                     <?php endif; ?>
                 </div>
             </div>
@@ -40,9 +40,8 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                 <div class="dropdown-content">
                     <a href="<?= BASE_URL ?>"><i class="fas fa-home"></i> Accueil</a>
                     <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user"></i> Profil</a>
-                        <a href="#comments"><i class="fas fa-comment"></i> Commentaires</a>
-                        <a href="#likes"><i class="fas fa-heart"></i> Likes</a>
+                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fas fa-eye"></i> Gallery</a>
+                        <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> uploads</a>
                     <?php endif; ?>
                 </div>
             </div>
