@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['q'])) {
             FROM user_files uf
             JOIN users u ON uf.user_id = u.id
             WHERE (uf.file_name LIKE :query OR u.email LIKE :query)
-            AND (uf.is_public = TRUE OR uf.user_id = :user_id)
+            AND (uf.is_public = TRUE OR uf.user_id = :user_id) 
             ORDER BY uf.upload_date DESC
         ");
         $stmt->execute([

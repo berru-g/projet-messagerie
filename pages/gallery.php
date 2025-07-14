@@ -93,7 +93,7 @@ require_once '../includes/header.php';
                         <span class="badge badge-excel">Excel</span>
                         <span class="badge badge-json">JSON</span>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Uploader</button>
+                    <!--<button type="submit" class="btn btn-primary mt-2">Uploader</button>-->
                 </form>
             </div>
             
@@ -130,6 +130,9 @@ require_once '../includes/header.php';
                         <a href="#" class="btn btn-sm btn-danger delete-file" data-file-id="<?= $file['id'] ?>">
                             <i class="fas fa-trash"></i>
                         </a>
+                        <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share" data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
+                            <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
+                        </button>
                     </div>
                 </div>
             <?php endforeach; ?>

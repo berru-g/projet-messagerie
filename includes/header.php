@@ -13,6 +13,7 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    
 </head>
 <body>
     <header class="fixed-header">
