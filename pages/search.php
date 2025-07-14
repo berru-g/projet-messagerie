@@ -6,7 +6,7 @@ if (!isLoggedIn()) {
     header("Location: " . BASE_URL . "/pages/login.php");
     exit;
 }
-
+$user = getUserById($_SESSION['user_id']);
 $searchResults = [];
 $searchQuery = '';
 
@@ -34,7 +34,7 @@ require_once '../includes/header.php';
 ?>
 
 <div class="container">
-    <h2>Rechercher des fichiers partagés</h2>
+    <h2><?= htmlspecialchars($user['username']) ?> fichiers partagés</h2>
     
     <div class="search-container mb-4">
         <form method="get" action="search.php">

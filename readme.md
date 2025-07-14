@@ -5,7 +5,7 @@
 
 <img width="960" alt="messagerie-connection-by-berru-g png" src="https://github.com/user-attachments/assets/e61b9d22-b33c-44c7-9200-f75e66b2526f" />
 
-Système de messagerie avec authentification, posts et likes, 100% personnalisable.
+Système de messagerie avec authentification, posts et likes, partage de fichier ( csv, google sheet ou json ) 100% personnalisable.
 
 ## ✨ Fonctionnalités
 
@@ -13,6 +13,7 @@ Système de messagerie avec authentification, posts et likes, 100% personnalisab
 - 📝 **Création de posts** avec markdown de base
 - ❤️ **Système de likes** interactif
 - 🔒 **Gestion de profil** (changement mot de passe)
+- 🗂️ **Partage de fichier** (.csv .json ou excel)
 - 📱 **Design responsive** et moderne
 - 🎨 **Personnalisation facile** via variables CSS
 
@@ -69,4 +70,4 @@ MIT License - Libre d'utilisation et modification
 
 Les PR sont les bienvenues ! Ouvrez une issue pour discuter des améliorations.
 
-Développé avec ❤️ par berru-g et bcp chatgpt
+Développé avec ❤️ par berru-g et chatgpt

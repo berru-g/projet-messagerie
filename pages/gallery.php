@@ -108,7 +108,7 @@ require_once '../includes/header.php';
     <h2><?= htmlspecialchars($user['username']) ?></h2>
     
     <div class="profile-info">
-        <h3>Ma galerie de fichiers</h3>
+        <h3>Upload</h3>
         
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="alert alert-success"><?= $_SESSION['success_message'] ?></div>
@@ -126,15 +126,15 @@ require_once '../includes/header.php';
     <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
         <label for="file-upload" class="upload-label">
             <i class="fas fa-cloud-upload-alt"></i>
-            <span>Ajouter un fichier</span>
+            <span>1 - Ajouter un fichier</span>
             <input type="file" id="file-upload" name="uploaded_file" 
                    accept=".csv,.xlsx,.xls,.json" required>
         </label>
         <div class="form-group form-check mt-2">
             <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
-            <label class="form-check-label" for="make-public">Rendre public</label>
+            <label class="form-check-label" for="make-public">2 - Rendre public</label>
         </div>
-        <button type="submit" class="btn btn-primary mt-2 w-100">Uploader</button>
+        <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
         <div class="file-types mt-2">
             <span class="badge badge-csv">CSV</span>
             <span class="badge badge-excel">Excel</span>
