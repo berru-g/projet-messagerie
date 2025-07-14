@@ -1,5 +1,9 @@
 # Messagerie - Template PHP/MySQL
 
+<img width="960" alt="messagerie-by-berru-g" src="https://github.com/user-attachments/assets/58183418-1434-42e3-83c5-06dcd187fdda" />
+
+
+<img width="960" alt="messagerie-connection-by-berru-g png" src="https://github.com/user-attachments/assets/e61b9d22-b33c-44c7-9200-f75e66b2526f" />
 
 Système de messagerie avec authentification, posts et likes, 100% personnalisable.
 
