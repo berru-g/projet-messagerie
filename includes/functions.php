@@ -117,7 +117,7 @@ function displayExcelFile($filePath) {
     $html .= '</table>';
     return $html;
 }
-
+/*
 function displayJsonFile($filePath) {
     $json = file_get_contents($filePath);
     $data = json_decode($json, true);
@@ -128,6 +128,95 @@ function displayJsonFile($filePath) {
     
     return '<pre>' . htmlspecialchars(print_r($data, true)) . '</pre>';
 }
+*/
+function displayJsonFile($filePath) {
+    $json = file_get_contents($filePath);
+    $data = json_decode($json, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return '<div class="alert alert-danger">Erreur JSON: ' . json_last_error_msg() . '</div>';
+    }
+    
+    // Vérifie si c'est un fichier de tarifs suivant le template
+    if (isset($data['meta'])) {
+        return renderPriceTemplate($data);
+    }
+    
+    // Fallback pour les autres JSON
+    return '<pre class="json-display">' . htmlspecialchars(json_encode($data, JSON_PRETTY_PRINT)) . '</pre>';
+}
 
+function renderPriceTemplate($data) {
+    ob_start(); ?>
+    <div class="price-template">
+        <!-- En-tête avec les métadonnées -->
+        <div class="price-header mb-4 p-3 bg-light rounded">
+            <h4>Fiche tarifaire</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Fournisseur:</strong> <?= htmlspecialchars($data['meta']['fournisseur'] ?? 'Non spécifié') ?></p>
+                    <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($data['meta']['date_maj'] ?? 'Inconnue') ?></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Devise:</strong> <?= htmlspecialchars($data['meta']['devise'] ?? 'EUR') ?></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tableau des produits -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Prix HT</th>
+                        <th>Unité</th>
+                        <th>TVA</th>
+                        <th>EAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($data['produits'] as $produit): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($produit['id_unique'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($produit['nom'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($produit['categorie'] ?? '') ?></td>
+                        <td class="text-right"><?= number_format($produit['prix_ht'] ?? 0, 2, ',', ' ') ?></td>
+                        <td><?= htmlspecialchars($produit['unite'] ?? '') ?></td>
+                        <td class="text-right"><?= number_format($produit['tva'] ?? 0, 2, ',', ' ') ?>%</td>
+                        <td><?= htmlspecialchars($produit['code_ean'] ?? '') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php return ob_get_clean();
+}
+
+// test formatage template json
+function generatePriceTemplate() {
+    return [
+        "meta" => [
+            "fournisseur" => "",
+            "date_maj" => date('Y-m-d'),
+            "devise" => "EUR",
+            "commentaire" => ""
+        ],
+        "produits" => [
+            [
+                "id_unique" => "001",
+                "nom" => "Exemple produit",
+                "categorie" => "viandes|poissons|légumes|boissons|épicerie",
+                "prix_ht" => 0.00,
+                "unite" => "kg|L|pièce",
+                "tva" => 5.5,
+                "code_ean" => ""
+            ]
+        ]
+    ];
+}
 ?>
 

@@ -3,6 +3,7 @@
     <div class="footer-section">
       <h3>FileShare</h3>
       <p>Plateforme de partage et gestion de Données analytiques sécurisée pour professionnels.</p>
+      <p><i class="fa-solid fa-users"></i> <?php echo $pdo->query("SELECT COUNT(id) FROM users")->fetchColumn(); ?> Utilisateurs</p>
     </div>
     <div class="footer-links">
       <a href="https://gael-berru.netlify.app" target="_blank" rel="noopener noreferrer" class="personal-link">

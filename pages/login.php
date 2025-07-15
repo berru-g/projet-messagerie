@@ -39,6 +39,7 @@ require_once '../includes/header.php';
 <div class="container auth-container">
     <h2>Connexion</h2>
     
+
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
             <?php foreach ($errors as $error): ?>

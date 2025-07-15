@@ -136,9 +136,9 @@ require_once '../includes/header.php';
         </div>
         <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
         <div class="file-types mt-2">
-            <span class="badge badge-csv">CSV</span>
-            <span class="badge badge-excel">Excel</span>
-            <span class="badge badge-json">JSON</span>
+            <span class="badge badge-csv">.csv</span>
+            <span class="badge badge-excel">.xlsx</span>
+            <span class="badge badge-json">.json</span>
         </div>
     </form>
 </div>
