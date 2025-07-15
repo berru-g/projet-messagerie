@@ -10,17 +10,17 @@ Système de messagerie avec authentification, posts et likes, partage de fichier
 
 ### Messagerie/like
 
-<img width="960" alt="messagerie-by-berru-g" src="https://github.com/user-attachments/assets/58183418-1434-42e3-83c5-06dcd187fdda" />
+<img width="960" height="540" alt="Capture d'écran_20250715_180854" src="https://github.com/user-attachments/assets/57142340-fb61-4880-8695-c1e56baeebe7" />
 
 
 ### Upload csv, excel, json. Privé ou public
 
-<img width="960" height="540" alt="messagerie-upload-fichier" src="https://github.com/user-attachments/assets/2bd9e005-17a5-4b33-91f9-21e8bae6a491" />
+<img width="960" height="540" alt="Capture d'écran_20250715_180938" src="https://github.com/user-attachments/assets/97777cad-461d-403c-bb61-b4a9555d2eb2" />
 
 
 ### Search fiche public
 
-<img width="960" height="540" alt="messagerie-search-fichier" src="https://github.com/user-attachments/assets/c77b84e1-9004-42ae-8735-0c1bf8a886e1" />
+<img width="960" height="540" alt="Capture d'écran_20250715_180926" src="https://github.com/user-attachments/assets/7dadb4b2-b14f-4de3-83e6-1e5adcdcdbd5" />
 
 
 ## ✨ Fonctionnalités
@@ -49,34 +49,6 @@ Système de messagerie avec authentification, posts et likes, partage de fichier
  - [full config sql](https://github.com/berru-g/projet-messagerie/blob/main/includes/config.sql)
 
 
-Configurer les variables :
-bash
-
-cp includes/config.dist.php includes/config.php
-
-Modifiez config.php avec vos identifiants DB.
-
-Lancer le serveur :
-bash
-
-    php -S localhost:8000
-
-
-🔧 Troubleshooting
-
-Problème : Erreur SQL avec emojis
-Solution : Exécuter :
-sql
-
-ALTER DATABASE messagerie_collegues 
-CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-Problème : Page blanche
-Solution : Activer les logs dans config.php :
-php
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 
 MIT License - Libre d'utilisation et modification
