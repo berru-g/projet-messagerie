@@ -19,13 +19,13 @@ require_once  '../includes/header.php';
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
     </div>
     
-<!--template vide -->
+<!--template à remplir ici -->
 
 
   </div>
 
 
-  <script src="../assets/js/generate.js"></script>
+  <script src="../assets/js/template.js"></script>
 
 
 <?php require_once  '../includes/footer.php'; ?>

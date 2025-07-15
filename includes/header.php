@@ -39,9 +39,10 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                 <div class="dropdown-content">
                     <a href="<?= BASE_URL ?>"><i class="fa-solid fa-comments"></i> Comment</a>
                     <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Search</a>
                         <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
                         <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
+                        <a href="<?= BASE_URL ?>/pages/mon-dashboard.php"><i class="fa-solid fa-chart-line"></i> Stats</a>
                     <?php endif; ?>
                 </div>
             </div>

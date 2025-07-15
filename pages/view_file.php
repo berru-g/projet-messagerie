@@ -54,12 +54,16 @@ require_once '../includes/header.php';
 ?>
 
 <div class="container">
+    
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><?= htmlspecialchars($file['file_name']) ?></h2>
-        <a href="<?= str_replace('../', BASE_URL.'/', $file['file_path']) ?>" download 
+        <a href="search.php"  
            class="btn btn-success">
-            <i class="fas fa-download"></i> Télécharger
+            <i class="fa-solid fa-reply"></i> 
         </a>
+        <a href="<?= str_replace('../', BASE_URL.'/', $file['file_path']) ?>" download 
+           class="btn btn-success"><i class="fas fa-download"></i></a>
+        
     </div>
 
     <div class="file-meta mb-4">

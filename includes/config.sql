@@ -45,3 +45,4 @@ CREATE TABLE user_files (
 ALTER TABLE user_files 
 ADD COLUMN is_public BOOLEAN DEFAULT FALSE,
 ADD COLUMN share_token VARCHAR(32) NULL;
+

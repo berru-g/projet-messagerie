@@ -73,6 +73,43 @@ h3 {
   -webkit-text-fill-color: transparent;
 }
 
+/* page profil stat*/
+.profile-stats {
+  display: flex;
+  gap: 5px;
+  margin-top: 7px;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-stats p {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: #333;
+  transition: transform 0.2s ease;
+}
+
+.profile-stats p:hover {
+  transform: translateY(-3px);
+}
+
+.profile-stats i {
+  font-size: 1rem;
+  color: #0077cc;
+  /* Bleu doux */
+  flex-shrink: 0;
+}
+
 /* Modern Dropdowns */
 .profile-dropdown,
 .menu-dropdown {
@@ -824,18 +861,19 @@ thead th {
   padding: 5px 5px;
   width: auto;
   overflow: auto;
-  
+
 }
 
 .text-right {
   text-align: right;
-  
+
 }
 
 .table-hover tbody tr:hover {
   background-color: rgba(52, 152, 219, 0.1);
   transition: background-color 0.3s ease;
 }
+
 tbody td {
   border-bottom: 1px solid grey;
   padding: 5px 5px;
