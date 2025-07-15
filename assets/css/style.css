@@ -151,7 +151,7 @@ h1, h2, h3 {
 
 /* Modern Container */
 .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 30px auto;
   padding: 0;
 }
@@ -435,7 +435,7 @@ input {
 
 /* Profile Page */
 .profile-container {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 60px auto;
   background: var(--secondary-color);
   padding: 40px;
@@ -587,6 +587,9 @@ input {
     align-items: center;
     font-size: 16px;
     color: #6c757d;
+    border: 1px dashed grey;
+    border-radius: 8px;
+    padding: 10px 10px;
 }
 
 .upload-label i {
@@ -597,6 +600,7 @@ input {
 
 #file-upload {
     display: none;
+    
 }
 
 .file-icon {
@@ -641,9 +645,16 @@ input {
 
 .file-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-top: 15px;
+    gap: 8px;
 }
+
+.file-actions a,
+.file-actions button {
+  width: 33px;
+}
+
 
 .file-types {
     margin: 10px 0;

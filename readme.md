@@ -29,12 +29,9 @@ Système de messagerie avec authentification, posts et likes, partage de fichier
    ```bash
    git clone https://github.com/berru-g/messagerie-collegues.git
 
-    Configurer la base de données :
-    sql
+2. **Configurer les différentes tables dans la base de données :**
+ - [full config sql](https://github.com/berru-g/projet-messagerie/blob/main/includes/config.sql)
 
-CREATE DATABASE messagerie_collegues;
-USE messagerie_collegues;
-SOURCE /chemin/vers/schema.sql;
 
 Configurer les variables :
 bash

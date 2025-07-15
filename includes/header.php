@@ -19,7 +19,7 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
         <div class="header-content">
             <div class="profile-dropdown">
                 <button class="profile-btn">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user-circle"></i>
                 </button>
                 <div class="dropdown-content">
                     <?php if (isLoggedIn()): ?>
@@ -37,10 +37,11 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="<?= BASE_URL ?>"><i class="fas fa-home"></i> Accueil</a>
+                    <a href="<?= BASE_URL ?>"><i class="fa-solid fa-comments"></i> Comment</a>
                     <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fas fa-eye"></i> Gallery</a>
-                        <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> uploads</a>
+                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+                        <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
+                        <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
                     <?php endif; ?>
                 </div>
             </div>

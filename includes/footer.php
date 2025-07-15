@@ -6,7 +6,7 @@
     </div>
     <div class="footer-links">
       <a href="https://gael-berru.netlify.app" target="_blank" rel="noopener noreferrer" class="personal-link">
-        <i class="fas fa-external-link-alt"></i> berru-g
+        <i class="fa-solid fa-envelope"></i> berru-g
       </a>
     </div>
   </div>
@@ -67,7 +67,7 @@
 }
 
 .personal-link:hover {
-  background-color: #ab9ff2;
+  background-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
 

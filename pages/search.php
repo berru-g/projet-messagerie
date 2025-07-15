@@ -91,7 +91,7 @@ require_once '../includes/header.php';
                             <div class="file-actions">
                                 <a href="view_file.php?id=<?= $file['id'] ?>" 
                                    class="btn btn-sm btn-primary">
-                                    <i class="fas fa-eye"></i> Voir
+                                    <i class="fas fa-eye"></i>
                                 </a>
                             </div>
                         </div>
