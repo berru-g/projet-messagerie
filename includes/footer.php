@@ -21,7 +21,7 @@
     <div class="footer-features">
       <h4>Fonctionnalités</h4>
       <ul>
-        <li><i class="fa-solid fa-comments"></i> Comment</li>         
+        <li><i class="fas fa-file-csv"></i> Generate csv to PDF</li>         
         <li><i class="fa-solid fa-inbox"></i> Inbox</li>
         <li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>

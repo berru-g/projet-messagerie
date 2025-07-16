@@ -42,6 +42,7 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                         <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Search</a>
                         <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
                         <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
+                        <a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Generate</a>
                         <a href="<?= BASE_URL ?>/pages/mon-dashboard.php"><i class="fa-solid fa-chart-line"></i> Stats</a>
                     <?php endif; ?>
                 </div>
