@@ -129,12 +129,16 @@ require_once '../includes/header.php';
             <input type="file" id="file-upload" name="uploaded_file" 
                    accept=".csv,.xlsx,.xls,.json" required>
         </label>
-        <div class="form-group mt-2">
+        <!--<div class="form-group mt-2">
             <label class="lock-toggle">
             <input type="checkbox" id="make-public" name="is_public" hidden>
             <i class="fas fa-lock"></i>
         <span class="ml-2">2 - Rendre <span class="status-text"></span></span>
         </label>
+        </div>-->
+        <div class="form-group form-check mt-2">
+            <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
+            <label class="form-check-label" for="make-public">2 - Rendre public</label>
         </div>
         <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
         <div class="file-types mt-2">
