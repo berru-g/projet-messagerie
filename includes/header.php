@@ -10,10 +10,13 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
     <title><?= SITE_NAME ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <!-- Remplacer par ces liens -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     
 </head>
 <body>
@@ -44,8 +47,8 @@ require_once __DIR__ . '/functions.php'; // Cette ligne doit venir AVANT d'utili
                         <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Search</a>
                         <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
                         <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
-                        <a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Generate ⚙️</a>
-                        <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data to chart ⚙️</a>
+                        <!--<a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>
+                        <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data to chart</a>-->
                         <a href="<?= BASE_URL ?>/pages/mon-dashboard.php"><i class="fa-solid fa-chart-line"></i> Stats</a>
                     <?php endif; ?>
                 </div>

@@ -91,7 +91,7 @@ h3 {
   gap: 0.75rem;
   background: #fff;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   font-size: 0.7rem;
   font-weight: 300;
@@ -104,9 +104,8 @@ h3 {
 }
 
 .profile-stats i {
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #0077cc;
-  /* Bleu doux */
   flex-shrink: 0;
 }
 
@@ -361,6 +360,43 @@ h3 {
   margin-right: 6px;
   font-size: 1.1rem;
 }
+/* cadenas pour upload public*/
+.lock-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.lock-toggle i {
+    font-size: 1.2rem;
+    width: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Quand cochée (public) */
+.lock-toggle input:checked + i {
+    color: var(--success-color); 
+}
+
+.lock-toggle input:checked + i::before {
+    content: "\f09c"; /* Icône ouverte */
+}
+
+/* Quand décochée (privé) */
+.lock-toggle input:not(:checked) + i::before {
+    content: "\f023"; /* Icône fermée */
+}
+
+/* Texte dynamique */
+.lock-toggle input:checked ~ .status-text::after {
+    content: "public";
+}
+
+.lock-toggle input:not(:checked) ~ .status-text::after {
+    content: "privé";
+}
+.text-success { color: var(--success-color); }
+.text-secondary { color: #6c757d; }
 
 /* Modern Auth Forms */
 .auth-container {
@@ -648,7 +684,8 @@ input {
   align-items: center;
   font-size: 16px;
   color: #6c757d;
-  border: 1px dashed grey;
+  border: 1px dashed #3498db;
+  background-color: rgba(52, 152, 219, 0.1);
   border-radius: 8px;
   padding: 10px 10px;
 }
@@ -734,12 +771,13 @@ input {
   display: flex;
   justify-content: flex-start;
   margin-top: 15px;
-  gap: 8px;
+  gap: 4px;
 }
 
 .file-actions a,
+.file-actions i,
 .file-actions button {
-  width: 33px;
+  width: 15px;
 }
 
 

@@ -57,7 +57,7 @@ require_once '../includes/header.php';
 
     <?php if (!empty($searchQuery)): ?>
         <div class="search-results">
-            <h4>Résultats pour "<?= htmlspecialchars($searchQuery) ?>"</h4>
+            <h4>Résultats pour "<?= htmlspecialchars($searchQuery) ?>" <?= count($searchResults) ?> fichiers</h4>
             
             <?php if (empty($searchResults)): ?>
                 <div class="alert alert-info">Aucun fichier trouvé.</div>

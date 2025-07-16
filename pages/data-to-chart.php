@@ -12,220 +12,127 @@ $user = getUserById($_SESSION['user_id']);
 require_once '../includes/header.php';
 ?>
 
-<div class="container data-viz-container">
-    <!-- Header Section -->
-    <div class="viz-header">
-        <h2><i class="fas fa-chart-line"></i> Data Visualizer Pro</h2>
-        <p class="text-muted">Transformez vos fichiers en insights visuels en 3 étapes</p>
-    </div>
-
-    <!-- Process Steps -->
-    <div class="viz-steps">
-        <div class="step active" id="step1">
-            <span class="step-number">1</span>
-            <span class="step-text">Importer</span>
-        </div>
-        <div class="step" id="step2">
-            <span class="step-number">2</span>
-            <span class="step-text">Configurer</span>
-        </div>
-        <div class="step" id="step3">
-            <span class="step-number">3</span>
-            <span class="step-text">Visualiser</span>
-        </div>
-    </div>
-
-    <!-- Upload Card -->
-    <div class="card upload-card active" id="uploadCard">
-        <div class="card-body">
-            <div class="dropzone" id="dropZone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h5>Déposez votre fichier ici</h5>
-                <p class="text-muted">ou cliquez pour parcourir</p>
-                <input type="file"  id="dataUpload" accept=".csv,.json,.xlsx,.xls">
-                <div class="supported-formats">
-                    <span class="badge badge-pill badge-secondary">CSV</span>
-                    <span class="badge badge-pill badge-secondary">JSON</span>
-                    <span class="badge badge-pill badge-secondary">Excel</span>
-                </div>
-            </div>
-            <div class="file-preview mt-3 d-none" id="filePreview">
-                <div class="file-info">
-                    <span id="fileName"></span>
-                    <span class="file-size" id="fileSize"></span>
-                    <button class="btn btn-sm btn-outline-danger" id="cancelUpload">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="progress mt-2">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                         id="uploadProgress" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Configuration Card -->
-    <div class="card config-card" id="configCard">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="chart-preview-container">
-                        <canvas id="dataChart"></canvas>
-                        <div class="chart-watermark">Preview</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="chartType"><i class="fas fa-chart-pie"></i> Type de graphique</label>
-                        <select class="form-control custom-select" id="chartType">
-                            <option value="line">Ligne</option>
-                            <option value="bar">Barres verticales</option>
-                            <option value="horizontalBar">Barres horizontales</option>
-                            <option value="pie">Camembert</option>
-                            <option value="doughnut">Anneau</option>
-                            <option value="radar">Radar</option>
-                        </select>
-                    </div>
-                    
-                    <div class="axis-config">
-                        <div class="form-group">
-                            <label for="xAxis"><i class="fas fa-arrows-alt-h"></i> Axe X</label>
-                            <select class="form-control custom-select" id="xAxis"></select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="yAxis"><i class="fas fa-arrows-alt-v"></i> Axe Y</label>
-                            <select class="form-control custom-select" id="yAxis"></select>
-                        </div>
-                    </div>
-
-                    <div class="color-picker mt-3">
-                        <label><i class="fas fa-palette"></i> Palette de couleurs</label>
-                        <div class="color-options">
-                            <div class="color-option theme1 active" data-theme="default"></div>
-                            <div class="color-option theme2" data-theme="pastel"></div>
-                            <div class="color-option theme3" data-theme="vibrant"></div>
-                            <div class="color-option theme4" data-theme="monochrome"></div>
-                        </div>
-                    </div>
-
-                    <button id="updateChart" class="btn btn-primary btn-block mt-3">
-                        <i class="fas fa-sync-alt"></i> Actualiser
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Data & Export Card -->
-    <div class="card export-card" id="exportCard">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="data-table-container">
-                        <div class="table-actions">
-                            <div class="search-box">
-                                <input type="text" id="tableSearch" placeholder="Rechercher...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <div class="rows-info" id="rowsInfo"></div>
-                        </div>
-                        <div id="tableContainer" class="table-responsive"></div>
-                        <nav aria-label="Data pagination">
-                            <ul class="pagination" id="pagination"></ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="export-options">
-                        <h5><i class="fas fa-download"></i> Options d'export</h5>
-                        
-                        <div class="export-format">
-                            <label>Format :</label>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-secondary active">
-                                    <input type="radio" name="exportFormat" value="pdf" checked> PDF
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="exportFormat" value="png"> PNG
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="exportFormat" value="json"> JSON
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group mt-3">
-                            <label for="exportTitle"><i class="fas fa-heading"></i> Titre du rapport</label>
-                            <input type="text" class="form-control" id="exportTitle" placeholder="Ma visualisation">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="exportNotes"><i class="fas fa-sticky-note"></i> Notes</label>
-                            <textarea class="form-control" id="exportNotes" rows="2"></textarea>
-                        </div>
-
-                        <button id="exportBtn" class="btn btn-success btn-block mt-3">
-                            <i class="fas fa-file-export"></i> Exporter
-                        </button>
-
-                        <div class="share-options mt-3">
-                            <label><i class="fas fa-share-alt"></i> Partager :</label>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" id="copyLinkBtn">
-                                    <i class="fas fa-link"></i> Lien
-                                </button>
-                                <button class="btn btn-sm btn-outline-info" id="embedBtn">
-                                    <i class="fas fa-code"></i> Embed
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sample Data Modal -->
-    <div class="modal fade" id="sampleDataModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Charger des exemples</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action" data-sample="sales">
-                            <i class="fas fa-shopping-cart"></i> Données de ventes
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action" data-sample="weather">
-                            <i class="fas fa-cloud-sun"></i> Données météo
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action" data-sample="survey">
-                            <i class="fas fa-poll"></i> Résultats de sondage
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="data-visualizer-header">
+  <h1><i class="fas fa-chart-line"></i> Data Visualizer Pro</h1>
+  <p>Transformez vos fichiers en insights visuels en 3 étapes</p>
+  <div class="steps">
+    <div class="step active">1 <span>Importer</span></div>
+    <div class="step">2 <span>Configurer</span></div>
+    <div class="step">3 <span>Visualiser</span></div>
+  </div>
 </div>
 
-<!-- Bibliothèques -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="../assets/js/data-to-chart.js"></script>
-
+<div class="upload-container">
+  <div class="upload-dropzone" id="dropZone">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <p><strong>Déposez votre fichier ici</strong></p>
+    <p>ou cliquez pour parcourir</p>
+    <p class="formats">CSV &nbsp;&nbsp; JSON &nbsp;&nbsp; Excel</p>
+    <input type="file" id="dataUpload" accept=".csv,.json,.xls,.xlsx" hidden>
+  </div>
+  <button class="clear-btn" id="clearFile">✕</button>
+</div>
 
 <style>
+
+.data-visualizer-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.data-visualizer-header h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+.data-visualizer-header i {
+  margin-right: 10px;
+  color: #3b82f6;
+}
+
+.data-visualizer-header p {
+  color: #555;
+  margin-top: 0.3rem;
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.step {
+  background: #e3e3e3;
+  color: #777;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+  min-width: 50px;
+  transition: all 0.3s ease;
+}
+
+.step.active {
+  background: #3b82f6;
+  color: white;
+  transform: scale(1.05);
+}
+
+.step span {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.upload-container {
+  max-width: 900px;
+  margin: auto;
+  position: relative;
+}
+
+.upload-dropzone {
+  background: #edf6fd;
+  border: 2px dashed #3b82f6;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 1rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.upload-dropzone:hover {
+  background: #e0f0ff;
+}
+
+.upload-dropzone i {
+  font-size: 3rem;
+  color: #3b82f6;
+  margin-bottom: 1rem;
+}
+
+.upload-dropzone .formats {
+  margin-top: 1rem;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.clear-btn {
+  position: absolute;
+  bottom: -2.5rem;
+  right: 0.5rem;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  border: none;
+  border-radius: 1rem;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
 .data-viz-container {
     margin-top: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -542,5 +449,12 @@ require_once '../includes/header.php';
     }
 }
 </style>     
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="../assets/js/data-to-chart.js"></script>
 
 <?php require_once '../includes/footer.php'; ?>

@@ -92,7 +92,7 @@ require_once '../includes/header.php';
             datasets: [{
                 label: 'Utilisateurs',
                 data: [<?= $stats['new_users_last_30'] ?>, <?= $stats['total_users'] - $stats['new_users_last_30'] ?>],
-                backgroundColor: ['#4caf50', '#90caf9']
+                backgroundColor: ['#ab9ff2', '#2575fc']
             }]
         },
         options: { animation: { duration: 1000 } }
@@ -112,7 +112,7 @@ require_once '../includes/header.php';
                         <?= $type['count'] ?>,
                     <?php endforeach; ?>
                 ],
-                backgroundColor: ['#ff9800', '#03a9f4', '#8bc34a', '#e91e63']
+                backgroundColor: ['#ffd97d', '#2575fc', '#60d394', '#ee6055']
             }]
         },
         options: { animation: { duration: 1000 } }
@@ -125,7 +125,7 @@ require_once '../includes/header.php';
             datasets: [{
                 label: 'Interactions',
                 data: [<?= $stats['comments_count'] ?>, <?= $stats['likes_count'] ?>],
-                backgroundColor: ['#ff5722', '#3f51b5']
+                backgroundColor: ['#ee6055', '#2575fc']
             }]
         },
         options: {

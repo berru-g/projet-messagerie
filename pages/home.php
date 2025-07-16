@@ -33,7 +33,7 @@ require_once  '../includes/header.php';
 
 <div class="container">
     <div class="comment-form">
-        <h2>Poster un commentaire</h2>
+        <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
         <form method="POST">
             <textarea name="content" placeholder="Quoi de neuf ?" required></textarea>
             <button type="submit" name="comment">Publier</button>

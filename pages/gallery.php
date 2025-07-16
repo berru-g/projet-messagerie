@@ -105,10 +105,9 @@ require_once '../includes/header.php';
 ?>
 
 <div class="container profile-container">
-    <h2><?= htmlspecialchars($user['username']) ?></h2>
     
     <div class="profile-info">
-        <h3>Upload</h3>
+        <h3><?= htmlspecialchars($user['username']) ?> Upload</h3>
         
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="alert alert-success"><?= $_SESSION['success_message'] ?></div>
@@ -130,9 +129,12 @@ require_once '../includes/header.php';
             <input type="file" id="file-upload" name="uploaded_file" 
                    accept=".csv,.xlsx,.xls,.json" required>
         </label>
-        <div class="form-group form-check mt-2">
-            <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
-            <label class="form-check-label" for="make-public">2 - Rendre public</label>
+        <div class="form-group mt-2">
+            <label class="lock-toggle">
+            <input type="checkbox" id="make-public" name="is_public" hidden>
+            <i class="fas fa-lock"></i>
+        <span class="ml-2">2 - Rendre <span class="status-text"></span></span>
+        </label>
         </div>
         <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
         <div class="file-types mt-2">
@@ -179,6 +181,12 @@ require_once '../includes/header.php';
                         <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share" data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
                             <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
                         </button>
+                       
+                        <a href="view_file.php?id=<?= $file['id'] ?>" 
+                                class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                            
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -264,6 +272,15 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> En cours...';
         });
     }
+});
+//anime checkbox private/public
+document.querySelectorAll('.lock-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+        const checkbox = this.querySelector('input');
+        checkbox.checked = !checkbox.checked;
+        const event = new Event('change');
+        checkbox.dispatchEvent(event);
+    });
 });
 </script>
 <script src="../assets/js/script.js"></script>

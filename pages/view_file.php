@@ -57,7 +57,7 @@ require_once '../includes/header.php';
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><?= htmlspecialchars($file['file_name']) ?></h2>
-        <a href="search.php"  
+        <a href="gallery.php"  
            class="btn btn-success">
             <i class="fa-solid fa-reply"></i> 
         </a>
