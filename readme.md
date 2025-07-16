@@ -1,7 +1,12 @@
 # Template PHP/MySQL 
 Système de messagerie avec authentification, posts et likes, partage de fichier ( csv, google sheet ou json ). 
-**Objectif:** *mise à jour auto des prix d'une fiche technique puisquee pas d'api, demander aux fournisseurs d'upload la maj, les pro récupère leurs fiches à jour dans le format demandé.*
+**Objectif:** *mise à jour auto des prix d'une fiche technique puisquee pas d'[API](https://rnm.franceagrimer.fr/prix#), demander aux fournisseurs d'upload la maj, les pro récupère leurs fiches à jour dans le format demandé.*
  - 07/25 : V1.1 Développé par berru-g et deepseek
+
+
+
+https://github.com/user-attachments/assets/4ed5bbe0-c909-4e63-99dc-87d46c09cdd2
+
 
 ### Login/register/changepassword
 
