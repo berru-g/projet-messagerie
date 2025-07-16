@@ -43,7 +43,7 @@ require_once  '../includes/header.php';
         <p><strong>Nom d'utilisateur:</strong> <?= htmlspecialchars($user['username']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
         <p><strong>Membre depuis:</strong> <?= date('d/m/Y', strtotime($user['created_at'])) ?></p>
-        <p><a href="mon-dashboard.php" class="auth-links">Dashboard</a></p>
+        <!--<p><a href="mon-dashboard.php" style="text-decoration:none;color:#ab9ff2;"><i class="fa-solid fa-chart-line"></i> Dashboard</a></p>-->
     </div>
 
     <div class="profile-stats">

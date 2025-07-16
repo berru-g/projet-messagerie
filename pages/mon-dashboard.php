@@ -8,7 +8,13 @@ if (!isLoggedIn()) {
 }
 
 $user = getUserById($_SESSION['user_id']);
+/*
+if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com') {
+    http_response_code(403);
+    exit("⛔ Accès interdit.");
+}
 
+*/
 // Récupération des stats globales
 $stats = [];
 
