@@ -1,4 +1,22 @@
 
+:root {
+  --background-color: #f1f1f1;
+  --text-color: #000000;
+  --titre-color: #6c757d;
+  --primary-color: #ab9ff2;
+  --secondary-color: #ffffff;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --input-background: #f9f9f9;
+  --accent-color: #2575fc;
+  --success-color: #60d394;
+  --error-color: #ee6055;
+  --jaune-color: #ffd97d;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+
 .data-visualizer-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -11,7 +29,7 @@
 
 .data-visualizer-header i {
   margin-right: 10px;
-  color: #3b82f6;
+  color: #2575fc;
 }
 
 .data-visualizer-header p {
@@ -41,7 +59,7 @@
 }
 
 .step.active {
-  background: #3b82f6;
+  background: #2575fc;
   color: white;
   transform: scale(1.05);
 }
@@ -58,9 +76,9 @@
 }
 
 .upload-dropzone {
-  background: #edf6fd;
+  background: #e0f0ff;
   max-width: 500px;
-  border: 2px dashed #3b82f6;
+  border: 2px dashed var(--accent-color);
   padding: 3rem;
   text-align: center;
   border-radius: 1rem;
@@ -69,12 +87,12 @@
 }
 
 .upload-dropzone:hover {
-  background: #e0f0ff;
+  background: #edf6fd;
 }
 
 .upload-dropzone i {
   font-size: 3rem;
-  color: #3b82f6;
+  color: var(--accent-color);
   margin-bottom: 1rem;
 }
 
@@ -358,7 +376,7 @@
 .table th {
     border-top: none;
     font-weight: 600;
-    color: #2c3e50;
+    color: #2575fc;
 }
 
 

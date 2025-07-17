@@ -3,8 +3,8 @@ require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
 if (!isLoggedIn()) {
-    header("Location: " . BASE_URL . "/pages/login.php");
-    exit;
+  header("Location: " . BASE_URL . "/pages/login.php");
+  exit;
 }
 
 $user = getUserById($_SESSION['user_id']);
@@ -27,7 +27,11 @@ require_once '../includes/header.php';
     <i class="fas fa-cloud-upload-alt"></i>
     <p><strong>Déposez votre fichier ici</strong></p>
     <p>ou cliquez pour parcourir</p>
-    <p class="formats">CSV &nbsp;&nbsp; JSON &nbsp;&nbsp; Excel</p>
+    <div class="file-types mt-2">
+      <span class="badge badge-csv">.csv</span>
+      <span class="badge badge-excel">.xlsx</span>
+      <span class="badge badge-json">.json</span>
+    </div>
     <input type="file" id="dataUpload" accept=".csv,.json,.xls,.xlsx" hidden>
   </div>
 </div>
@@ -35,7 +39,7 @@ require_once '../includes/header.php';
 <div class="container mt-5">
   <div id="columnSelector" class="mb-4"></div>
   <canvas id="myChart" height="120"></canvas>
-  <div class="auth-container">
+  <div class="mt-4 d-flex flex-wrap gap-2">
     <select id="chartType" class="form-select w-auto">
       <option value="bar">Barres</option>
       <option value="line">Lignes</option>
@@ -50,8 +54,9 @@ require_once '../includes/header.php';
   <div class="table-responsive mt-4">
     <table id="dataTable" class="table table-bordered table-striped"></table>
   </div>
-  
-  <div class="auth-container">
+
+  <div class="mt-4 d-flex flex-wrap gap-2">
+
     <button id="exportTablePNG" class="btn btn-outline-primary"><i class="fas fa-image"></i> PNG Tableau</button>
     <button id="exportTablePDF" class="btn btn-outline-secondary"><i class="fas fa-file-pdf"></i> PDF Tableau</button>
   </div>
@@ -115,6 +120,29 @@ Poires,60
         parseCSV(csv);
       };
       reader.readAsBinaryString(file);
+    } else if (ext === "json") {
+      reader.onload = e => parseJSON(e.target.result);
+      reader.readAsText(file);
+    }
+  }
+
+  function parseJSON(jsonString) {
+    try {
+      const data = JSON.parse(jsonString);
+      if (!Array.isArray(data)) throw new Error("JSON doit être un tableau de lignes.");
+
+      const headers = Object.keys(data[0]);
+      const rows = data.filter(row => row[headers[0]] && row[headers[1]]);
+      currentRows = rows;
+      currentLabel = headers[0];
+      currentValue = headers[1];
+
+      columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
+      renderChart(currentLabel, currentValue, rows);
+      renderTable(rows);
+      columnSelector.addEventListener("change", updateFromCheckbox);
+    } catch (err) {
+      alert("Erreur lors de l'analyse du JSON : " + err.message);
     }
   }
 
@@ -187,7 +215,7 @@ Poires,60
     const url = chart.toBase64Image();
     const a = document.createElement("a");
     a.href = url;
-    a.download = "Fileshare-chart.png";
+    a.download = "chart.png";
     a.click();
   });
 
@@ -196,7 +224,7 @@ Poires,60
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jspdf.jsPDF();
       pdf.addImage(imgData, "PNG", 10, 10, 180, 100);
-      pdf.save("fileshare-chart.pdf");
+      pdf.save("chart.pdf");
     });
   });
 
@@ -204,7 +232,7 @@ Poires,60
     html2canvas(dataTable).then(canvas => {
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
-      link.download = "fileshare-tableau.png";
+      link.download = "tableau.png";
       link.click();
     });
   });
@@ -214,7 +242,7 @@ Poires,60
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jspdf.jsPDF();
       pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
-      pdf.save("fileshare-tableau.pdf");
+      pdf.save("tableau.pdf");
     });
   });
 </script>

@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
         'application/json' => 'json'
     ];
-    
+
     // Debug: Vérifiez ce qui est reçu
     error_log(print_r($_FILES, true));
-    
+
     $fileType = $_FILES['uploaded_file']['type'];
     $fileExtension = strtolower(pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION));
-    
+
     // Vérification plus robuste du type de fichier
     $valid = false;
     if (array_key_exists($fileType, $allowedTypes)) {
@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
             $fileType = $typeMap[$fileExtension];
         }
     }
-    
+
     if ($valid) {
         $uploadDir = '../uploads/' . $user['id'] . '/';
-        
+
         if (!file_exists($uploadDir)) {
             if (!mkdir($uploadDir, 0755, true)) {
                 $_SESSION['error_message'] = "Erreur: Impossible de créer le dossier de destination.";
@@ -56,12 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
                 exit;
             }
         }
-        
+
         $originalName = basename($_FILES['uploaded_file']['name']);
         $safeName = preg_replace('/[^a-zA-Z0-9-_\.]/', '', $originalName);
         $fileName = uniqid() . '_' . $safeName;
         $filePath = $uploadDir . $fileName;
-        
+
         if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $filePath)) {
             // Enregistrement avec statut public par défaut
             $stmt = $pdo->prepare("INSERT INTO user_files 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
                 $allowedTypes[$fileType] ?? $fileType,
                 1 // Public par défaut
             ]);
-            
+
             $_SESSION['success_message'] = "Fichier uploadé avec succès!";
         } else {
             $errorMsg = "Erreur lors de l'upload. Code: " . $_FILES['uploaded_file']['error'];
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
     } else {
         $_SESSION['error_message'] = "Type de fichier non supporté. Formats acceptés: CSV, Excel, JSON.";
     }
-    
+
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -107,55 +107,55 @@ require_once '../includes/header.php';
 ?>
 
 <div class="container profile-container">
-    
+
     <div class="profile-info">
         <h3><?= htmlspecialchars($user['username']) ?> Upload</h3>
-        
+
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="alert alert-success"><?= $_SESSION['success_message'] ?></div>
             <?php unset($_SESSION['success_message']); ?>
         <?php endif; ?>
-        
+
         <?php if (isset($_SESSION['error_message'])): ?>
             <div class="alert alert-danger"><?= $_SESSION['error_message'] ?></div>
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
-        
+
         <div class="file-gallery">
             <!-- Case pour uploader un nouveau fichier -->
             <div class="file-card upload-card">
-    <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-        <label for="file-upload" class="upload-label">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>1 - Ajouter un fichier</span>
-            <input type="file" id="file-upload" name="uploaded_file" 
-                   accept=".csv,.xlsx,.xls,.json" required>
-        </label>
-        <!--<div class="form-group mt-2">
+                <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                    <label for="file-upload" class="upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>1 - Ajouter un fichier</span>
+                        <input type="file" id="file-upload" name="uploaded_file" accept=".csv,.xlsx,.xls,.json"
+                            required>
+                    </label>
+                    <!--<div class="form-group mt-2">
             <label class="lock-toggle">
             <input type="checkbox" id="make-public" name="is_public" hidden>
             <i class="fas fa-lock"></i>
         <span class="ml-2">2 - Rendre <span class="status-text"></span></span>
         </label>
         </div>-->
-        <div class="form-group form-check mt-2">
-            <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
-            <label class="form-check-label" for="make-public">2 - Rendre public</label>
-        </div>
-        <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
-        <div class="file-types mt-2">
-            <span class="badge badge-csv">.csv</span>
-            <span class="badge badge-excel">.xlsx</span>
-            <span class="badge badge-json">.json</span>
-        </div>
-    </form>
-</div>
-            
+                    <div class="form-group form-check mt-2">
+                        <input type="checkbox" class="form-check-input" id="make-public" name="is_public" checked>
+                        <label class="form-check-label" for="make-public">2 - Rendre public</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2 w-100">3 - Uploader</button>
+                    <div class="file-types mt-2">
+                        <span class="badge badge-csv">.csv</span>
+                        <span class="badge badge-excel">.xlsx</span>
+                        <span class="badge badge-json">.json</span>
+                    </div>
+                </form>
+            </div>
+
             <!-- Affichage des fichiers existants -->
             <?php foreach ($userFiles as $file): ?>
                 <div class="file-card">
                     <div class="file-icon">
-                        <?php switch($file['file_type']):
+                        <?php switch ($file['file_type']):
                             case 'csv': ?>
                                 <i class="fas fa-file-csv"></i>
                                 <?php break; ?>
@@ -178,21 +178,22 @@ require_once '../includes/header.php';
                         <small class="file-type <?= $file['file_type'] ?>"><?= strtoupper($file['file_type']) ?></small>
                     </div>
                     <div class="file-actions">
-                        <a href="<?= str_replace('../', BASE_URL.'/', $file['file_path']) ?>" download class="btn btn-sm btn-success">
+                        <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
+                            class="btn btn-sm btn-success">
                             <i class="fas fa-download"></i>
                         </a>
                         <a href="#" class="btn btn-sm btn-danger delete-file" data-file-id="<?= $file['id'] ?>">
                             <i class="fas fa-trash"></i>
                         </a>
-                        <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share" data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
+                        <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
+                            data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
                             <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
                         </button>
-                       
-                        <a href="view_file.php?id=<?= $file['id'] ?>" 
-                                class="btn btn-sm btn-primary">
+
+                        <a href="view_file.php?id=<?= $file['id'] ?>" class="btn btn-sm btn-primary">
                             <i class="fas fa-eye"></i>
                         </a>
-                            
+
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -201,93 +202,93 @@ require_once '../includes/header.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de la suppression
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.delete-file')) {
-            e.preventDefault();
-            const button = e.target.closest('.delete-file');
-            const fileId = button.getAttribute('data-file-id');
-            
-            if (confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?')) {
-                fetch('../includes/delete_file.php', {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Gestion de la suppression
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.delete-file')) {
+                e.preventDefault();
+                const button = e.target.closest('.delete-file');
+                const fileId = button.getAttribute('data-file-id');
+
+                if (confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?')) {
+                    fetch('../includes/delete_file.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'file_id=' + fileId
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                button.closest('.file-card').remove();
+                            } else {
+                                alert('Erreur: ' + (data.message || 'Action échouée'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Erreur réseau - Veuillez réessayer');
+                        });
+                }
+            }
+
+            // Gestion du partage public/privé
+            if (e.target.closest('.toggle-share')) {
+                const button = e.target.closest('.toggle-share');
+                const fileId = button.getAttribute('data-file-id');
+
+                fetch('../includes/toggle_share.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: 'file_id=' + fileId
                 })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        button.closest('.file-card').remove();
-                    } else {
-                        alert('Erreur: ' + (data.message || 'Action échouée'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur réseau - Veuillez réessayer');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const icon = button.querySelector('i');
+                            if (data.is_public) {
+                                button.classList.remove('btn-secondary');
+                                button.classList.add('btn-success');
+                                icon.classList.remove('fa-lock');
+                                icon.classList.add('fa-lock-open');
+                                button.title = 'Public';
+                            } else {
+                                button.classList.remove('btn-success');
+                                button.classList.add('btn-secondary');
+                                icon.classList.remove('fa-lock-open');
+                                icon.classList.add('fa-lock');
+                                button.title = 'Privé';
+                            }
+                        }
+                    });
             }
-        }
-        
-        // Gestion du partage public/privé
-        if (e.target.closest('.toggle-share')) {
-            const button = e.target.closest('.toggle-share');
-            const fileId = button.getAttribute('data-file-id');
-            
-            fetch('../includes/toggle_share.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'file_id=' + fileId
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const icon = button.querySelector('i');
-                    if (data.is_public) {
-                        button.classList.remove('btn-secondary');
-                        button.classList.add('btn-success');
-                        icon.classList.remove('fa-lock');
-                        icon.classList.add('fa-lock-open');
-                        button.title = 'Public';
-                    } else {
-                        button.classList.remove('btn-success');
-                        button.classList.add('btn-secondary');
-                        icon.classList.remove('fa-lock-open');
-                        icon.classList.add('fa-lock');
-                        button.title = 'Privé';
-                    }
-                }
+        });
+
+        // Feedback visuel pendant l'upload
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', function () {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> En cours...';
             });
         }
     });
-
-    // Feedback visuel pendant l'upload
-    const uploadForm = document.getElementById('uploadForm');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', function() {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> En cours...';
+    //anime checkbox private/public
+    document.querySelectorAll('.lock-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const checkbox = this.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            const event = new Event('change');
+            checkbox.dispatchEvent(event);
         });
-    }
-});
-//anime checkbox private/public
-document.querySelectorAll('.lock-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-        const checkbox = this.querySelector('input');
-        checkbox.checked = !checkbox.checked;
-        const event = new Event('change');
-        checkbox.dispatchEvent(event);
     });
-});
 </script>
 <script src="../assets/js/script.js"></script>
 <?php require_once '../includes/footer.php'; ?>
