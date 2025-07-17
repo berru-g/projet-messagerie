@@ -1,7 +1,9 @@
 <?php
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
-
+// Prochaine feature :
+// - upload plus de format
+// - revoir le delete non fonctionnel
 if (!isLoggedIn()) {
     header("Location: " . BASE_URL . "/pages/login.php");
     exit;

@@ -43,10 +43,11 @@ require_once  '../includes/header.php';
         <p><strong>Nom d'utilisateur:</strong> <?= htmlspecialchars($user['username']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
         <p><strong>Membre depuis:</strong> <?= date('d/m/Y', strtotime($user['created_at'])) ?></p>
-        <!--<p><a href="mon-dashboard.php" style="text-decoration:none;color:#ab9ff2;"><i class="fa-solid fa-chart-line"></i> Dashboard</a></p>-->
+        <p style="text-align:right;"><a href="<?= BASE_URL ?>/pages/mon-dashboard.php" style="text-align:right;text-decoration:none;color:#ab9ff2;"><i class="fa-solid fa-chart-line"></i> Full Stats</a></p>
     </div>
 
     <div class="profile-stats">
+    <h3>Mes stats :</h3>
     <p><i class="fas fa-file-upload"></i> <?= $fileCount ?></p>
     <p><i class="fas fa-globe"></i> <?= $publicFileCount ?></p>
     <p><i class="fas fa-comments"></i> <?= $commentCount ?></p>

@@ -13,12 +13,12 @@ require_once '../includes/header.php';
 ?>
 
 <div class="data-visualizer-header">
-  <h1><i class="fas fa-chart-line"></i> Data Visualizer Pro</h1>
+  <h1><i class="fas fa-chart-line"></i> Data Visualizer</h1>
   <p>Transformez vos fichiers en insights visuels en 3 étapes</p>
   <div class="steps">
     <div class="step active">1 <span>Importer</span></div>
-    <div class="step">2 <span>Configurer</span></div>
-    <div class="step">3 <span>Visualiser</span></div>
+    <div class="step">2 <span>Visualiser</span></div>
+    <div class="step">3 <span>Configurer</span></div>
   </div>
 </div>
 
@@ -30,431 +30,141 @@ require_once '../includes/header.php';
     <p class="formats">CSV &nbsp;&nbsp; JSON &nbsp;&nbsp; Excel</p>
     <input type="file" id="dataUpload" accept=".csv,.json,.xls,.xlsx" hidden>
   </div>
-  <button class="clear-btn" id="clearFile">✕</button>
+  <!--<button class="clear-btn" id="clearFile">✕</button>-->
 </div>
 
-<style>
-
-.data-visualizer-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.data-visualizer-header h1 {
-  font-size: 2rem;
-  color: #2c3e50;
-}
-
-.data-visualizer-header i {
-  margin-right: 10px;
-  color: #3b82f6;
-}
-
-.data-visualizer-header p {
-  color: #555;
-  margin-top: 0.3rem;
-}
-
-.steps {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.step {
-  background: #e3e3e3;
-  color: #777;
-  border-radius: 999px;
-  padding: 0.5rem 1.2rem;
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.9rem;
-  min-width: 50px;
-  transition: all 0.3s ease;
-}
-
-.step.active {
-  background: #3b82f6;
-  color: white;
-  transform: scale(1.05);
-}
-
-.step span {
-  font-size: 0.8rem;
-  font-weight: normal;
-}
-
-.upload-container {
-  max-width: 900px;
-  margin: auto;
-  position: relative;
-}
-
-.upload-dropzone {
-  background: #edf6fd;
-  border: 2px dashed #3b82f6;
-  padding: 3rem;
-  text-align: center;
-  border-radius: 1rem;
-  position: relative;
-  cursor: pointer;
-}
-
-.upload-dropzone:hover {
-  background: #e0f0ff;
-}
-
-.upload-dropzone i {
-  font-size: 3rem;
-  color: #3b82f6;
-  margin-bottom: 1rem;
-}
-
-.upload-dropzone .formats {
-  margin-top: 1rem;
-  color: #555;
-  font-size: 0.9rem;
-}
-
-.clear-btn {
-  position: absolute;
-  bottom: -2.5rem;
-  right: 0.5rem;
-  background: linear-gradient(to right, #667eea, #764ba2);
-  border: none;
-  border-radius: 1rem;
-  color: white;
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-.data-viz-container {
-    margin-top: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.viz-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.viz-header h2 {
-    color: #2c3e50;
-    font-weight: 700;
-}
-
-/* Steps Indicator */
-.viz-steps {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 20px;
-    position: relative;
-    color: #95a5a6;
-}
-
-.step:not(:last-child):after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    right: -20px;
-    width: 40px;
-    height: 2px;
-    background: #bdc3c7;
-}
-
-.step-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #ecf0f1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 8px;
-    border: 2px solid #bdc3c7;
-    color: #7f8c8d;
-}
-
-.step.active .step-number {
-    background: #3498db;
-    border-color: #2980b9;
-    color: white;
-}
-
-.step.active .step-text {
-    color: #2c3e50;
-    font-weight: 600;
-}
-
-/* Cards */
-.card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-    display: none;
-}
-
-.card.active {
-    display: block;
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-.card-body {
-    padding: 25px;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Upload Section */
-.dropzone {
-    border: 2px dashed #3498db;
-    border-radius: 8px;
-    padding: 40px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    background: rgba(52, 152, 219, 0.05);
-}
-
-.dropzone:hover {
-    background: rgba(52, 152, 219, 0.1);
-}
-
-.dropzone.dragover {
-    background: rgba(52, 152, 219, 0.2);
-    border-color: #2980b9;
-}
-
-.dropzone i {
-    font-size: 48px;
-    color: #3498db;
-    margin-bottom: 15px;
-}
-
-.dropzone h5 {
-    color: #2c3e50;
-    margin-bottom: 5px;
-}
-
-#dataUpload {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    cursor: pointer;
-}
-
-.file-preview {
-    border: 1px solid #eee;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.file-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.file-size {
-    color: #7f8c8d;
-    font-size: 0.9em;
-}
-
-.supported-formats {
-    margin-top: 15px;
-}
-
-.supported-formats .badge {
-    margin: 0 3px;
-    font-weight: normal;
-}
-
-/* Chart Section */
-.chart-preview-container {
-    position: relative;
-    height: 400px;
-    width: 100%;
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid #eee;
-}
-
-.chart-watermark {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    color: rgba(0, 0, 0, 0.1);
-    font-size: 24px;
-    pointer-events: none;
-}
-
-.axis-config {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.color-picker {
-    margin-bottom: 20px;
-}
-
-.color-options {
-    display: flex;
-    margin-top: 10px;
-}
-
-.color-option {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s;
-}
-
-.color-option:hover {
-    transform: scale(1.1);
-}
-
-.color-option.active {
-    border-color: #2c3e50;
-    transform: scale(1.1);
-}
-
-.theme1 { background: linear-gradient(135deg, #4e73df, #1cc88a, #36b9cc); }
-.theme2 { background: linear-gradient(135deg, #a8d8ea, #aa96da, #fcbad3); }
-.theme3 { background: linear-gradient(135deg, #ff595e, #ffca3a, #1982c4); }
-.theme4 { background: linear-gradient(135deg, #495057, #6c757d, #adb5bd); }
-
-/* Table Section */
-.data-table-container {
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid #eee;
-}
-
-.table-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.search-box {
-    position: relative;
-    width: 250px;
-}
-
-.search-box input {
-    padding-left: 30px;
-    border-radius: 20px;
-}
-
-.search-box i {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    color: #7f8c8d;
-}
-
-.rows-info {
-    color: #7f8c8d;
-    font-size: 0.9em;
-    align-self: center;
-}
-
-.table {
-    font-size: 0.9em;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-
-.export-options {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    height: 100%;
-}
-
-.export-format {
-    margin-bottom: 15px;
-}
-
-.export-format .btn-group {
-    width: 100%;
-}
-
-.export-format .btn {
-    flex: 1;
-}
-
-.share-options {
-    margin-top: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .viz-steps {
-        flex-wrap: wrap;
-    }
-    
-    .step {
-        margin-bottom: 15px;
-    }
-    
-    .step:after {
-        display: none;
-    }
-    
-    .chart-container {
-        height: 300px;
-    }
-    
-    .col-md-8, .col-md-4 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-    
-    .export-options {
-        margin-top: 20px;
-        height: auto;
-    }
-}
-</style>     
+<div class="container mt-5">
+  <div id="columnSelector" class="mb-4"></div>
+  <canvas id="myChart" height="120"></canvas>
+  <div class="mt-4 d-flex gap-2">
+    <select id="chartType" class="form-select w-auto">
+      <option value="bar">Barres</option>
+      <option value="line">Lignes</option>
+      <option value="pie">Camembert</option>
+      <option value="doughnut">Donut</option>
+      <option value="radar">Radar</option>
+    </select>
+    <button id="exportPNG" class="btn btn-primary"><i class="fas fa-image"></i> PNG</button>
+    <button id="exportPDF" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> PDF</button>
+  </div>
+</div>
+<link rel="stylesheet" href="../assets/css/data-to-chart.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="../assets/js/data-to-chart.js"></script>
+<script>
+  const chartContainer = document.getElementById("myChart");
+  const columnSelector = document.getElementById("columnSelector");
+  const chartTypeSelect = document.getElementById("chartType");
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("dataUpload");
+  let chart;
+  let currentRows = [];
+  let currentLabel = "";
+  let currentValue = "";
+
+  dropZone.addEventListener("click", () => fileInput.click());
+  dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragover"); });
+  dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+  dropZone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+    handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener("change", e => handleFile(e.target.files[0]));
+
+  function handleFile(file) {
+    const reader = new FileReader();
+    const ext = file.name.split(".").pop().toLowerCase();
+
+    if (ext === "csv") {
+      reader.onload = e => parseCSV(e.target.result);
+      reader.readAsText(file);
+    } else if (["xls", "xlsx"].includes(ext)) {
+      reader.onload = e => {
+        const wb = XLSX.read(e.target.result, { type: "binary" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const csv = XLSX.utils.sheet_to_csv(ws);
+        parseCSV(csv);
+      };
+      reader.readAsBinaryString(file);
+    }
+  }
+
+  function parseCSV(csv) {
+    const data = Papa.parse(csv, { header: true });
+    const headers = data.meta.fields;
+    const rows = data.data;
+    currentRows = rows;
+    currentLabel = headers[0];
+    currentValue = headers[1];
+    columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
+    renderChart(currentLabel, currentValue, rows);
+    columnSelector.addEventListener("change", updateFromCheckbox);
+  }
+
+  function updateFromCheckbox() {
+    const selected = [...columnSelector.querySelectorAll("input:checked")].map(el => el.value);
+    if (selected.length >= 2) {
+      currentLabel = selected[0];
+      currentValue = selected[1];
+      renderChart(currentLabel, currentValue, currentRows);
+    }
+  }
+
+  function renderChart(labelKey, valueKey, rows) {
+    const labels = rows.map(r => r[labelKey]);
+    const values = rows.map(r => parseFloat(r[valueKey]));
+    const type = chartTypeSelect.value;
+    if (chart) chart.destroy();
+    chart = new Chart(chartContainer, {
+      type,
+      data: {
+        labels,
+        datasets: [{
+          label: `${valueKey} par ${labelKey}`,
+          data: values,
+          backgroundColor: "rgba(54, 162, 235, 0.5)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: { display: true, text: "Visualisation des données" }
+        }
+      }
+    });
+  }
+
+  chartTypeSelect.addEventListener("change", () => {
+    if (currentLabel && currentValue && currentRows.length > 0) {
+      renderChart(currentLabel, currentValue, currentRows);
+    }
+  });
+
+  document.getElementById("exportPNG").addEventListener("click", () => {
+    const url = chart.toBase64Image();
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chart.png";
+    a.click();
+  });
+
+  document.getElementById("exportPDF").addEventListener("click", () => {
+    html2canvas(chartContainer).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jspdf.jsPDF();
+      pdf.addImage(imgData, "PNG", 10, 10, 180, 100);
+      pdf.save("chart.pdf");
+    });
+  });
+</script>
 
 <?php require_once '../includes/footer.php'; ?>

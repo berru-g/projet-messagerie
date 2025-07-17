@@ -8,13 +8,18 @@ if (!isLoggedIn()) {
 }
 
 $user = getUserById($_SESSION['user_id']);
-/*
+/* Un seul accé autorisé ...
 if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com') {
     http_response_code(403);
     exit("⛔ Accès interdit.");
+}*/
+/* redirection
+if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com') {
+    header("Location: " . BASE_URL . "/403.php");
+    exit;
 }
-
 */
+
 // Récupération des stats globales
 $stats = [];
 

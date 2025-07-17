@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
-
+// Attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant
 if (!isLoggedIn()) {
     header("Location: " . BASE_URL . "/pages/login.php");
     exit;
@@ -46,32 +46,31 @@ try {
             $fileContent = '<pre>' . htmlspecialchars(file_get_contents($file['file_path'])) . '</pre>';
     }
 } catch (Exception $e) {
-    $fileContent = '<div class="alert alert-danger">Erreur lors de la lecture du fichier: ' . 
-                   htmlspecialchars($e->getMessage()) . '</div>';
+    $fileContent = '<div class="alert alert-danger">Erreur lors de la lecture du fichier: ' .
+        htmlspecialchars($e->getMessage()) . '</div>';
 }
 
 require_once '../includes/header.php';
 ?>
 
 <div class="container">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><?= htmlspecialchars($file['file_name']) ?></h2>
-        <a href="gallery.php"  
-           class="btn btn-success">
-            <i class="fa-solid fa-reply"></i> 
+        <a href="gallery.php" class="btn btn-success">
+            <i class="fa-solid fa-reply"></i>
         </a>
-        <a href="<?= str_replace('../', BASE_URL.'/', $file['file_path']) ?>" download 
-           class="btn btn-success"><i class="fas fa-download"></i></a>
-        
+        <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download class="btn btn-success"><i
+                class="fas fa-download"></i></a>
+
     </div>
 
     <div class="file-meta mb-4">
         <p><strong>Propriétaire:</strong> <?= htmlspecialchars($file['owner_email']) ?></p>
         <p><strong>Date d'upload:</strong> <?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></p>
         <p><strong>Type:</strong> <span class="badge badge-<?= $file['file_type'] ?>">
-            <?= strtoupper($file['file_type']) ?>
-        </span></p>
+                <?= strtoupper($file['file_type']) ?>
+            </span></p>
     </div>
 
     <div class="file-content card">
