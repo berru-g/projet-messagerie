@@ -32,7 +32,9 @@ body {
   font-family: 'Poppins', sans-serif;
   line-height: 1.6;
 }
-
+h1 {
+  font-size: 0.3rem;
+}
 h1,
 h2,
 h3 {
@@ -46,14 +48,14 @@ h3 {
   top: 0;
   left: 0;
   right: 0;
-  background: var(--secondary-color);
+  background: rgba(241, 241, 241, 0.024);
   color: var(--text-color);
   padding: 15px 0;
   box-shadow: var(--card-shadow);
   z-index: 1000;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--shadow-color);
 }
 
 .header-content {

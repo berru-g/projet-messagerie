@@ -30,13 +30,12 @@ require_once '../includes/header.php';
     <p class="formats">CSV &nbsp;&nbsp; JSON &nbsp;&nbsp; Excel</p>
     <input type="file" id="dataUpload" accept=".csv,.json,.xls,.xlsx" hidden>
   </div>
-  <!--<button class="clear-btn" id="clearFile">✕</button>-->
 </div>
 
 <div class="container mt-5">
   <div id="columnSelector" class="mb-4"></div>
   <canvas id="myChart" height="120"></canvas>
-  <div class="mt-4 d-flex gap-2">
+  <div class="auth-container">
     <select id="chartType" class="form-select w-auto">
       <option value="bar">Barres</option>
       <option value="line">Lignes</option>
@@ -44,10 +43,32 @@ require_once '../includes/header.php';
       <option value="doughnut">Donut</option>
       <option value="radar">Radar</option>
     </select>
-    <button id="exportPNG" class="btn btn-primary"><i class="fas fa-image"></i> PNG</button>
-    <button id="exportPDF" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> PDF</button>
+    <button id="exportPNG" class="btn btn-primary"><i class="fas fa-image"></i> PNG Graphique</button>
+    <button id="exportPDF" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> PDF Graphique</button>
+  </div>
+
+  <div class="table-responsive mt-4">
+    <table id="dataTable" class="table table-bordered table-striped"></table>
+  </div>
+  
+  <div class="auth-container">
+    <button id="exportTablePNG" class="btn btn-outline-primary"><i class="fas fa-image"></i> PNG Tableau</button>
+    <button id="exportTablePDF" class="btn btn-outline-secondary"><i class="fas fa-file-pdf"></i> PDF Tableau</button>
+  </div>
+
+  <div class="mt-4">
+    <h5>📁 Format de fichier idéal (CSV/Excel)</h5>
+    <p>Assurez-vous que votre fichier respecte ce format de base :</p>
+    <pre>
+Produit,Quantité
+Pommes,120
+Bananes,90
+Poires,60
+    </pre>
+    <p>💡 Colonne 1 : catégorie ou nom / Colonne 2 : valeur numérique</p>
   </div>
 </div>
+
 <link rel="stylesheet" href="../assets/css/data-to-chart.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -62,6 +83,8 @@ require_once '../includes/header.php';
   const chartTypeSelect = document.getElementById("chartType");
   const dropZone = document.getElementById("dropZone");
   const fileInput = document.getElementById("dataUpload");
+  const dataTable = document.getElementById("dataTable");
+
   let chart;
   let currentRows = [];
   let currentLabel = "";
@@ -98,12 +121,14 @@ require_once '../includes/header.php';
   function parseCSV(csv) {
     const data = Papa.parse(csv, { header: true });
     const headers = data.meta.fields;
-    const rows = data.data;
+    const rows = data.data.filter(row => row[headers[0]] && row[headers[1]]);
     currentRows = rows;
     currentLabel = headers[0];
     currentValue = headers[1];
+
     columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
     renderChart(currentLabel, currentValue, rows);
+    renderTable(rows);
     columnSelector.addEventListener("change", updateFromCheckbox);
   }
 
@@ -113,6 +138,7 @@ require_once '../includes/header.php';
       currentLabel = selected[0];
       currentValue = selected[1];
       renderChart(currentLabel, currentValue, currentRows);
+      renderTable(currentRows);
     }
   }
 
@@ -143,6 +169,14 @@ require_once '../includes/header.php';
     });
   }
 
+  function renderTable(rows) {
+    if (!rows.length) return;
+    const headers = Object.keys(rows[0]);
+    const thead = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>`;
+    const tbody = `<tbody>${rows.map(r => `<tr>${headers.map(h => `<td>${r[h]}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    dataTable.innerHTML = thead + tbody;
+  }
+
   chartTypeSelect.addEventListener("change", () => {
     if (currentLabel && currentValue && currentRows.length > 0) {
       renderChart(currentLabel, currentValue, currentRows);
@@ -153,7 +187,7 @@ require_once '../includes/header.php';
     const url = chart.toBase64Image();
     const a = document.createElement("a");
     a.href = url;
-    a.download = "chart.png";
+    a.download = "Fileshare-chart.png";
     a.click();
   });
 
@@ -162,7 +196,25 @@ require_once '../includes/header.php';
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jspdf.jsPDF();
       pdf.addImage(imgData, "PNG", 10, 10, 180, 100);
-      pdf.save("chart.pdf");
+      pdf.save("fileshare-chart.pdf");
+    });
+  });
+
+  document.getElementById("exportTablePNG").addEventListener("click", () => {
+    html2canvas(dataTable).then(canvas => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "fileshare-tableau.png";
+      link.click();
+    });
+  });
+
+  document.getElementById("exportTablePDF").addEventListener("click", () => {
+    html2canvas(dataTable).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jspdf.jsPDF();
+      pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
+      pdf.save("fileshare-tableau.pdf");
     });
   });
 </script>

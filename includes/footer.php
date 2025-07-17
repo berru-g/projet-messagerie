@@ -3,8 +3,7 @@
     <!-- Section Logo + Description -->
     <div class="footer-brand">
       <h3 class="app-name"><?= SITE_NAME ?></h3>
-      <p class="tagline">La plateforme qui synchronise automatiquement vos tarifs fournisseurs avec les mercuriales
-        professionnelles.</p>
+      <p class="tagline">Plateforme de partage et visualisation de fichiers CSV, Excel et Json. Export en graphique PDF ou PNG</p>
       <div class="stats">
         <div class="stat-item">
           <i class="fas fa-database"></i>
@@ -24,7 +23,7 @@
     <div class="footer-features">
       <h4>Fonctionnalités</h4>
       <ul>
-        <li><i class="fas fa-file-csv"></i><a href="../pages/gallery.php"> Csv to PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
+        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Csv to PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
         <li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>

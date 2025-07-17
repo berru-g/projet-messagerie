@@ -1,13 +1,40 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/functions.php'; 
+require_once __DIR__ . '/functions.php';
 
 ?><!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= SITE_NAME ?></title>
+    <title>FileShare – Partage et visualisation intelligente de fichiers</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description"
+        content="FileShare est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
+    <meta name="keywords"
+        content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="FileShare">
+
+    <!-- Open Graph pour Facebook / LinkedIn -->
+    <meta property="og:title" content="FileShare – Partage intelligent de fichiers et données">
+    <meta property="og:description"
+        content="Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
+    <meta property="og:image" content="https://example.com/assets/share-image.png">
+    <meta property="og:url" content="https://example.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FileShare – Partage et visualisation de fichiers CSV/Excel">
+    <meta name="twitter:description"
+        content="Transformez vos données avec FileShare. Partagez, visualisez et exportez tous types de fichiers.">
+    <meta name="twitter:image" content="https://example.com/assets/share-image.png">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://example.com">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
@@ -16,8 +43,61 @@ require_once __DIR__ . '/functions.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-    
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FileShare",
+  "url": "https://example.com",
+  "description": "Plateforme de partage et de visualisation de fichiers CSV, JSON, Excel, avec export PDF/PNG et messagerie collaborative.",
+  "applicationCategory": "BusinessApplication",
+  "browserRequirements": "Requires HTML5",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment utiliser FileShare pour transformer un fichier CSV en graphique PDF ?",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "text": "Connectez-vous à votre compte FileShare."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Importez votre fichier CSV ou Excel via l'interface drag & drop."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Sélectionnez les colonnes à visualiser et le type de graphique."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Exportez le graphique en PDF ou PNG."
+    }
+  ],
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Module Data Visualizer"
+    }
+  ],
+  "totalTime": "PT1M",
+  "image": "https://example.com/assets/howto-preview.png"
+}
+</script>
+
 </head>
+
 <body>
     <header class="fixed-header">
         <div class="header-content">
@@ -27,15 +107,17 @@ require_once __DIR__ . '/functions.php';
                 </button>
                 <div class="dropdown-content">
                     <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i> <?= htmlspecialchars($user['username']) ?></a>
-                        <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de passe</a>
+                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i>
+                            <?= htmlspecialchars($user['username']) ?></a>
+                        <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de
+                            passe</a>
                         <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <h1><?= SITE_NAME ?></h1>
-            
+
             <div class="menu-dropdown">
                 <button class="menu-btn">
                     <i class="fas fa-bars"></i>
@@ -47,12 +129,13 @@ require_once __DIR__ . '/functions.php';
                         <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
                         <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
                         <!--<a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>-->
-                        <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data Visualizer</a>
-                        
+                        <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
+                            Visualizer</a>
+
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </header>
-    
+
     <main>
