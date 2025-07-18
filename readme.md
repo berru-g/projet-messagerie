@@ -1,7 +1,6 @@
 # Template PHP/MySQL 
-Système de messagerie avec authentification, posts et likes, partage de fichier ( csv, google sheet ou json ). 
+Système de messagerie avec authentification, posts et likes, partage de fichier ( csv, google sheet, json, png, jpg et pdf ). 
 **Objectif:** *mise à jour auto des prix d'une fiche technique puisquee pas d'[API](https://rnm.franceagrimer.fr/prix#), demander aux fournisseurs d'upload la maj, les pro récupère leurs fiches à jour dans le format demandé.*
- - 07/25 : V1.1 Développé par berru-g et deepseek
 
 
 
@@ -31,9 +30,9 @@ https://github.com/user-attachments/assets/4ed5bbe0-c909-4e63-99dc-87d46c09cdd2
 ## ✨ Fonctionnalités
 
 - ✅ **Authentification sécurisée** (inscription/connexion)
-- 📝 **Création de posts** avec markdown de base
+- 📝 **Création de posts** avec PNG, JPG ou PDF
 - ❤️ **Système de likes** interactif
-- 🔒 **Gestion de profil** (changement mot de passe)
+- 🔒 **Gestion de profil** (Dashboard)
 - 🗂️ **Partage de fichier** privée ou public (.csv .json ou excel)
 - 📱 **Design responsive** et moderne
 - 🎨 **Personnalisation facile** via variables CSS
@@ -60,4 +59,4 @@ MIT License - Libre d'utilisation et modification
 
 Les Améliorations sont les bienvenues ! Ouvrez une issue pour discuter. Merci du soutient. 
 
-V1.1 Développé avec ❤️ par berru-g et deepseek 2025
+- 18/25 : V1.2 Développé avec ❤️ par berru-g et deepseek 2025

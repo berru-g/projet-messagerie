@@ -39,6 +39,22 @@ $stats['likes_count'] = $pdo->query("SELECT COUNT(*) FROM likes")->fetchColumn()
 // Top utilisateurs
 $stats['top_uploaders'] = $pdo->query("SELECT u.username, COUNT(f.id) as uploads FROM users u JOIN user_files f ON u.id = f.user_id GROUP BY u.id ORDER BY uploads DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 $stats['top_commented'] = $pdo->query("SELECT u.username, COUNT(c.id) as comments FROM users u JOIN comments c ON u.id = c.user_id GROUP BY u.id ORDER BY comments DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+// stat img
+$stats['image_extensions'] = $pdo->query("
+    SELECT 
+        CASE 
+            WHEN file_type = 'jpg' THEN 'JPG'
+            WHEN file_type = 'pdf' THEN 'PDF'
+            WHEN file_type = 'png' THEN 'PNG'
+            WHEN file_type = 'mp4' THEN 'MP4'
+            ELSE 'Autres'
+        END AS extension,
+        COUNT(*) as count
+    FROM user_files_img
+    GROUP BY extension
+")->fetchAll(PDO::FETCH_ASSOC);
+
+
 
 require_once '../includes/header.php';
 ?>
@@ -62,6 +78,16 @@ require_once '../includes/header.php';
         </div>
 
         <div class="stat-card">
+            <h3><i class="fas fa-image"></i> Types d'images</h3>
+            <canvas id="imagesChart" height="100"></canvas>
+            <ul>
+                <?php foreach ($stats['image_extensions'] as $ext): ?>
+                    <li><?= htmlspecialchars($ext['extension']) ?> : <?= $ext['count'] ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+        <div class="stat-card">
             <h3><i class="fas fa-comments"></i> Interactions</h3>
             <canvas id="interactionsChart" height="100"></canvas>
             <p>Commentaires : <?= $stats['comments_count'] ?></p>
@@ -76,6 +102,7 @@ require_once '../includes/header.php';
                 <?php endforeach; ?>
             </ul>
         </div>
+
 
         <div class="stat-card">
             <h3><i class="fas fa-fire"></i> Plus actifs (posts)</h3>
@@ -108,13 +135,13 @@ require_once '../includes/header.php';
         data: {
             labels: [
                 <?php foreach ($stats['file_types'] as $type): ?>
-                    '<?= ucfirst($type['file_type']) ?>',
+                        '<?= ucfirst($type['file_type']) ?>',
                 <?php endforeach; ?>
             ],
             datasets: [{
                 data: [
                     <?php foreach ($stats['file_types'] as $type): ?>
-                        <?= $type['count'] ?>,
+                            <?= $type['count'] ?>,
                     <?php endforeach; ?>
                 ],
                 backgroundColor: ['#ffd97d', '#2575fc', '#60d394', '#ee6055']
@@ -143,50 +170,81 @@ require_once '../includes/header.php';
             }
         }
     });
+    
+    const imagesChart = new Chart(document.getElementById('imagesChart'), {
+        type: 'doughnut',
+        data: {
+            labels: [
+                <?php foreach ($stats['image_extensions'] as $ext): ?>
+                    '<?= $ext['extension'] ?>',
+                <?php endforeach; ?>
+            ],
+            datasets: [{
+                data: [
+                    <?php foreach ($stats['image_extensions'] as $ext): ?>
+                        <?= $ext['count'] ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: ['#ffd97d', '#ab9ff2', '#60d394', '#ff7b89']
+            }]
+        },
+        options: {
+            animation: { duration: 1000 }
+        }
+    });
+
 </script>
 
 <style>
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-.stat-card {
-    background: #f5f7fa;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-.stat-card:hover {
-    transform: translateY(-5px);
-}
-.stat-card h3 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.stat-card p, .stat-card li {
-    margin: 0.4rem 0;
-    color: #555;
-    font-size: 0.95rem;
-}
-.stat-card ul {
-    padding-left: 1.2rem;
-    margin-top: 0.5rem;
-}
-canvas {
-    margin-bottom: 1rem;
-}
-@media (max-width: 600px) {
     .stats-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
     }
-}
+
+    .stat-card {
+        background: #f5f7fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card h3 {
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-card p,
+    .stat-card li {
+        margin: 0.4rem 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .stat-card ul {
+        padding-left: 1.2rem;
+        margin-top: 0.5rem;
+    }
+
+    canvas {
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 600px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <?php require_once '../includes/footer.php'; ?>

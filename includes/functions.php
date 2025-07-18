@@ -141,6 +141,7 @@ function uploadFile($file) {
     
     return ['error' => 'Erreur lors du téléchargement'];
 }
+
 // ???
 function displayExcelFile($filePath) {
     require_once '../vendor/autoload.php';
