@@ -46,3 +46,21 @@ ALTER TABLE user_files
 ADD COLUMN is_public BOOLEAN DEFAULT FALSE,
 ADD COLUMN share_token VARCHAR(32) NULL;
 
+
+-- table des uploads img
+CREATE TABLE user_files_img (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    file_type ENUM('png', 'jpg', 'pdf', 'mp4') NOT NULL,
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Ajouter à ta table comments pour permettre les réponses
+ALTER TABLE comments
+ADD COLUMN parent_id INT NULL,
+ADD COLUMN file_path VARCHAR(255) NULL,
+ADD COLUMN file_type ENUM('image', 'video') NULL,
+ADD FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE;

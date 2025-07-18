@@ -1,6 +1,6 @@
 <?php
-require_once  '../includes/config.php';
-require_once  '../includes/functions.php';
+require_once '../includes/config.php';
+require_once '../includes/functions.php';
 
 if (!isLoggedIn()) {
     header("Location: " . BASE_URL . "/pages/login.php");
@@ -8,13 +8,27 @@ if (!isLoggedIn()) {
 }
 
 $user = getUserById($_SESSION['user_id']);
-$comments = getAllComments();
+//$comments = getAllComments();
+// pour afficher le com sous un post ciblé ? 2h pour trouver ce bug gael t'abuse (ouai je me parle tout seul putain je suis fou ça y'est. ..)
+$comments = getParentComments();
+
 
 // Traitement du formulaire de commentaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment'])) {
     $content = trim($_POST['content']);
-    if (!empty($content)) {
-        addComment($_SESSION['user_id'], $content);
+    $file_path = null;
+    $file_type = null;
+
+    if (!empty($_FILES['file']['name'])) {
+        $upload = uploadFile($_FILES['file']);
+        if (!isset($upload['error'])) {
+            $file_path = $upload['path'];
+            $file_type = $upload['type'];
+        }
+    }
+
+    if (!empty($content) || $file_path) {
+        addComment($_SESSION['user_id'], $content, null, $file_path, $file_type);
         header("Location: " . BASE_URL);
         exit;
     }
@@ -28,41 +42,114 @@ if (isset($_GET['like'])) {
     exit;
 }
 
-require_once  '../includes/header.php';
+// Traitement du formulaire de réponse sous un post
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_POST['parent_id'])) {
+    $content = trim($_POST['content']);
+    $file_path = null;
+    $file_type = null;
+
+    if (!empty($_FILES['file']['name'])) {
+        $upload = uploadFile($_FILES['file']);
+        if (!isset($upload['error'])) {
+            $file_path = $upload['path'];
+            $file_type = $upload['type'];
+        }
+    }
+
+    if (!empty($content) || $file_path) {
+        $parent_id = intval($_POST['parent_id']);
+        addComment($_SESSION['user_id'], $content, $parent_id, $file_path, $file_type);
+        header("Location: " . BASE_URL);
+        exit;
+    }
+}
+
+
+require_once '../includes/header.php';
 ?>
 
 <div class="container">
     <div class="comment-form">
         <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
-        <form method="POST">
-            <textarea name="content" placeholder="Quoi de neuf ?" required></textarea>
-            <button type="submit" name="comment">Publier</button>
+        <form method="POST" enctype="multipart/form-data" class="reply-form">
+            <textarea name="content" placeholder="Exprimez-vous..."></textarea>
+
+            <label for="file-main" class="file-label">
+                <i class="fas fa-file-upload"></i> Parcourir
+            </label>
+            <input type="file" name="file" id="file-main" accept="image/*,video/*">
+
+            <button type="submit" name="comment" class="btn-reply">
+                <i class="fas fa-paper-plane"></i> Poster
+            </button>
         </form>
     </div>
 
-    <div class="comments-section">
-        <h2>Messagerie</h2>
-        <?php if (empty($comments)): ?>
-            <p>Aucun commentaire pour le moment.</p>
-        <?php else: ?>
-            <?php foreach ($comments as $comment): ?>
-                <div class="comment">
-                    <div class="comment-header">
-                        <span class="username"><?= htmlspecialchars($comment['username']) ?></span>
-                        <span class="date"><?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?></span>
-                    </div>
-                    <div class="comment-content">
-                        <?= nl2br(htmlspecialchars($comment['content'])) ?>
-                    </div>
-                    <div class="comment-actions">
-                        <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= hasLiked($_SESSION['user_id'], $comment['id']) ? 'liked' : '' ?>">
-                            <i class="fas fa-heart"></i> <?= $comment['like_count'] ?>
-                        </a>
-                    </div>
+    <div class="comments">
+        <h2>Tous les posts</h2>
+        <?php foreach ($comments as $comment): ?>
+            <div class="comment">
+                <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
+
+                <?php if (!empty($comment['content'])): ?>
+                    <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($comment['file_path'])): ?>
+                    <?php if ($comment['file_type'] === 'image'): ?>
+                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;">
+                    <?php elseif ($comment['file_type'] === 'video'): ?>
+                        <video controls style="max-width:300px;">
+                            <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
+                            Votre navigateur ne supporte pas la vidéo.
+                        </video>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <div class="comment-actions">
+                    <a href="?like=<?= $comment['id'] ?>">❤️ <?= $comment['like_count'] ?></a>
+                </div>
+            </div>
+
+            <!-- Formulaire de réponse -->
+            <form method="POST" enctype="multipart/form-data" class="reply-form">
+                <input type="hidden" name="parent_id" value="<?= $comment['id'] ?>">
+                <textarea name="content" placeholder="Répondre à ce post..."></textarea>
+
+                <label for="file-<?= $comment['id'] ?>" class="file-label">
+                    <i class="fas fa-file-upload"></i> Parcourir
+                </label>
+                <input type="file" name="file" id="file-<?= $comment['id'] ?>" accept="image/*,video/*">
+
+                <button type="submit" name="reply" class="btn-reply">
+                    <i class="fas fa-reply"></i> Répondre
+                </button>
+            </form>
+
+            <!-- Affichage des réponses -->
+            <?php foreach (getReplies($comment['id']) as $reply): ?>
+                <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
+                    <p><strong><?= htmlspecialchars($reply['username']) ?></strong> a répondu :</p>
+
+                    <?php if (!empty($reply['content'])): ?>
+                        <p><?= nl2br(htmlspecialchars($reply['content'])) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($reply['file_path'])): ?>
+                        <?php if ($reply['file_type'] === 'image'): ?>
+                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:200px;" alt="image réponse">
+                        <?php elseif ($reply['file_type'] === 'video'): ?>
+                            <video controls style="max-width:200px;">
+                                <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
+                            </video>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
-        <?php endif; ?>
+
+        <?php endforeach; ?>
     </div>
 </div>
 
-<?php require_once  '../includes/footer.php'; ?>
+
+<?php require_once '../includes/footer.php'; ?>

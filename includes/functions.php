@@ -14,12 +14,13 @@ function getUserById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fonction pour ajouter un commentaire
-function addComment($user_id, $content) {
+// Fonction pour ajouter un commentaire ( cohérence avec la table gael putain!!!!)
+function addComment($user_id, $content, $parent_id = null, $file_path = null, $file_type = null) {
     global $pdo;
-    $stmt = $pdo->prepare("INSERT INTO comments (user_id, content, created_at) VALUES (?, ?, NOW())");
-    return $stmt->execute([$user_id, $content]);
+    $stmt = $pdo->prepare("INSERT INTO comments (user_id, content, parent_id, file_path, file_type, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+    return $stmt->execute([$user_id, $content, $parent_id, $file_path, $file_type]);
 }
+
 
 // Fonction pour liker un commentaire
 function likeComment($user_id, $comment_id) {
@@ -87,6 +88,60 @@ function displayCsvFile($filePath) {
     return $html;
 }
 
+// Fonction pour obtenir les commentaires parents (principaux)
+function getParentComments() {
+    global $pdo;
+    $stmt = $pdo->query("
+        SELECT c.*, u.username, COUNT(l.id) as like_count 
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN likes l ON c.id = l.comment_id
+        WHERE c.parent_id IS NULL
+        GROUP BY c.id
+        ORDER BY c.created_at DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Fonction pour obtenir les réponses à un commentaire
+function getReplies($comment_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT c.*, u.username, COUNT(l.id) as like_count 
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN likes l ON c.id = l.comment_id
+        WHERE c.parent_id = ?
+        GROUP BY c.id
+        ORDER BY c.created_at ASC
+    ");
+    $stmt->execute([$comment_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Fonction pour uploader un fichier
+function uploadFile($file) {
+    $uploadDir = '../uploads/';
+    $allowedTypes = ['image/jpeg', 'image/png', 'video/mp4'];
+    
+    if (!in_array($file['type'], $allowedTypes)) {
+        return ['error' => 'Type de fichier non autorisé'];
+    }
+    
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $fileName = uniqid() . '.' . $extension;
+    $filePath = $uploadDir . $fileName;
+    
+    if (move_uploaded_file($file['tmp_name'], $filePath)) {
+        return [
+            'path' => 'uploads/' . $fileName, // ← chemin relatif
+            'type' => strpos($file['type'], 'image') !== false ? 'image' : 'video'
+        ];
+    }
+    
+    return ['error' => 'Erreur lors du téléchargement'];
+}
+// ???
 function displayExcelFile($filePath) {
     require_once '../vendor/autoload.php';
     $html = '<table class="table table-bordered table-striped">';

@@ -17,7 +17,6 @@
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
 /* Base Styles */
 * {
   margin: 0;
@@ -265,13 +264,10 @@ h3 {
   margin-right: 8px;
 }
 
-/* Modern Comments Section */
 .comments-section {
-  background: var(--secondary-color);
+  background: transparent;
   padding: 25px;
-  border-radius: 16px;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  gap: 20px;
 }
 
 .comments-section h2 {
@@ -281,17 +277,21 @@ h3 {
 }
 
 .comment {
-  padding: 20px 0;
+  margin-top: 20px;
+  padding: 20px 20px;
+  background-color: #fff;
   border-bottom: 1px solid var(--border-color);
+  border-radius: 12px;
   transition: var(--transition);
 }
 
 .comment:hover {
-  background-color: rgba(var(--primary-color), 0.03);
+  background-color: rgba(var(--primary-color), 0.7);
 }
 
 .comment:last-child {
   border-bottom: none;
+  border-top:1px dashed rgba(155, 156, 156);
 }
 
 .comment-header {
@@ -300,6 +300,254 @@ h3 {
   margin-bottom: 12px;
   align-items: center;
 }
+
+
+/* Styles pour les médias uploadés */
+.comment-media {
+  margin: 15px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  max-width: 100%;
+}
+
+.comment-media img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.comment-media img:hover {
+  transform: scale(1.02);
+}
+
+.comment-media video {
+  display: block;
+  max-width: 100%;
+  border-radius: 12px;
+  background: #000;
+}
+
+/* Styles pour les réponses aux commentaires */
+/* STYLE POUR LE FORMULAIRE DE RÉPONSE */
+.reply-form {
+    margin-left: 20px;
+    margin-top: 10px;
+    padding: 10px;
+    border-left: 2px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.reply-form textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.reply-form .file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-right: 10px;
+    transition: background-color 0.2s;
+}
+
+.reply-form .file-label:hover {
+    background-color: #ddd;
+}
+
+.reply-form input[type="file"] {
+    display: none;
+}
+
+.reply-form .btn-reply {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s;
+}
+
+.reply-form .btn-reply:hover {
+    background-color: #0056b3;
+}
+
+/*
+.replies {
+  margin-top: 20px;
+  padding-left: 20px;
+  border-left: 2px solid var(--primary-color);
+}
+
+.reply {
+  padding: 15px;
+  margin-bottom: 15px;
+  background: rgba(var(--primary-color), 0.05);
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.reply:hover {
+  background: rgba(var(--primary-color), 0.1);
+}
+
+.reply .comment-header {
+  margin-bottom: 8px;
+}
+
+.reply .username::before {
+  background: var(--accent-color);
+}
+
+
+.reply-form {
+  margin-top: 15px;
+  padding: 15px;
+  background: var(--input-background);
+  border-radius: 12px;
+}
+
+.reply-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
+  background: var(--secondary-color);
+}
+
+.reply-form button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}*/
+
+/* Styles pour l'upload de fichiers */
+.file-upload {
+  margin-bottom: 15px;
+}
+
+.file-upload label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--titre-color);
+}
+
+.file-upload input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  background: var(--input-background);
+}
+
+.file-preview {
+  margin-top: 10px;
+  display: none;
+}
+
+.file-preview img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+/* Bouton de réponse */
+.reply-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--titre-color);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.reply-btn:hover {
+  transform: translateY(-2px);
+  
+}
+
+/* Responsive spécifique pour les médias */
+@media (max-width: 768px) {
+  .replies {
+    padding-left: 10px;
+  }
+  
+  .comment-media img, 
+  .comment-media video {
+    max-width: 100%;
+  }
+  
+  .reply {
+    padding: 10px;
+  }
+  
+  .reply-form {
+    padding: 10px;
+  }
+}
+
+/* Animation pour les nouveaux commentaires */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.new-comment {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Style pour les commentaires épinglés */
+.comment.pinned {
+  border-left: 4px solid var(--accent-color);
+  background: rgba(var(--accent-color), 0.05);
+}
+
+.pin-indicator {
+  color: var(--accent-color);
+  margin-left: 8px;
+  font-size: 0.8em;
+}
+
 
 .username {
   font-weight: 600;
@@ -339,6 +587,7 @@ h3 {
 .like-btn {
   background: none;
   border: none;
+  text-decoration: none;
   color: var(--titre-color);
   cursor: pointer;
   font-size: 0.9rem;
@@ -350,7 +599,7 @@ h3 {
 }
 
 .like-btn:hover {
-  background-color: rgba(var(--error-color), 0.1);
+  transform: translateY(-2px);
 }
 
 .like-btn.liked {
@@ -362,6 +611,10 @@ h3 {
   margin-right: 6px;
   font-size: 1.1rem;
 }
+.like-btn:hover {
+  transform: translateY(-2px);
+}
+
 /* cadenas pour upload public*/
 .lock-toggle {
     cursor: pointer;
@@ -918,6 +1171,3 @@ tbody td {
   border-bottom: 1px solid grey;
   padding: 5px 5px;
 }
-
-/* visualisation des données via chart */
-
