@@ -40,6 +40,13 @@ function likeComment($user_id, $comment_id) {
         return $stmt->execute([$user_id, $comment_id]);
     }
 }
+// pour voir si user à liké ou non le post
+function hasUserLiked($commentId, $userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM likes WHERE comment_id = ? AND user_id = ?");
+    $stmt->execute([$commentId, $userId]);
+    return $stmt->fetchColumn() > 0;
+}
 
 // Fonction pour obtenir tous les commentaires avec leurs likes
 function getAllComments() {
@@ -274,5 +281,21 @@ function generatePriceTemplate() {
         ]
     ];
 }
+
+//search to view_chart
+function getFileById($id) {
+  global $pdo;
+  $stmt = $pdo->prepare("SELECT * FROM user_files WHERE id = ?");
+  $stmt->execute([$id]);
+  return $stmt->fetch();
+}
+// verif que le fichier est public ( mais mode private bug/ a revoir)
+function canAccessFile($user_id, $file_id) {
+  global $pdo;
+  $stmt = $pdo->prepare("SELECT id FROM user_files WHERE id = ? AND (user_id = ? OR is_public = TRUE)");
+  $stmt->execute([$file_id, $user_id]);
+  return $stmt->fetch() !== false;
+}
+
 ?>
 

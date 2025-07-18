@@ -58,7 +58,7 @@ CREATE TABLE user_files_img (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Ajouter à ta table comments pour permettre les réponses
+-- Pour permettre les réponses
 ALTER TABLE comments
 ADD COLUMN parent_id INT NULL,
 ADD COLUMN file_path VARCHAR(255) NULL,

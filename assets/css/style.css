@@ -170,7 +170,9 @@ h3 {
 .profile-dropdown .dropdown-content {
   left: 0;
 }
-
+.dropdown.open .dropdown-content {
+  display: block;
+}
 .dropdown-content a {
   color: var(--text-color);
   padding: 12px 20px;
@@ -192,13 +194,27 @@ h3 {
   width: 20px;
   text-align: center;
 }
-
+/* Par défaut, le dropdown est masqué */
+.profile-dropdown .dropdown-content,
+.menu-dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    z-index: 1000;
+    right: 0;
+}
+/* au click mobile */
+.profile-dropdown.open .dropdown-content,
+.menu-dropdown.open .dropdown-content {
+    display: block;
+}
+/* à l'hover sur pc */
 .profile-dropdown:hover .dropdown-content,
 .menu-dropdown:hover .dropdown-content {
   display: block;
 }
 
-/* Modern Container */
 .container {
   max-width: 1000px;
   margin: 30px auto;
@@ -286,7 +302,7 @@ h3 {
 }
 
 .comment:hover {
-  background-color: rgba(var(--primary-color), 0.7);
+  transform: translateY(-2px);
 }
 
 .comment:last-child {
@@ -331,22 +347,18 @@ h3 {
 }
 
 /* Styles pour les réponses aux commentaires */
-/* STYLE POUR LE FORMULAIRE DE RÉPONSE */
 .reply-form {
-    margin-left: 20px;
     margin-top: 10px;
     padding: 10px;
-    border-left: 2px solid #ddd;
-    background-color: #f9f9f9;
+    background-color: #fff;
     border-radius: 8px;
 }
 
 .reply-form textarea {
     width: 100%;
-    min-height: 60px;
+    min-height: 30px;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     resize: vertical;
     font-family: inherit;
     font-size: 14px;
@@ -369,6 +381,7 @@ h3 {
 
 .reply-form .file-label:hover {
     background-color: #ddd;
+    transform: translateY(-2px);
 }
 
 .reply-form input[type="file"] {
@@ -584,36 +597,29 @@ h3 {
   justify-content: flex-end;
 }
 
-.like-btn {
+.like-btn,
+.like-btn i {
   background: none;
   border: none;
-  text-decoration: none;
   color: var(--titre-color);
   cursor: pointer;
   font-size: 0.9rem;
-  transition: var(--transition);
+  transition: color 0.3s ease;
   display: flex;
   align-items: center;
   padding: 6px 12px;
-  border-radius: 20px;
+  text-decoration: none;
 }
 
 .like-btn:hover {
-  transform: translateY(-2px);
+  opacity: 0.8;
 }
 
 .like-btn.liked {
   color: var(--error-color);
-  background-color: rgba(var(--error-color), 0.1);
 }
 
-.like-btn i {
-  margin-right: 6px;
-  font-size: 1.1rem;
-}
-.like-btn:hover {
-  transform: translateY(-2px);
-}
+
 
 /* cadenas pour upload public*/
 .lock-toggle {
@@ -1170,4 +1176,10 @@ thead th {
 tbody td {
   border-bottom: 1px solid grey;
   padding: 5px 5px;
+}
+.column-selectors {
+  max-width: 800px;
+}
+.column-selectors select {
+  min-width: 200px;
 }

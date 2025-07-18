@@ -6,45 +6,45 @@ require_once __DIR__ . '/functions.php';
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= SITE_NAME ?></title>
-    <title>FileShare – Partage et visualisation intelligente de fichiers</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <meta name="description"
-        content="FileShare est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
-    <meta name="keywords"
-        content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="FileShare">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= SITE_NAME ?></title>
+  <title>FileShare – Partage et visualisation intelligente de fichiers</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta name="description"
+    content="FileShare est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
+  <meta name="keywords"
+    content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="FileShare">
 
-    <!-- Open Graph pour Facebook / LinkedIn -->
-    <meta property="og:title" content="FileShare – Partage intelligent de fichiers et données">
-    <meta property="og:description"
-        content="Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
-    <meta property="og:image" content="https://example.com/assets/share-image.png">
-    <meta property="og:url" content="https://example.com">
-    <meta property="og:type" content="website">
+  <!-- Open Graph pour Facebook / LinkedIn -->
+  <meta property="og:title" content="FileShare – Partage intelligent de fichiers et données">
+  <meta property="og:description"
+    content="Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
+  <meta property="og:image" content="https://example.com/assets/share-image.png">
+  <meta property="og:url" content="https://example.com">
+  <meta property="og:type" content="website">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FileShare – Partage et visualisation de fichiers CSV/Excel">
-    <meta name="twitter:description"
-        content="Transformez vos données avec FileShare. Partagez, visualisez et exportez tous types de fichiers.">
-    <meta name="twitter:image" content="https://example.com/assets/share-image.png">
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://example.com">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FileShare – Partage et visualisation de fichiers CSV/Excel">
+  <meta name="twitter:description"
+    content="Transformez vos données avec FileShare. Partagez, visualisez et exportez tous types de fichiers.">
+  <meta name="twitter:image" content="https://example.com/assets/share-image.png">
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://example.com">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
-    <script type="application/ld+json">
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
@@ -62,7 +62,7 @@ require_once __DIR__ . '/functions.php';
 }
 </script>
 
-    <script type="application/ld+json">
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -99,43 +99,65 @@ require_once __DIR__ . '/functions.php';
 </head>
 
 <body>
-    <header class="fixed-header">
-        <div class="header-content">
-            <div class="profile-dropdown">
-                <button class="profile-btn">
-                    <i class="fas fa-user-circle"></i>
-                </button>
-                <div class="dropdown-content">
-                    <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i>
-                            <?= htmlspecialchars($user['username']) ?></a>
-                        <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de
-                            passe</a>
-                        <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <h1><?= SITE_NAME ?></h1>
-
-            <div class="menu-dropdown">
-                <button class="menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="<?= BASE_URL ?>"><i class="fa-solid fa-comments"></i> Comment</a>
-                    <?php if (isLoggedIn()): ?>
-                        <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Public file</a>
-                        <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
-                        <a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
-                        <!--<a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>-->
-                        <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
-                            Visualizer</a>
-
-                    <?php endif; ?>
-                </div>
-            </div>
+  <header class="fixed-header">
+    <div class="header-content">
+      <div class="profile-dropdown">
+        <button class="profile-btn">
+          <i class="fas fa-user-circle"></i>
+        </button>
+        <div class="dropdown-content">
+          <?php if (isLoggedIn()): ?>
+            <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i>
+              <?= htmlspecialchars($user['username']) ?></a>
+            <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de
+              passe</a>
+            <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+          <?php endif; ?>
         </div>
-    </header>
+      </div>
 
-    <main>
+      <h1><?= SITE_NAME ?></h1>
+
+      <div class="menu-dropdown">
+        <button class="menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="<?= BASE_URL ?>"><i class="fa-solid fa-comments"></i> Comment</a>
+          <?php if (isLoggedIn()): ?>
+            <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Public file</a>
+            <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>
+            <!--<a href="<?= BASE_URL ?>/pages/facture.php"><i class="fa-solid fa-receipt"></i> Create Invoice</a>
+                        <a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>-->
+            <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
+              Visualizer</a>
+
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Gestion du clic pour les deux dropdowns
+        document.querySelectorAll(".profile-btn, .menu-btn").forEach(btn => {
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation(); // évite propagation du clic
+            const parent = btn.closest(".profile-dropdown, .menu-dropdown");
+            parent.classList.toggle("open");
+          });
+        });
+
+        // Ferme le menu si clic en dehors
+        document.addEventListener("click", function (e) {
+          document.querySelectorAll(".profile-dropdown, .menu-dropdown").forEach(dropdown => {
+            if (!dropdown.contains(e.target)) {
+              dropdown.classList.remove("open");
+            }
+          });
+        });
+      });
+    </script>
+
+  </header>
+
+  <main>

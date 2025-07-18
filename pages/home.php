@@ -9,9 +9,8 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 //$comments = getAllComments();
-// pour afficher le com sous un post ciblé ? 2h pour trouver ce bug gael t'abuse (ouai je me parle tout seul putain je suis fou ça y'est. ..)
-$comments = getParentComments();
-
+$comments = getParentComments(); // pour afficher le com sous un post ciblé ? 1h pour trouver ce bug gael vas te coucher (ouai je me parle tout seul putain je suis fou ça y'est. ..)
+//$userLiked = hasUserLiked($comment['id'], $user['id']);  //bug ici
 
 // Traitement du formulaire de commentaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment'])) {
@@ -72,7 +71,7 @@ require_once '../includes/header.php';
     <div class="comment-form">
         <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
         <form method="POST" enctype="multipart/form-data" class="reply-form">
-            <textarea name="content" placeholder="Exprimez-vous..."></textarea>
+            <textarea name="content" placeholder="Exprimez-vous "></textarea>
 
             <label for="file-main" class="file-label">
                 <i class="fas fa-file-upload"></i> Parcourir
@@ -86,7 +85,7 @@ require_once '../includes/header.php';
     </div>
 
     <div class="comments">
-        <h2>Tous les posts</h2>
+        <h2>Posts commun</h2>
         <?php foreach ($comments as $comment): ?>
             <div class="comment">
                 <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
@@ -107,7 +106,11 @@ require_once '../includes/header.php';
                 <?php endif; ?>
 
                 <div class="comment-actions">
-                    <a href="?like=<?= $comment['id'] ?>">❤️ <?= $comment['like_count'] ?></a>
+
+                    <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= $userLiked ? 'liked' : 'not-liked' ?>">
+                        <i class="fas fa-heart"></i> <?= $comment['like_count'] ?>
+                    </a>
+
                 </div>
             </div>
 

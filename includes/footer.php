@@ -1,9 +1,20 @@
 <footer class="data-footer">
   <div class="footer-grid">
-    <!-- Section Logo + Description -->
+    <!--     
+  FileShare
+    Visualise et partage tes données — sans compte, sans email, sans pub.
+
+    🔍 Lis les fichiers CSV, Excel, JSON
+
+    📊 Transforme-les en graphiques propres
+
+    📁 Exporte en PDF ou PNG
+
+    🕶️ Utilisation anonyme, sans traçage
+     -->
     <div class="footer-brand">
       <h3 class="app-name"><?= SITE_NAME ?></h3>
-      <p class="tagline">Plateforme de partage et visualisation de fichiers CSV, Excel et Json. Export en graphique PDF ou PNG</p>
+      <p class="tagline">Plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key.</p>
       <div class="stats">
         <div class="stat-item">
           <i class="fas fa-database"></i>
@@ -27,9 +38,9 @@
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
         <li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>
-        <li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
+        <!--<li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
         <li><i class="fas fa-sync-alt"></i> Mises à jour automatiques des prix</li>
-        <!--<li><i class="fas fa-chart-line"></i> Analytics des prix</li>-->
+        <li><i class="fas fa-chart-line"></i> Analytics des prix</li>-->
         <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
       </ul>
     </div>

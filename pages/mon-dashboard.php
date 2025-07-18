@@ -39,6 +39,7 @@ $stats['likes_count'] = $pdo->query("SELECT COUNT(*) FROM likes")->fetchColumn()
 // Top utilisateurs
 $stats['top_uploaders'] = $pdo->query("SELECT u.username, COUNT(f.id) as uploads FROM users u JOIN user_files f ON u.id = f.user_id GROUP BY u.id ORDER BY uploads DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 $stats['top_commented'] = $pdo->query("SELECT u.username, COUNT(c.id) as comments FROM users u JOIN comments c ON u.id = c.user_id GROUP BY u.id ORDER BY comments DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+
 // stat img
 $stats['image_extensions'] = $pdo->query("
     SELECT 
