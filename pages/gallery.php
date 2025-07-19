@@ -181,10 +181,11 @@ require_once '../includes/header.php';
                         <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
                             class="btn btn-sm btn-success">
                             <i class="fas fa-download"></i>
-                        </a>
-                        <a href="#" class="btn btn-sm btn-danger delete-file" data-file-id="<?= $file['id'] ?>">
-                            <i class="fas fa-trash"></i>
-                        </a>
+                
+                                <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
+                                    <i class="fas fa-chart-line"></i>
+                                </a>
+                
                         <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
                             data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
                             <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>

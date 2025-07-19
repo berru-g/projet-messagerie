@@ -289,7 +289,7 @@ function getFileById($id) {
   $stmt->execute([$id]);
   return $stmt->fetch();
 }
-// verif que le fichier est public ( mais mode private bug/ a revoir)
+// verif que le fichier est public ( 19/07  mode private bug à l'upload/ a revoir)
 function canAccessFile($user_id, $file_id) {
   global $pdo;
   $stmt = $pdo->prepare("SELECT id FROM user_files WHERE id = ? AND (user_id = ? OR is_public = TRUE)");

@@ -24,7 +24,7 @@
         <div class="stat-item">
           <i class="fas fa-users"></i>
           <span><?php echo number_format($pdo->query("SELECT COUNT(id) FROM users")->fetchColumn()); ?>
-            professionnels</span>
+            Data Enthusiasts</span>
         </div>
 
       </div>
@@ -34,7 +34,8 @@
     <div class="footer-features">
       <h4>Fonctionnalités</h4>
       <ul>
-        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Csv to PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
+        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
+        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to Chart</a></li>
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
         <li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>

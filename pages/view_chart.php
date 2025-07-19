@@ -18,12 +18,14 @@ if (!$file || !canAccessFile($_SESSION['user_id'], $file_id)) {
 $file_path = '../uploads/' . $file['file_path'];
 $file_ext = strtolower(pathinfo($file['file_name'], PATHINFO_EXTENSION));
 $user = getUserById($_SESSION['user_id']);
+//$owner_email = getUserById($owner_email['owner_email']);
 
 require_once '../includes/header.php';
 ?>
 
-<div class="data-visualizer-header">
-    <h1><i class="fas fa-chart-line"></i> Visualisation Graphique</h1>
+<div class="container">
+    <h3><i class="fas fa-chart-line"></i> Visualisation Graphique</h3>
+    <!--<p>Propriétaire: <?= htmlspecialchars($file['owner_email']) ?></p>-->
     <p>Data : <?= htmlspecialchars($file['file_name']) ?></p>
 </div>
 
@@ -57,21 +59,30 @@ require_once '../includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <script>
-    // Même code JS que data-to-chart.php mais avec chargement automatique
     document.addEventListener('DOMContentLoaded', function () {
-        const fileExt = "<?= $file_ext ?>";
-        const filePath = "<?= $file_path ?>";
+        const chartContainer = document.getElementById("myChart");
+        const columnSelector = document.getElementById("columnSelector");
+        const chartTypeSelect = document.getElementById("chartType");
+        const dataTable = document.getElementById("dataTable");
 
-        // Fonction pour charger le fichier via AJAX
+        let chart;
+        let currentRows = [];
+        let currentLabel = "";
+        let currentValue = "";
+
+        // Charger le fichier selon son type
         function loadFile() {
+            const fileExt = "<?= $file_ext ?>";
+            const filePath = "<?= $file_path ?>";
+
             if (fileExt === 'csv') {
                 fetch(filePath)
                     .then(response => response.text())
-                    .then(parseCSV);
+                    .then(csv => parseCSV(csv));
             } else if (fileExt === 'json') {
                 fetch(filePath)
                     .then(response => response.json())
-                    .then(data => parseJSON(JSON.stringify(data)));
+                    .then(data => parseJSON(data));
             } else if (fileExt === 'xlsx' || fileExt === 'xls') {
                 fetch(filePath)
                     .then(response => response.arrayBuffer())
@@ -84,56 +95,8 @@ require_once '../includes/header.php';
             }
         }
 
-        // Initialiser le graphique
-        loadFile();
-
-        // ... (le reste du code JavaScript de data-to-chart.php)
-        const chartContainer = document.getElementById("myChart");
-        const columnSelector = document.getElementById("columnSelector");
-        const chartTypeSelect = document.getElementById("chartType");
-        const dropZone = document.getElementById("dropZone");
-        const fileInput = document.getElementById("dataUpload");
-        const dataTable = document.getElementById("dataTable");
-
-        let chart;
-        let currentRows = [];
-        let currentLabel = "";
-        let currentValue = "";
-
-        dropZone.addEventListener("click", () => fileInput.click());
-        dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragover"); });
-        dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
-        dropZone.addEventListener("drop", e => {
-            e.preventDefault();
-            dropZone.classList.remove("dragover");
-            handleFile(e.dataTransfer.files[0]);
-        });
-        fileInput.addEventListener("change", e => handleFile(e.target.files[0]));
-
-        function handleFile(file) {
-            const reader = new FileReader();
-            const ext = file.name.split(".").pop().toLowerCase();
-
-            if (ext === "csv") {
-                reader.onload = e => parseCSV(e.target.result);
-                reader.readAsText(file);
-            } else if (["xls", "xlsx"].includes(ext)) {
-                reader.onload = e => {
-                    const wb = XLSX.read(e.target.result, { type: "binary" });
-                    const ws = wb.Sheets[wb.SheetNames[0]];
-                    const csv = XLSX.utils.sheet_to_csv(ws);
-                    parseCSV(csv);
-                };
-                reader.readAsBinaryString(file);
-            } else if (ext === "json") {
-                reader.onload = e => parseJSON(e.target.result);
-                reader.readAsText(file);
-            }
-        }
-
-        function parseJSON(jsonString) {
+        function parseJSON(data) {
             try {
-                const data = JSON.parse(jsonString);
                 if (!Array.isArray(data)) throw new Error("JSON doit être un tableau de lignes.");
 
                 const headers = Object.keys(data[0]);
@@ -142,10 +105,14 @@ require_once '../includes/header.php';
                 currentLabel = headers[0];
                 currentValue = headers[1];
 
-                columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
+                columnSelector.innerHTML = headers.map(h =>
+                    `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`
+                ).join("");
+
                 renderChart(currentLabel, currentValue, rows);
                 renderTable(rows);
-                /*columnSelector.addEventListener("change", updateFromCheckbox);*/
+
+                columnSelector.addEventListener("change", updateFromCheckbox);
             } catch (err) {
                 alert("Erreur lors de l'analyse du JSON : " + err.message);
             }
@@ -159,13 +126,16 @@ require_once '../includes/header.php';
             currentLabel = headers[0];
             currentValue = headers[1];
 
-            columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
+            columnSelector.innerHTML = headers.map(h =>
+                `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`
+            ).join("");
+
             renderChart(currentLabel, currentValue, rows);
             renderTable(rows);
             columnSelector.addEventListener("change", updateFromCheckbox);
         }
 
-        /*function updateFromCheckbox() {
+        function updateFromCheckbox() {
             const selected = [...columnSelector.querySelectorAll("input:checked")].map(el => el.value);
             if (selected.length >= 2) {
                 currentLabel = selected[0];
@@ -173,13 +143,15 @@ require_once '../includes/header.php';
                 renderChart(currentLabel, currentValue, currentRows);
                 renderTable(currentRows);
             }
-        }*/
+        }
 
         function renderChart(labelKey, valueKey, rows) {
             const labels = rows.map(r => r[labelKey]);
             const values = rows.map(r => parseFloat(r[valueKey]));
             const type = chartTypeSelect.value;
+
             if (chart) chart.destroy();
+
             chart = new Chart(chartContainer, {
                 type,
                 data: {
@@ -192,11 +164,34 @@ require_once '../includes/header.php';
                         borderWidth: 1
                     }]
                 },
+                // Dans renderChart(), modifie les options :
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { position: "top" },
-                        title: { display: true, text: "Visualisation des données" }
+                        legend: {
+                            position: 'top',
+                            labels: { font: { family: 'Arial', size: 14 } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#ab9ff2',
+                            bodyFont: { size: 14 },
+                            padding: 12,
+                            cornerRadius: 12
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 12 } }
+                        },
+                        y: {
+                            grid: { color: '#ab9ff2' },
+                            ticks: { font: { size: 12 } }
+                        }
+                    },
+                    elements: {
+                        bar: { borderRadius: 6 },
+                        line: { tension: 0.4 }
                     }
                 }
             });
@@ -210,6 +205,7 @@ require_once '../includes/header.php';
             dataTable.innerHTML = thead + tbody;
         }
 
+        // Écouteurs d'événements
         chartTypeSelect.addEventListener("change", () => {
             if (currentLabel && currentValue && currentRows.length > 0) {
                 renderChart(currentLabel, currentValue, currentRows);
@@ -220,77 +216,22 @@ require_once '../includes/header.php';
             const url = chart.toBase64Image();
             const a = document.createElement("a");
             a.href = url;
-            a.download = "chart.png";
+            a.download = "<?= BASE_URL ?>chart.png";
             a.click();
         });
 
         document.getElementById("exportPDF").addEventListener("click", () => {
             html2canvas(chartContainer).then(canvas => {
-                const imgData = canvas.toDataURL("image/png");
+                const imgData = canvas.toDataURL("<?= BASE_URL ?>image/png");
                 const pdf = new jspdf.jsPDF();
                 pdf.addImage(imgData, "PNG", 10, 10, 180, 100);
                 pdf.save("chart.pdf");
             });
         });
 
-        document.getElementById("exportTablePNG").addEventListener("click", () => {
-            html2canvas(dataTable).then(canvas => {
-                const link = document.createElement("a");
-                link.href = canvas.toDataURL("image/png");
-                link.download = "tableau.png";
-                link.click();
-            });
-        });
-
-        document.getElementById("exportTablePDF").addEventListener("click", () => {
-            html2canvas(dataTable).then(canvas => {
-                const imgData = canvas.toDataURL("image/png");
-                const pdf = new jspdf.jsPDF();
-                pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
-                pdf.save("tableau.pdf");
-            });
-        });
+        // Initialiser le graphique
+        loadFile();
     });
-    // Remplacer toute la logique des checkboxes par ceci :
-
-    function setupColumnSelectors(headers) {
-        const labelSelect = document.getElementById('labelColumn');
-        const valueSelect = document.getElementById('valueColumn');
-
-        // Vider et remplir les selects
-        labelSelect.innerHTML = '<option value="">Choisir la colonne Label</option>';
-        valueSelect.innerHTML = '<option value="">Choisir la colonne Valeur</option>';
-
-        headers.forEach(header => {
-            labelSelect.appendChild(new Option(header, header));
-            valueSelect.appendChild(new Option(header, header));
-        });
-
-        // Sélection automatique des premières colonnes
-        if (headers.length >= 2) {
-            labelSelect.value = headers[0];
-            valueSelect.value = headers[1];
-            updateChartFromSelects();
-        }
-
-        // Écouteurs d'événements
-        labelSelect.addEventListener('change', updateChartFromSelects);
-        valueSelect.addEventListener('change', updateChartFromSelects);
-    }
-
-    function updateChartFromSelects() {
-        const labelColumn = document.getElementById('labelColumn').value;
-        const valueColumn = document.getElementById('valueColumn').value;
-
-        if (labelColumn && valueColumn) {
-            currentLabel = labelColumn;
-            currentValue = valueColumn;
-            renderChart(currentLabel, currentValue, currentRows);
-        }
-    }
-
-    // Dans parseCSV/parseJSON, remplacer la partie checkboxes par :
-    setupColumnSelectors(headers);
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
