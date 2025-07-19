@@ -1,13 +1,15 @@
 <?php
-require_once  'db.php';
+require_once 'db.php';
 
 // Fonction pour vérifier si un utilisateur est connecté
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']);
 }
 
 // Fonction pour obtenir les informations de l'utilisateur
-function getUserById($id) {
+function getUserById($id)
+{
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$id]);
@@ -15,7 +17,8 @@ function getUserById($id) {
 }
 
 // Fonction pour ajouter un commentaire ( cohérence avec la table gael putain!!!!)
-function addComment($user_id, $content, $parent_id = null, $file_path = null, $file_type = null) {
+function addComment($user_id, $content, $parent_id = null, $file_path = null, $file_type = null)
+{
     global $pdo;
     $stmt = $pdo->prepare("INSERT INTO comments (user_id, content, parent_id, file_path, file_type, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
     return $stmt->execute([$user_id, $content, $parent_id, $file_path, $file_type]);
@@ -23,13 +26,14 @@ function addComment($user_id, $content, $parent_id = null, $file_path = null, $f
 
 
 // Fonction pour liker un commentaire
-function likeComment($user_id, $comment_id) {
+function likeComment($user_id, $comment_id)
+{
     global $pdo;
-    
+
     // Vérifier si l'utilisateur a déjà liké ce commentaire
     $stmt = $pdo->prepare("SELECT id FROM likes WHERE user_id = ? AND comment_id = ?");
     $stmt->execute([$user_id, $comment_id]);
-    
+
     if ($stmt->rowCount() > 0) {
         // Retirer le like
         $stmt = $pdo->prepare("DELETE FROM likes WHERE user_id = ? AND comment_id = ?");
@@ -41,7 +45,8 @@ function likeComment($user_id, $comment_id) {
     }
 }
 // pour voir si user à liké ou non le post
-function hasUserLiked($commentId, $userId) {
+function hasUserLiked($commentId, $userId)
+{
     global $pdo;
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM likes WHERE comment_id = ? AND user_id = ?");
     $stmt->execute([$commentId, $userId]);
@@ -49,7 +54,8 @@ function hasUserLiked($commentId, $userId) {
 }
 
 // Fonction pour obtenir tous les commentaires avec leurs likes
-function getAllComments() {
+function getAllComments()
+{
     global $pdo;
     $stmt = $pdo->query("
         SELECT c.*, u.username, COUNT(l.id) as like_count 
@@ -63,7 +69,8 @@ function getAllComments() {
 }
 
 // Fonction pour vérifier si l'utilisateur courant a liké un commentaire
-function hasLiked($user_id, $comment_id) {
+function hasLiked($user_id, $comment_id)
+{
     global $pdo;
     $stmt = $pdo->prepare("SELECT id FROM likes WHERE user_id = ? AND comment_id = ?");
     $stmt->execute([$user_id, $comment_id]);
@@ -71,9 +78,10 @@ function hasLiked($user_id, $comment_id) {
 }
 
 // fonction de visualisation des uploads
-function displayCsvFile($filePath) {
+function displayCsvFile($filePath)
+{
     $html = '<table class="table table-bordered table-striped">';
-    
+
     if (($handle = fopen($filePath, "r")) !== FALSE) {
         $firstRow = true;
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -90,13 +98,14 @@ function displayCsvFile($filePath) {
         }
         fclose($handle);
     }
-    
+
     $html .= '</table>';
     return $html;
 }
 
 // Fonction pour obtenir les commentaires parents (principaux)
-function getParentComments() {
+function getParentComments()
+{
     global $pdo;
     $stmt = $pdo->query("
         SELECT c.*, u.username, COUNT(l.id) as like_count 
@@ -111,7 +120,8 @@ function getParentComments() {
 }
 
 // Fonction pour obtenir les réponses à un commentaire
-function getReplies($comment_id) {
+function getReplies($comment_id)
+{
     global $pdo;
     $stmt = $pdo->prepare("
         SELECT c.*, u.username, COUNT(l.id) as like_count 
@@ -127,42 +137,44 @@ function getReplies($comment_id) {
 }
 
 // Fonction pour uploader un fichier
-function uploadFile($file) {
+function uploadFile($file)
+{
     $uploadDir = '../uploads/';
     $allowedTypes = ['image/jpeg', 'image/png', 'video/mp4'];
-    
+
     if (!in_array($file['type'], $allowedTypes)) {
         return ['error' => 'Type de fichier non autorisé'];
     }
-    
+
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $fileName = uniqid() . '.' . $extension;
     $filePath = $uploadDir . $fileName;
-    
+
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
         return [
             'path' => 'uploads/' . $fileName, // ← chemin relatif
             'type' => strpos($file['type'], 'image') !== false ? 'image' : 'video'
         ];
     }
-    
+
     return ['error' => 'Erreur lors du téléchargement'];
 }
 
 // ???
-function displayExcelFile($filePath) {
+function displayExcelFile($filePath)
+{
     require_once '../vendor/autoload.php';
     $html = '<table class="table table-bordered table-striped">';
-    
+
     try {
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
         $worksheet = $spreadsheet->getActiveSheet();
-        
+
         foreach ($worksheet->getRowIterator() as $row) {
             $html .= '<tr>';
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
-            
+
             foreach ($cellIterator as $cell) {
                 $value = $cell->getFormattedValue();
                 if ($row->getRowIndex() == 1) {
@@ -176,7 +188,7 @@ function displayExcelFile($filePath) {
     } catch (Exception $e) {
         return '<div class="alert alert-danger">Erreur Excel: ' . htmlspecialchars($e->getMessage()) . '</div>';
     }
-    
+
     $html .= '</table>';
     return $html;
 }
@@ -184,32 +196,34 @@ function displayExcelFile($filePath) {
 function displayJsonFile($filePath) {
     $json = file_get_contents($filePath);
     $data = json_decode($json, true);
-    
+
     if (json_last_error() !== JSON_ERROR_NONE) {
         return '<div class="alert alert-danger">Erreur JSON: ' . json_last_error_msg() . '</div>';
     }
-    
+
     return '<pre>' . htmlspecialchars(print_r($data, true)) . '</pre>';
 }
 */
-function displayJsonFile($filePath) {
+function displayJsonFile($filePath)
+{
     $json = file_get_contents($filePath);
     $data = json_decode($json, true);
-    
+
     if (json_last_error() !== JSON_ERROR_NONE) {
         return '<div class="alert alert-danger">Erreur JSON: ' . json_last_error_msg() . '</div>';
     }
-    
+
     // Vérifie si c'est un fichier de tarifs suivant le template
     if (isset($data['meta'])) {
         return renderPriceTemplate($data);
     }
-    
+
     // Fallback pour les autres JSON
     return '<pre class="json-display">' . htmlspecialchars(json_encode($data, JSON_PRETTY_PRINT)) . '</pre>';
 }
 
-function renderPriceTemplate($data) {
+function renderPriceTemplate($data)
+{
     ob_start(); ?>
     <div class="price-template">
         <!-- En-tête avec les métadonnées -->
@@ -217,15 +231,17 @@ function renderPriceTemplate($data) {
             <h4>Fiche tarifaire</h4>
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Fournisseur:</strong> <?= htmlspecialchars($data['meta']['fournisseur'] ?? 'Non spécifié') ?></p>
-                    <p><strong>Date de mise à jour:</strong> <?= htmlspecialchars($data['meta']['date_maj'] ?? 'Inconnue') ?></p>
+                    <p><strong>Fournisseur:</strong> <?= htmlspecialchars($data['meta']['fournisseur'] ?? 'Non spécifié') ?>
+                    </p>
+                    <p><strong>Date de mise à jour:</strong>
+                        <?= htmlspecialchars($data['meta']['date_maj'] ?? 'Inconnue') ?></p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Devise:</strong> <?= htmlspecialchars($data['meta']['devise'] ?? 'EUR') ?></p>
                 </div>
             </div>
         </div>
-        
+
         <!-- Tableau des produits -->
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -242,15 +258,15 @@ function renderPriceTemplate($data) {
                 </thead>
                 <tbody>
                     <?php foreach ($data['produits'] as $produit): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($produit['id_unique'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($produit['nom'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($produit['categorie'] ?? '') ?></td>
-                        <td class="text-right"><?= number_format($produit['prix_ht'] ?? 0, 2, ',', ' ') ?></td>
-                        <td><?= htmlspecialchars($produit['unite'] ?? '') ?></td>
-                        <td class="text-right"><?= number_format($produit['tva'] ?? 0, 2, ',', ' ') ?>%</td>
-                        <td><?= htmlspecialchars($produit['code_ean'] ?? '') ?></td>
-                    </tr>
+                        <tr>
+                            <td><?= htmlspecialchars($produit['id_unique'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($produit['nom'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($produit['categorie'] ?? '') ?></td>
+                            <td class="text-right"><?= number_format($produit['prix_ht'] ?? 0, 2, ',', ' ') ?></td>
+                            <td><?= htmlspecialchars($produit['unite'] ?? '') ?></td>
+                            <td class="text-right"><?= number_format($produit['tva'] ?? 0, 2, ',', ' ') ?>%</td>
+                            <td><?= htmlspecialchars($produit['code_ean'] ?? '') ?></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -260,7 +276,8 @@ function renderPriceTemplate($data) {
 }
 
 // test formatage template json
-function generatePriceTemplate() {
+function generatePriceTemplate()
+{
     return [
         "meta" => [
             "fournisseur" => "",
@@ -283,19 +300,25 @@ function generatePriceTemplate() {
 }
 
 //search to view_chart
-function getFileById($id) {
-  global $pdo;
-  $stmt = $pdo->prepare("SELECT * FROM user_files WHERE id = ?");
-  $stmt->execute([$id]);
-  return $stmt->fetch();
+function getFileById($id)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT uf.*, u.id as owner_id 
+        FROM user_files uf
+        JOIN users u ON uf.user_id = u.id
+        WHERE uf.id = ?
+    ");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 // verif que le fichier est public ( 19/07  mode private bug à l'upload/ a revoir)
-function canAccessFile($user_id, $file_id) {
-  global $pdo;
-  $stmt = $pdo->prepare("SELECT id FROM user_files WHERE id = ? AND (user_id = ? OR is_public = TRUE)");
-  $stmt->execute([$file_id, $user_id]);
-  return $stmt->fetch() !== false;
+function canAccessFile($user_id, $file_id)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM user_files WHERE id = ? AND (user_id = ? OR is_public = TRUE)");
+    $stmt->execute([$file_id, $user_id]);
+    return $stmt->fetch() !== false;
 }
 
 ?>
-

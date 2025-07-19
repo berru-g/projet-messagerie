@@ -18,15 +18,19 @@ if (!$file || !canAccessFile($_SESSION['user_id'], $file_id)) {
 $file_path = '../uploads/' . $file['file_path'];
 $file_ext = strtolower(pathinfo($file['file_name'], PATHINFO_EXTENSION));
 $user = getUserById($_SESSION['user_id']);
-//$owner_email = getUserById($owner_email['owner_email']);
+$owner = getUserById($file['owner_id']);
 
 require_once '../includes/header.php';
 ?>
 
-<div style="display:block;margin: 0 auto;align-items: center;">
-    <h3><i class="fas fa-chart-line"></i> Visualisation Graphique</h3>
-    <!--<p>Propriétaire: <?= htmlspecialchars($file['owner_email']) ?></p>-->
-    <p>Data : <?= htmlspecialchars($file['file_name']) ?></p>
+<div class="data-visualizer-header">
+    <h1><i class="fas fa-chart-line"></i> Data Visualizer</h1>
+    <p><i class="fas fa-file"></i>  <?= htmlspecialchars($file['file_name']) ?></p>
+    <?php if ($owner): ?>
+        <p><i class="fas fa-user"></i> 
+            <?= htmlspecialchars($owner['user_mail'] ?? $owner['email']) ?>
+        </p>
+    <?php endif; ?>
 </div>
 
 <div class="container mt-5">

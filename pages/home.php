@@ -66,93 +66,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
 
 require_once '../includes/header.php';
 ?>
+<!-- presentation du tool -->
+<section class="data-tools-showcase">
+    <div class="dt-container">
+        <h2 class="dt-title">
+            <span class="dt-icon"><i class="fas fa-chart-network"></i></span>
+            Transformez vos données en insights
+        </h2>
 
-<div class="container">
-    <div class="comment-form">
-        <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
-        <form method="POST" enctype="multipart/form-data" class="reply-form">
-            <textarea name="content" placeholder="Exprimez-vous "></textarea>
-
-            <label for="file-main" class="file-label">
-                <i class="fas fa-file-upload"></i> Parcourir
-            </label>
-            <input type="file" name="file" id="file-main" accept="image/*,video/*">
-
-            <button type="submit" name="comment" class="btn-reply">
-                <i class="fas fa-paper-plane"></i> Poster
-            </button>
-        </form>
-    </div>
-
-    <div class="comments">
-        <h2>Posts commun</h2>
-        <?php foreach ($comments as $comment): ?>
-            <div class="comment">
-                <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
-
-                <?php if (!empty($comment['content'])): ?>
-                    <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
-                <?php endif; ?>
-
-                <?php if (!empty($comment['file_path'])): ?>
-                    <?php if ($comment['file_type'] === 'image'): ?>
-                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;">
-                    <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls style="max-width:300px;">
-                            <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
-                            Votre navigateur ne supporte pas la vidéo.
-                        </video>
-                    <?php endif; ?>
-                <?php endif; ?>
-
-                <div class="comment-actions">
-
-                    <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= $userLiked ? 'liked' : 'not-liked' ?>">
-                        <i class="fas fa-heart"></i> <?= $comment['like_count'] ?>
-                    </a>
-
+        <div class="dt-grid">
+            <!-- Carte CSV -->
+            <div class="dt-card">
+                <div class="dt-card-icon csv">
+                    <i class="fa fa-file-csv"></i>
                 </div>
+                <h3>CSV Transformer</h3>
+                <p>Conversion vers multiples formats</p>
+                <ul class="dt-features">
+                    <li><i class="fas fa-chart-bar"></i> Graphiques dynamiques</li>
+                    <li><i class="fas fa-table"></i> Tableaux interactifs</li>
+                    <li><i class="fas fa-file-export"></i> Exports PNG/PDF</li>
+                </ul>
             </div>
 
-            <!-- Formulaire de réponse -->
-            <form method="POST" enctype="multipart/form-data" class="reply-form">
-                <input type="hidden" name="parent_id" value="<?= $comment['id'] ?>">
-                <textarea name="content" placeholder="Répondre à ce post..."></textarea>
+            <!-- Carte Excel -->
+            <div class="dt-card">
+                <div class="dt-card-icon excel">
+                    <i class="fa fa-file-excel"></i>
+                </div>
+                <h3>Excel Magic</h3>
+                <p>Analyse avancée</p>
+                <ul class="dt-features">
+                    <li><i class="fas fa-project-diagram"></i> Visualisations 3D</li>
+                    <li><i class="fas fa-bolt"></i> Traitement rapide</li>
+                    <li><i class="fas fa-cloud-upload"></i> Intégration cloud</li>
+                </ul>
+            </div>
 
-                <label for="file-<?= $comment['id'] ?>" class="file-label">
+            <!-- Carte JSON -->
+            <div class="dt-card">
+                <div class="dt-card-icon json">
+                    <i class="fa fa-file-code"></i>
+                </div>
+                <h3>JSON Explorer</h3>
+                <p>Analyse de structures</p>
+                <ul class="dt-features">
+                    <li><i class="fas fa-sitemap"></i> Arborescence</li>
+                    <li><i class="fas fa-filter"></i> Filtres intelligents</li>
+                    <li><i class="fas fa-share-alt"></i> Partage configurable</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dt-cta">
+            <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
+            <div class="dt-buttons">
+                <a href="<?= BASE_URL ?>/pages/search.php" class="dt-btn primary">
+                    <i class="fas fa-rocket"></i> Commencer
+                </a>
+                <a href="#" class="dt-btn secondary">
+                    <i class="fas fa-book-open"></i> Tutoriels
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <div class="container" id="mur">
+        <div class="comment-form">
+            <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
+            <form method="POST" enctype="multipart/form-data" class="reply-form">
+                <textarea name="content" placeholder="Exprimez-vous "></textarea>
+
+                <label for="file-main" class="file-label">
                     <i class="fas fa-file-upload"></i> Parcourir
                 </label>
-                <input type="file" name="file" id="file-<?= $comment['id'] ?>" accept="image/*,video/*">
+                <input type="file" name="file" id="file-main" accept="image/*,video/*">
 
-                <button type="submit" name="reply" class="btn-reply">
-                    <i class="fas fa-reply"></i> Répondre
+                <button type="submit" name="comment" class="btn-reply">
+                    <i class="fas fa-paper-plane"></i> Poster
                 </button>
             </form>
+        </div>
 
-            <!-- Affichage des réponses -->
-            <?php foreach (getReplies($comment['id']) as $reply): ?>
-                <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
-                    <p><strong><?= htmlspecialchars($reply['username']) ?></strong> a répondu :</p>
+        <div class="comments">
+            <h2>Posts commun</h2>
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment">
+                    <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
 
-                    <?php if (!empty($reply['content'])): ?>
-                        <p><?= nl2br(htmlspecialchars($reply['content'])) ?></p>
+                    <?php if (!empty($comment['content'])): ?>
+                        <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
                     <?php endif; ?>
 
-                    <?php if (!empty($reply['file_path'])): ?>
-                        <?php if ($reply['file_type'] === 'image'): ?>
-                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:200px;" alt="image réponse">
-                        <?php elseif ($reply['file_type'] === 'video'): ?>
-                            <video controls style="max-width:200px;">
-                                <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
+                    <?php if (!empty($comment['file_path'])): ?>
+                        <?php if ($comment['file_type'] === 'image'): ?>
+                            <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;">
+                        <?php elseif ($comment['file_type'] === 'video'): ?>
+                            <video controls style="max-width:300px;">
+                                <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
+                                Votre navigateur ne supporte pas la vidéo.
                             </video>
                         <?php endif; ?>
                     <?php endif; ?>
+
+                    <div class="comment-actions">
+
+                        <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= $userLiked ? 'liked' : 'not-liked' ?>">
+                            <i class="fas fa-heart"></i> <?= $comment['like_count'] ?>
+                        </a>
+
+                    </div>
                 </div>
+
+                <!-- Formulaire de réponse -->
+                <form method="POST" enctype="multipart/form-data" class="reply-form">
+                    <input type="hidden" name="parent_id" value="<?= $comment['id'] ?>">
+                    <textarea name="content" placeholder="Répondre à ce post..."></textarea>
+
+                    <label for="file-<?= $comment['id'] ?>" class="file-label">
+                        <i class="fas fa-file-upload"></i> Parcourir
+                    </label>
+                    <input type="file" name="file" id="file-<?= $comment['id'] ?>" accept="image/*,video/*">
+
+                    <button type="submit" name="reply" class="btn-reply">
+                        <i class="fas fa-reply"></i> Répondre
+                    </button>
+                </form>
+
+                <!-- Affichage des réponses -->
+                <?php foreach (getReplies($comment['id']) as $reply): ?>
+                    <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
+                        <p><strong><?= htmlspecialchars($reply['username']) ?></strong> a répondu :</p>
+
+                        <?php if (!empty($reply['content'])): ?>
+                            <p><?= nl2br(htmlspecialchars($reply['content'])) ?></p>
+                        <?php endif; ?>
+
+                        <?php if (!empty($reply['file_path'])): ?>
+                            <?php if ($reply['file_type'] === 'image'): ?>
+                                <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:200px;" alt="image réponse">
+                            <?php elseif ($reply['file_type'] === 'video'): ?>
+                                <video controls style="max-width:200px;">
+                                    <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
+                                </video>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+
             <?php endforeach; ?>
-
-        <?php endforeach; ?>
+        </div>
     </div>
-</div>
 
 
-<?php require_once '../includes/footer.php'; ?>
+    <?php require_once '../includes/footer.php'; ?>
