@@ -153,18 +153,18 @@ require_once '../includes/header.php';
         <?php foreach ($comments as $comment): ?>
             <div class="comment">
 
-                <?php if (!empty($user['profile_picture'])): ?>
-                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀" class="profile-picture-thumbnail">
+                <?php if (!empty($comment['profile_picture'])): ?>
+                    <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>"
+                        alt="Photo de <?= htmlspecialchars($comment['username']) ?>" class="profile-picture-thumbnail">
                 <?php else: ?>
-
                     <i class="fas fa-user-circle"></i>
                 <?php endif; ?>
-
-                <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
 
                 <span class="comment-date">
                     <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
                 </span>
+
+                <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
 
                 <?php if (!empty($comment['content'])): ?>
                     <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
@@ -209,6 +209,12 @@ require_once '../includes/header.php';
             <!-- Affichage des réponses -->
             <?php foreach (getReplies($comment['id']) as $reply): ?>
                 <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
+                    <?php if (!empty($reply['profile_picture'])): ?>
+                        <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>"
+                            alt="Photo de <?= htmlspecialchars($reply['username']) ?>" class="profile-picture-thumbnail">
+                    <?php else: ?>
+                        <i class="fas fa-user-circle"></i>
+                    <?php endif; ?>
                     <p><strong><?= htmlspecialchars($reply['username']) ?></strong> a répondu :</p>
 
                     <?php if (!empty($reply['content'])): ?>

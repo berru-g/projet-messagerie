@@ -535,6 +535,38 @@ h3 {
   align-items: center;
 }
 
+.comment-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-picture-comment {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ab9ff2;
+}
+
+.comment-icon {
+    font-size: 40px;
+    color: #ab9ff2;
+}
+
+.comment-username {
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-content {
+    margin-left: 50px; /* Pour aligner avec le texte sous la photo */
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 
 /* Styles pour les médias uploadés */
 .img-partage {

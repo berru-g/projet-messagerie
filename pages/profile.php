@@ -91,7 +91,7 @@ require_once '../includes/header.php';
         <div class="profile-picture-container">
             
             <img src="<?= !empty($user['profile_picture']) ? htmlspecialchars($user['profile_picture']) : 'https://via.placeholder.com/150' ?>"
-                alt="Photo de profil" class="profile-picture">
+                alt="." class="profile-picture">
             <form method="post" enctype="multipart/form-data" class="profile-picture-form">
                 <input type="file" name="profile_picture" accept="image/*" style="background-color:white;border:none;">
                 <button type="submit" class="btn-small">Mettre à jour</button>

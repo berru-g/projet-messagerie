@@ -7,6 +7,14 @@ function isLoggedIn()
     return isset($_SESSION['user_id']);
 }
 
+// refresh
+function refreshUserData() {
+    if (isLoggedIn()) {
+        $_SESSION['user_data'] = getUserById($_SESSION['user_id']);
+        return $_SESSION['user_data'];
+    }
+    return null;
+}
 // Protection des URLs
 function safe_url($path) {
     $base = rtrim(BASE_URL, '/');
@@ -22,8 +30,7 @@ function safe_url($path) {
 }
 
 // Fonction pour obtenir les informations de l'utilisateur
-function getUserById($id)
-{
+function getUserById($id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$id]);
