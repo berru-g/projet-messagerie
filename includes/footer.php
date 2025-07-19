@@ -14,7 +14,7 @@
      -->
     <div class="footer-brand">
       <h3 class="app-name"><?= SITE_NAME ?></h3>
-      <p class="tagline">Plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key.</p>
+      <p class="tagline">Plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key, (inscription anonyme sans vérification de mail).</p>
       <div class="stats">
         <div class="stat-item">
           <i class="fas fa-database"></i>
@@ -61,7 +61,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>© <?= date('Y') ?> <?= SITE_NAME ?> - Tous droits réservés</p>
+    <p>© <?= date('Y') ?> <?= SITE_NAME ?> by <a href="https://gael-berru.netlify.app">berru-g</a> - Tous droits réservés</p>
     <div class="legal-links">
       <a href="#">CGU</a> | <a href="#">Confidentialité</a>
     </div>
@@ -236,6 +236,11 @@
     background: rgba(0, 0, 0, 0.2);
     font-size: 0.8rem;
     color: #95a5a6;
+  }
+  .footer-bottom a {
+    font-size: 0.8rem;
+    color: #ab9ff2 ;
+    text-decoration: none;
   }
 
   .legal-links {

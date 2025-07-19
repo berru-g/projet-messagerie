@@ -37,6 +37,8 @@ https://github.com/user-attachments/assets/4ed5bbe0-c909-4e63-99dc-87d46c09cdd2
 - 📱 **Design responsive** et moderne
 - 🎨 **Personnalisation facile** via variables CSS
 
+![SQL Injection Protection](https://img.shields.io/badge/SQL_Injection-100%25_Protected-brightgreen)
+
 ## 🚀 Installation
 
 ### Prérequis

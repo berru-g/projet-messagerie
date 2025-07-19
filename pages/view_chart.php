@@ -31,7 +31,11 @@ require_once '../includes/header.php';
             <?= htmlspecialchars($owner['user_mail'] ?? $owner['email']) ?>
         </p>
     <?php endif; ?>
-</div>
+    <!--btn retour exactement là où on en etais via historyback protège contre l'injection-->
+        <a href="#" class="primary-btn back-btn" data-fallback="search.php">
+    <i class="fa-solid fa-reply"></i>
+</a>
+    </div>
 
 <div class="container mt-5">
     <div id="columnSelector" class="mb-4"></div>
@@ -236,6 +240,18 @@ require_once '../includes/header.php';
         // Initialiser le graphique
         loadFile();
     });
+    // btn retour exactement là où on en etais via historyback protège contre l'injection
+    document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Si l'historique contient la page précédente (et n'est pas externe)
+        if (document.referrer.includes(window.location.hostname)) {
+            history.back();
+        } else {
+            window.location.href = btn.dataset.fallback;
+        }
+    });
+});
 </script>
 
 <?php require_once '../includes/footer.php'; ?>

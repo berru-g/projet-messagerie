@@ -90,8 +90,10 @@ require_once '../includes/header.php';
         <div class="dt-cta">
             <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
             <div class="dt-buttons">
-                <a href="<?= BASE_URL ?>/#seconnecter" class="dt-btn primary">
-                    <i class="fas fa-rocket"></i> Commencer gratuitement
+                <!-- gratuitement
+                </a>-->
+                <a href="<?= safe_url('/pages/search.php') ?>" class="dt-btn primary">
+                    <i class="fas fa-rocket"></i> Commencer
                 </a>
                 <a href="#" class="dt-btn secondary">
                     <i class="fas fa-book-open"></i> Tutoriels
@@ -101,39 +103,39 @@ require_once '../includes/header.php';
     </div>
 </section>
 
-    <div class="container auth-container" id="seconnecter">
-        <h2>Connexion</h2>
+<div class="container auth-container" id="seconnecter">
+    <h2>Connexion</h2>
 
-        <?php if (!empty($errors)): ?>
-            <div class="alert alert-danger">
-                <?php foreach ($errors as $error): ?>
-                    <p><?= $error ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            <?php foreach ($errors as $error): ?>
+                <p><?= $error ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-        <?php if (isset($_GET['registered'])): ?>
-            <div class="alert alert-success">
-                Inscription réussie ! Vous pouvez maintenant vous connecter.
-            </div>
-        <?php endif; ?>
+    <?php if (isset($_GET['registered'])): ?>
+        <div class="alert alert-success">
+            Inscription réussie ! Vous pouvez maintenant vous connecter.
+        </div>
+    <?php endif; ?>
 
-        <form method="POST">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
+    <form method="POST">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
 
-            <div class="form-group">
-                <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
 
-            <button type="submit">Se connecter</button>
-        </form>
+        <button type="submit">Se connecter</button>
+    </form>
 
-        <p>Pas encore de compte ? <a href="register.php">Inscrivez-vous</a></p>
-        <p><a href="forgot-password.php">Mot de passe oublié ?</a></p>
-    </div>
+    <p>Pas encore de compte ? <a href="register.php">Inscrivez-vous</a></p>
+    <p><a href="forgot-password.php">Mot de passe oublié ?</a></p>
+</div>
 
-    <?php require_once '../includes/footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

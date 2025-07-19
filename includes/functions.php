@@ -7,6 +7,20 @@ function isLoggedIn()
     return isset($_SESSION['user_id']);
 }
 
+// Protection des URLs
+function safe_url($path) {
+    $base = rtrim(BASE_URL, '/');
+    $path = ltrim($path, '/');
+    
+    // Validation des caractères autorisés
+    if (!preg_match('/^[a-zA-Z0-9\-_\/\.]+$/', $path)) {
+        error_log("Tentative de path traversal: " . $_SERVER['REMOTE_ADDR']);
+        $path = 'index.php'; // Fallback sécurisé
+    }
+    
+    return htmlspecialchars($base . '/' . $path, ENT_QUOTES, 'UTF-8');
+}
+
 // Fonction pour obtenir les informations de l'utilisateur
 function getUserById($id)
 {
