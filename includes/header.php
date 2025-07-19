@@ -107,7 +107,7 @@ require_once __DIR__ . '/functions.php';
       <div class="profile-dropdown">
         <button class="profile-btn">
           <?php if (!empty($user['profile_picture'])): ?>
-            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="/"
+            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀"
               class="profile-picture-thumbnail">
           <?php else: ?>
             <i class="fas fa-user-circle"></i>
@@ -117,7 +117,7 @@ require_once __DIR__ . '/functions.php';
           <?php if (isLoggedIn()): ?>
             <a href="<?= BASE_URL ?>/pages/profile.php">
               <?php if (!empty($user['profile_picture'])): ?>
-                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="/"
+                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀"
                   class="profile-picture-small">
               <?php else: ?>
                 <i class="fas fa-user-circle"></i>

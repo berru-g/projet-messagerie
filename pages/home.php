@@ -152,14 +152,19 @@ require_once '../includes/header.php';
         <h2>Posts commun</h2>
         <?php foreach ($comments as $comment): ?>
             <div class="comment">
-                
+
                 <?php if (!empty($user['profile_picture'])): ?>
-                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="/" class="profile-picture-thumbnail">
+                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀" class="profile-picture-thumbnail">
                 <?php else: ?>
-                    
+
                     <i class="fas fa-user-circle"></i>
                 <?php endif; ?>
+
                 <p><strong><?= htmlspecialchars($comment['username']) ?></strong> :</p>
+
+                <span class="comment-date">
+                    <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
+                </span>
 
                 <?php if (!empty($comment['content'])): ?>
                     <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
@@ -175,6 +180,7 @@ require_once '../includes/header.php';
                         </video>
                     <?php endif; ?>
                 <?php endif; ?>
+
 
                 <div class="comment-actions">
 

@@ -191,10 +191,6 @@ require_once '../includes/header.php';
                             <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
                         </button>
 
-                        <a href="view_file.php?id=<?= $file['id'] ?>" class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i>
-                        </a>
-
                     </div>
                 </div>
             <?php endforeach; ?>
