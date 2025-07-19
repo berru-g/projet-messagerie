@@ -85,11 +85,15 @@ require_once '../includes/header.php';
                                 </small>
                             </div>
                             <div class="file-actions">
-                                <a href="view_file.php?id=<?= $file['id'] ?>" class="btn btn-sm btn-primary">
+                                <!--<a href="view_file.php?id=<?= $file['id'] ?>" class="btn btn-sm btn-primary">
                                     <i class="fas fa-eye"></i>
-                                </a>
+                                </a>-->
                                 <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
                                     <i class="fas fa-chart-line"></i>
+                                </a>
+                                <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
+                                    class="btn btn-sm btn-success">
+                                    <i class="fas fa-download"></i>
                                 </a>
                             </div>
                         </div>

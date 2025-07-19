@@ -31,7 +31,7 @@ CREATE TABLE likes (
 );
 
 
--- table des uploads
+-- table des uploads csv/xlsx/json
 CREATE TABLE user_files (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -41,13 +41,13 @@ CREATE TABLE user_files (
     upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
--- permettre le partage des uploads 
+-- permettre le partage des uploads
 ALTER TABLE user_files 
 ADD COLUMN is_public BOOLEAN DEFAULT FALSE,
 ADD COLUMN share_token VARCHAR(32) NULL;
 
 
--- table des uploads img
+-- table des uploads img png/jpg
 CREATE TABLE user_files_img (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -58,9 +58,15 @@ CREATE TABLE user_files_img (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Pour permettre les réponses
+-- Pour permettre les réponses sous les post du mur
 ALTER TABLE comments
 ADD COLUMN parent_id INT NULL,
 ADD COLUMN file_path VARCHAR(255) NULL,
 ADD COLUMN file_type ENUM('image', 'video') NULL,
 ADD FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE;
+
+-- Profile user
+-- user V1.2
+ALTER TABLE users
+ADD COLUMN profile_picture VARCHAR(255) NULL,
+ADD COLUMN website_url VARCHAR(255) NULL;

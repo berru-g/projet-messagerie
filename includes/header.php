@@ -45,7 +45,7 @@ require_once __DIR__ . '/functions.php';
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet">
 
   <script type="application/ld+json">
 {
@@ -106,14 +106,25 @@ require_once __DIR__ . '/functions.php';
     <div class="header-content">
       <div class="profile-dropdown">
         <button class="profile-btn">
-          <i class="fas fa-user-circle"></i>
+          <?php if (!empty($user['profile_picture'])): ?>
+            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="/"
+              class="profile-picture-thumbnail">
+          <?php else: ?>
+            <i class="fas fa-user-circle"></i>
+          <?php endif; ?>
         </button>
         <div class="dropdown-content">
           <?php if (isLoggedIn()): ?>
-            <a href="<?= BASE_URL ?>/pages/profile.php"><i class="fas fa-user-circle"></i>
-              <?= htmlspecialchars($user['username']) ?></a>
-            <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de
-              passe</a>
+            <a href="<?= BASE_URL ?>/pages/profile.php">
+              <?php if (!empty($user['profile_picture'])): ?>
+                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="/"
+                  class="profile-picture-small">
+              <?php else: ?>
+                <i class="fas fa-user-circle"></i>
+              <?php endif; ?>
+              <?= htmlspecialchars($user['username']) ?>
+            </a>
+            <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de passe</a>
             <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
           <?php endif; ?>
         </div>

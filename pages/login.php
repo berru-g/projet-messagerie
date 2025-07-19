@@ -90,9 +90,8 @@ require_once '../includes/header.php';
         <div class="dt-cta">
             <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
             <div class="dt-buttons">
-                <!-- gratuitement
-                </a>-->
-                <a href="<?= safe_url('/pages/search.php') ?>" class="dt-btn primary">
+                <!--<?= safe_url('/pages/search.php') ?>--remplace--<?= BASE_URL ?>-->
+                <a href="#seconnecter" class="dt-btn primary">
                     <i class="fas fa-rocket"></i> Commencer
                 </a>
                 <a href="#" class="dt-btn secondary">

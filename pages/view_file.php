@@ -58,6 +58,7 @@ require_once '../includes/header.php';
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><?= htmlspecialchars($file['file_name']) ?></h2>
         <a href="gallery.php" class="btn btn-success">
+            <!--bug avec <a href="#" class="primary-btn back-btn" data-fallback="search.php">-->
             <i class="fa-solid fa-reply"></i>
         </a>
         <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download class="btn btn-success"><i
