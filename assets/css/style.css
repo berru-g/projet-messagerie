@@ -1169,11 +1169,14 @@ thead th {
 }
 
 .table-hover tbody tr:hover {
-  background-color: rgba(52, 152, 219, 0.1);
+  background-color: var(--primary-color);
+  color: var(--background-color);
   transition: background-color 0.3s ease;
 }
 
 tbody td {
+  background-color: var(--primary-color);
+  color: var(--background-color);
   border-bottom: 1px solid grey;
   padding: 5px 5px;
 }

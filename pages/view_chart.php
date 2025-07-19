@@ -23,7 +23,7 @@ $user = getUserById($_SESSION['user_id']);
 require_once '../includes/header.php';
 ?>
 
-<div class="container">
+<div style="display:block;margin: 0 auto;align-items: center;">
     <h3><i class="fas fa-chart-line"></i> Visualisation Graphique</h3>
     <!--<p>Propriétaire: <?= htmlspecialchars($file['owner_email']) ?></p>-->
     <p>Data : <?= htmlspecialchars($file['file_name']) ?></p>
