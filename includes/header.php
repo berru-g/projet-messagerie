@@ -115,6 +115,7 @@ require_once __DIR__ . '/functions.php';
         </button>
         <div class="dropdown-content">
           <?php if (isLoggedIn()): ?>
+            <!--<?= safe_url('/chemin/index.php') ?>--remplace--<?= BASE_URL ?>--?-->
             <a href="<?= BASE_URL ?>/pages/profile.php">
               <?php if (!empty($user['profile_picture'])): ?>
                 <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀"

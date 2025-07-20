@@ -131,22 +131,7 @@ require_once '../includes/header.php';
         </div>
     </div>
 
-    <!-- Section édition -->
-    <div class="profile-edit-section">
-        <h3 class="section-title"><i class="fas fa-user-cog"></i> Personnalisation</h3>
-        
-        <form method="post" class="website-form">
-            <div class="form-group">
-                <label for="website_url">Votre site web :</label>
-                <div class="input-group">
-                    <input type="url" name="website_url" id="website_url"
-                           value="<?= !empty($user['website_url']) ? htmlspecialchars($user['website_url']) : '' ?>"
-                           placeholder="https://example.com">
-                    <button type="submit" class="btn-primary">Mettre à jour</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    
 
     <script>
 // Gestion de l'affichage du bouton Enregistrer
@@ -221,6 +206,24 @@ document.getElementById('profile_picture').addEventListener('change', function()
         </div>
     </div>
 
+
+    <!-- Section édition -->
+    <div class="profile-edit-section">
+        <h3 class="section-title"><i class="fas fa-user-cog"></i> Personnalisation</h3>
+        
+        <form method="post" class="website-form">
+            <div class="form-group">
+                <label for="website_url">Votre site web :</label>
+                <div class="input-group">
+                    <input type="url" name="website_url" id="website_url"
+                           value="<?= !empty($user['website_url']) ? htmlspecialchars($user['website_url']) : '' ?>"
+                           placeholder="https://example.com">
+                    <button type="submit" class="btn-primary">Mettre à jour</button>
+                </div>
+            </div>
+        </form>
+    
+
     <!-- Actions -->
     <div class="action-buttons">
         <a href="change-password.php" class="btn-primary">
@@ -230,6 +233,7 @@ document.getElementById('profile_picture').addEventListener('change', function()
             <i class="fas fa-chart-pie"></i> Tableau de bord complet
         </a>
     </div>
+</div>
 </div>
 
 <style>

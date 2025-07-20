@@ -8,6 +8,7 @@ if (!isLoggedIn()) {
 }
 
 $user = getUserById($_SESSION['user_id']);
+//$owner = getUserById($file['user_id']); // affcihe img otheruser - ajouter sql
 //$comments = getAllComments();
 $comments = getParentComments(); // pour afficher le com sous un post ciblé ? 1h pour trouver ce bug gael vas te coucher (ouai je me parle tout seul putain je suis fou ça y'est. ..)
 //$userLiked = hasUserLiked($comment['id'], $user['id']);  //bug ici
