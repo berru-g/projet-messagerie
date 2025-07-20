@@ -66,69 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
 
 require_once '../includes/header.php';
 ?>
-<!-- presentation du tool 
-<section class="data-tools-showcase">
-    <div class="dt-container">
-        <h2 class="dt-title">
-            <span class="dt-icon"><i class="fas fa-chart-network"></i></span>
-            Transformez vos données en insights
-        </h2>
-
-        <div class="dt-grid">
-            <div class="dt-card">
-                <div class="dt-card-icon csv">
-                    <i class="fa fa-file-csv"></i>
-                </div>
-                <h3>CSV Transformer</h3>
-                <p>Conversion vers multiples formats</p>
-                <ul class="dt-features">
-                    <li><i class="fas fa-chart-bar"></i> Graphiques dynamiques</li>
-                    <li><i class="fas fa-table"></i> Tableaux interactifs</li>
-                    <li><i class="fas fa-file-export"></i> Exports PNG/PDF</li>
-                </ul>
-            </div>
-
-            <div class="dt-card">
-                <div class="dt-card-icon excel">
-                    <i class="fa fa-file-excel"></i>
-                </div>
-                <h3>Excel Magic</h3>
-                <p>Analyse avancée</p>
-                <ul class="dt-features">
-                    <li><i class="fas fa-project-diagram"></i> Visualisations 3D</li>
-                    <li><i class="fas fa-bolt"></i> Traitement rapide</li>
-                    <li><i class="fas fa-cloud-upload"></i> Intégration cloud</li>
-                </ul>
-            </div>
-
-            <div class="dt-card">
-                <div class="dt-card-icon json">
-                    <i class="fa fa-file-code"></i>
-                </div>
-                <h3>JSON Explorer</h3>
-                <p>Analyse de structures</p>
-                <ul class="dt-features">
-                    <li><i class="fas fa-sitemap"></i> Arborescence</li>
-                    <li><i class="fas fa-filter"></i> Filtres intelligents</li>
-                    <li><i class="fas fa-share-alt"></i> Partage configurable</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="dt-cta">
-            <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
-            <div class="dt-buttons">
-                <a href="<?= safe_url('/pages/search.php') ?>" class="dt-btn primary">
-                    <i class="fas fa-rocket"></i> Commencer
-                </a>
-                <a href="#" class="dt-btn secondary">
-                    <i class="fas fa-book-open"></i> Tutoriels
-                </a>
-            </div>
-        </div>
-    </div>
-</section>-->
-<!--<?= safe_url('/pages/search.php') ?>--remplace--<?= BASE_URL ?>-->
 
 
 <div class="container" id="mur">
