@@ -112,7 +112,7 @@ require_once __DIR__ . '/functions.php';
       <div class="profile-dropdown">
         <button class="profile-btn">
           <?php if (!empty($user['profile_picture'])): ?>
-            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀" class="profile-picture-thumbnail">
+            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="⚙️" class="profile-picture-thumbnail">
           <?php else: ?>
             <i class="fas fa-user-circle"></i>
           <?php endif; ?>
@@ -149,7 +149,7 @@ require_once __DIR__ . '/functions.php';
                         <a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>-->
             <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
               Visualizer</a>
-            <a href="<?= BASE_URL ?>/pages/codepen.php"><i class="fas fa-code"></i> Codepen</a>
+            <!--<a href="<?= BASE_URL ?>/pages/codepen.php"><i class="fas fa-code"></i> Codepen</a>-->
           <?php endif; ?>
         </div>
       </div>

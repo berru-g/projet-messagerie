@@ -1097,7 +1097,7 @@ input {
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ab9ff2;
+    /*border: 2px solid #ab9ff2;*/
 }
 
 /* Style pour l'image dans le dropdown */

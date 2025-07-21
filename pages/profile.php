@@ -89,6 +89,7 @@ $stmt = $pdo->prepare("SELECT * FROM user_files WHERE user_id = ? ORDER BY uploa
 $stmt->execute([$user['id']]);
 $userFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
 require_once '../includes/header.php';
 ?>
 
