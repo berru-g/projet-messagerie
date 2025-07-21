@@ -75,4 +75,4 @@ ADD COLUMN website_url VARCHAR(255) NULL;
 SELECT f.*, u.id as owner_id, u.username, u.profile_picture, u.email
 FROM user_files f
 JOIN users u ON f.user_id = u.id
-WHERE f.id = ?
+WHERE f.id = ? -- bug pas l

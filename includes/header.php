@@ -38,11 +38,16 @@ require_once __DIR__ . '/functions.php';
   <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> revoir tout le css bootstrap c'est vrt de la grosse merde-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Fail-safe si jQuery ne charge pas
+    window.jQuery || document.write('<script src="<?= BASE_URL ?>/assets/js/jquery.min.js">\x3C/script>');
+  </script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet">
@@ -107,8 +112,7 @@ require_once __DIR__ . '/functions.php';
       <div class="profile-dropdown">
         <button class="profile-btn">
           <?php if (!empty($user['profile_picture'])): ?>
-            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀"
-              class="profile-picture-thumbnail">
+            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀" class="profile-picture-thumbnail">
           <?php else: ?>
             <i class="fas fa-user-circle"></i>
           <?php endif; ?>
@@ -118,8 +122,7 @@ require_once __DIR__ . '/functions.php';
             <!--<?= safe_url('/chemin/index.php') ?>--remplace--<?= BASE_URL ?>--?-->
             <a href="<?= BASE_URL ?>/pages/profile.php">
               <?php if (!empty($user['profile_picture'])): ?>
-                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="🧑‍🚀"
-                  class="profile-picture-small">
+                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="⚙️" class="profile-picture-small">
               <?php else: ?>
                 <i class="fas fa-user-circle"></i>
               <?php endif; ?>
@@ -146,7 +149,7 @@ require_once __DIR__ . '/functions.php';
                         <a href="<?= BASE_URL ?>/pages/format.php"><i class="fas fa-file-csv"></i> Data to Table</a>-->
             <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
               Visualizer</a>
-
+            <a href="<?= BASE_URL ?>/pages/codepen.php"><i class="fas fa-code"></i> Codepen</a>
           <?php endif; ?>
         </div>
       </div>
