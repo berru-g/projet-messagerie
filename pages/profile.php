@@ -7,15 +7,15 @@ if (!isLoggedIn()) {
     exit;
 }
 
-$user = getUserById($_SESSION['user_id']);
-$userId = $_SESSION['user_id'];
-// Visibilité public d'un profil
-$profileUserId = $_GET['user_id'] ?? $_SESSION['user_id']; // Prend l'ID de l'URL ou celui en session
+// Identifiants
+$userId = $_SESSION['user_id']; // l'utilisateur connecté
+$user = getUserById($userId);   // ses infos
+
+$profileUserId = isset($_GET['user_id']) ? intval($_GET['user_id']) : $userId;
 $profileUser = getUserById($profileUserId);
 
-// Remplace ensuite tous les $user par $profileUser dans ce fichier
-// Traitement du formulaire de mise à jour
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Traitement uniquement si l'utilisateur modifie son propre profil
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId === $profileUserId) {
     // Mise à jour du site web
     if (isset($_POST['website_url'])) {
         $websiteUrl = filter_var($_POST['website_url'], FILTER_SANITIZE_URL);
@@ -36,16 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileName = 'profile_' . $userId . '_' . time() . '.' . $fileExt;
         $targetPath = $uploadDir . $fileName;
 
-        // Vérification du type de fichier
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array(strtolower($fileExt), $allowedTypes)) {
             if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetPath)) {
-                // Suppression de l'ancienne photo si elle existe
                 if (!empty($user['profile_picture']) && file_exists($user['profile_picture'])) {
                     unlink($user['profile_picture']);
                 }
 
-                // Mise à jour en base de données
                 $stmt = $pdo->prepare("UPDATE users SET profile_picture = ? WHERE id = ?");
                 $stmt->execute([$targetPath, $userId]);
                 $user['profile_picture'] = $targetPath;
@@ -54,240 +51,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
-// Nombre total de fichiers privée
+// Statistiques du profil visité
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_files WHERE user_id = ?");
-$stmt->execute([$userId]);
+$stmt->execute([$profileUserId]);
 $fileCount = $stmt->fetchColumn();
 
-// Nombre de fichiers publics
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_files WHERE user_id = ? AND is_public = 1");
-$stmt->execute([$userId]);
+$stmt->execute([$profileUserId]);
 $publicFileCount = $stmt->fetchColumn();
 
-// Nombre d'images partagées 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_files_img WHERE user_id = ?");
-$stmt->execute([$user['id']]);
+$stmt->execute([$profileUserId]);
 $imageCount = $stmt->fetchColumn();
 
-
-// Nombre de commentaires
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM comments WHERE user_id = ?");
-$stmt->execute([$userId]);
+$stmt->execute([$profileUserId]);
 $commentCount = $stmt->fetchColumn();
 
-// Nombre de likes reçus
 $stmt = $pdo->prepare("
     SELECT COUNT(*) FROM likes 
     WHERE comment_id IN (SELECT id FROM comments WHERE user_id = ?)
 ");
-$stmt->execute([$userId]);
+$stmt->execute([$profileUserId]);
 $likesReceived = $stmt->fetchColumn();
 
-// Récupération des fichiers de l'utilisateur
 $stmt = $pdo->prepare("SELECT * FROM user_files WHERE user_id = ? ORDER BY upload_date DESC");
-$stmt->execute([$user['id']]);
+$stmt->execute([$profileUserId]);
 $userFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 require_once '../includes/header.php';
 ?>
 
 <div class="profile-app">
-    <!-- Header du profil -->
     <div class="profile-header">
         <div class="profile-avatar-section">
             <div class="avatar-edit">
-                <img src="<?= !empty($user['profile_picture']) ? htmlspecialchars($user['profile_picture']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['username']) . '&background=ab9ff2&color=fff' ?>"
-                    alt="Avatar de <?= htmlspecialchars($user['username']) ?>" class="avatar-image">
+                <img src="<?= !empty($profileUser['profile_picture']) ? htmlspecialchars($profileUser['profile_picture']) : 'https://ui-avatars.com/api/?name=' . urlencode($profileUser['username']) . '&background=ab9ff2&color=fff' ?>" alt="Avatar de <?= htmlspecialchars($profileUser['username']) ?>" class="avatar-image">
 
-                <form method="post" enctype="multipart/form-data" class="avatar-form">
-                    <input type="file" name="profile_picture" id="profile_picture" accept="image/*" hidden>
-                    <button type="button" class="btn-primary"
-                        onclick="document.getElementById('profile_picture').click()">
-                        <i class="fas fa-camera"></i> Changer
-                    </button>
-                    <button type="submit" class="btn-ghost" id="submit-btn" style="display:none;">
-                        <i class="fas fa-save"></i> Enregistrer
-                    </button>
-                </form>
+                <?php if ($userId === $profileUserId): ?>
+                    <form method="post" enctype="multipart/form-data" class="avatar-form">
+                        <input type="file" name="profile_picture" id="profile_picture" accept="image/*" hidden>
+                        <button type="button" class="btn-primary" onclick="document.getElementById('profile_picture').click()">
+                            <i class="fas fa-camera"></i> Changer
+                        </button>
+                        <button type="submit" class="btn-ghost" id="submit-btn" style="display:none;">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                    </form>
+                <?php endif; ?>
             </div>
 
             <div class="profile-identity">
-                <h1 class="profile-title"><?= htmlspecialchars($user['username']) ?></h1>
+                <h1 class="profile-title"><?= htmlspecialchars($profileUser['username']) ?></h1>
 
-                <!-- Lien cliquable seulement en mode affichage -->
-                <?php if (!empty($user['website_url'])): ?>
+                <?php if (!empty($profileUser['website_url'])): ?>
                     <div class="website-display">
-                        <a href="<?= htmlspecialchars($user['website_url']) ?>" target="_blank" class="website-link">
-                            <i class="fas fa-external-link-alt"></i> <?= htmlspecialchars($user['website_url']) ?>
+                        <a href="<?= htmlspecialchars($profileUser['website_url']) ?>" target="_blank" class="website-link">
+                            <i class="fas fa-external-link-alt"></i> <?= htmlspecialchars($profileUser['website_url']) ?>
                         </a>
                     </div>
                 <?php endif; ?>
 
                 <div class="profile-meta">
                     <span class="meta-item">
-                        <i class="fas fa-envelope"></i> <?= htmlspecialchars($user['email']) ?>
+                        <i class="fas fa-envelope"></i> <?= htmlspecialchars($profileUser['email']) ?>
                     </span>
                     <span class="meta-item">
-                        <i class="fas fa-calendar-alt"></i> Membre depuis le
-                        <?= date('d/m/Y', strtotime($user['created_at'])) ?>
+                        <i class="fas fa-calendar-alt"></i> Membre depuis le <?= date('d/m/Y', strtotime($profileUser['created_at'])) ?>
                     </span>
                 </div>
             </div>
         </div>
     </div>
 
-
-
     <script>
-        // Gestion de l'affichage du bouton Enregistrer
-        document.getElementById('profile_picture').addEventListener('change', function () {
+        document.getElementById('profile_picture')?.addEventListener('change', function () {
             if (this.files.length > 0) {
                 document.getElementById('submit-btn').style.display = 'inline-block';
             }
         });
     </script>
 
-<h3 class="section-title"><i class="fas fa-chart-pie"></i> Dashboard</h3>
-    <!-- Stats sous forme de cartes -->
+    <h3 class="section-title"><i class="fas fa-chart-pie"></i> Dashboard</h3>
     <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon bg-purple">
-                <i class="fas fa-image"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-count"><?= $imageCount ?></span>
-                <span class="stat-label">Images</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon bg-blue">
-                <i class="fas fa-file-upload"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-count"><?= $fileCount ?></span>
-                <span class="stat-label">Fichiers</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon bg-green">
-                <i class="fas fa-globe"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-count"><?= $publicFileCount ?></span>
-                <span class="stat-label">Publics</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon bg-orange">
-                <i class="fas fa-comment"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-count"><?= $commentCount ?></span>
-                <span class="stat-label">Commentaires</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon bg-red">
-                <i class="fas fa-heart"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-count"><?= $likesReceived ?></span>
-                <span class="stat-label">Likes reçus</span>
-            </div>
-        </div>
-
-        <div class="stat-card clickable" onclick="location.href='<?= BASE_URL ?>/pages/mon-dashboard.php'">
-            <div class="stat-icon bg-gradient">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">Voir toutes</span>
-                <span class="stat-link">les statistiques <i class="fas fa-arrow-right"></i></span>
-            </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon bg-purple"><i class="fas fa-image"></i></div><div class="stat-info"><span class="stat-count"><?= $imageCount ?></span><span class="stat-label">Images</span></div></div>
+        <div class="stat-card"><div class="stat-icon bg-blue"><i class="fas fa-file-upload"></i></div><div class="stat-info"><span class="stat-count"><?= $fileCount ?></span><span class="stat-label">Fichiers</span></div></div>
+        <div class="stat-card"><div class="stat-icon bg-green"><i class="fas fa-globe"></i></div><div class="stat-info"><span class="stat-count"><?= $publicFileCount ?></span><span class="stat-label">Publics</span></div></div>
+        <div class="stat-card"><div class="stat-icon bg-orange"><i class="fas fa-comment"></i></div><div class="stat-info"><span class="stat-count"><?= $commentCount ?></span><span class="stat-label">Commentaires</span></div></div>
+        <div class="stat-card"><div class="stat-icon bg-red"><i class="fas fa-heart"></i></div><div class="stat-info"><span class="stat-count"><?= $likesReceived ?></span><span class="stat-label">Likes reçus</span></div></div>
+        <?php if ($userId === $profileUserId): ?>
+        <div class="stat-card clickable" onclick="location.href='<?= BASE_URL ?>/pages/mon-dashboard.php'"><div class="stat-icon bg-gradient"><i class="fas fa-chart-line"></i></div><div class="stat-info"><span class="stat-label">Voir toutes</span><span class="stat-link">les statistiques <i class="fas fa-arrow-right"></i></span></div></div>
+        <?php endif; ?>
     </div>
 
     <h3 class="section-title"><i class="fas fa-file"></i> Fichier Public</h3>
     <div class="stats-grid">
-        <!-- Affichage des fichiers existants -->
         <?php foreach ($userFiles as $file): ?>
             <div class="file-card" style="max-width:200px;display:flex;">
                 <div class="file-icon">
-                    <?php switch ($file['file_type']):
-                        case 'csv': ?>
-                            <i class="fas fa-file-csv"></i>
-                            <?php break; ?>
-                        <?php case 'excel': ?>
-                            <i class="fas fa-file-excel"></i>
-                            <?php break; ?>
-                        <?php case 'json': ?>
-                            <i class="fas fa-file-code"></i>
-                            <?php break; ?>
-                        <?php case 'googlesheet': ?>
-                            <i class="fab fa-google-drive"></i>
-                            <?php break; ?>
-                        <?php default: ?>
-                            <i class="fas fa-file"></i>
-                    <?php endswitch; ?>
+                    <i class="fas fa-file<?= $file['file_type'] === 'csv' ? '-csv' : ($file['file_type'] === 'excel' ? '-excel' : ($file['file_type'] === 'json' ? '-code' : '')) ?>"></i>
                 </div>
                 <div class="file-info">
                     <h5><?= htmlspecialchars($file['file_name']) ?></h5>
                     <small><?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></small>
-                    <small class="file-type <?= $file['file_type'] ?>"><?= strtoupper($file['file_type']) ?></small>
+                    <small class="file-type"><?= strtoupper($file['file_type']) ?></small>
                 </div>
                 <div class="file-actions">
-                    <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
-                        class="btn btn-sm btn-success">
+                    <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download class="btn btn-sm btn-success">
                         <i class="fas fa-download"></i>
-
-                        <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
-                            <i class="fas fa-chart-line"></i>
-                        </a>
-
-                        <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
-                            data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
-                            <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
-                        </button>
-
+                    </a>
+                    <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
+                        <i class="fas fa-chart-line"></i>
+                    </a>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
 
-    <!-- Section édition -->
+    <?php if ($userId === $profileUserId): ?>
     <div class="profile-edit-section">
         <h3 class="section-title"><i class="fas fa-user-cog"></i> Personnalisation</h3>
-
         <form method="post" class="website-form">
             <div class="form-group">
                 <label for="website_url">Votre site web :</label>
                 <div class="input-group">
-                    <input type="url" name="website_url" id="website_url"
-                        value="<?= !empty($user['website_url']) ? htmlspecialchars($user['website_url']) : '' ?>"
-                        placeholder="https://example.com">
+                    <input type="url" name="website_url" id="website_url" value="<?= htmlspecialchars($user['website_url'] ?? '') ?>" placeholder="https://example.com">
                     <button type="submit" class="btn-primary">Mettre à jour</button>
                 </div>
             </div>
         </form>
-
-
-        <!-- Actions -->
         <div class="action-buttons">
-            <a href="change-password.php" class="btn-primary">
-                <i class="fas fa-key"></i> Changer le mot de passe
-            </a>
-            <a href="<?= BASE_URL ?>/pages/mon-dashboard.php" class="btn-ghost">
-                <i class="fas fa-chart-pie"></i> Tableau de bord complet
-            </a>
+            <a href="change-password.php" class="btn-primary"><i class="fas fa-key"></i> Changer le mot de passe</a>
+            <a href="<?= BASE_URL ?>/pages/mon-dashboard.php" class="btn-ghost"><i class="fas fa-chart-pie"></i> Tableau de bord complet</a>
         </div>
     </div>
+    <?php endif; ?>
 </div>
+
 
 <style>
     .profile-app {

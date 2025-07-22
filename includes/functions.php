@@ -129,7 +129,7 @@ function getParentComments()
 {
     global $pdo;
     $stmt = $pdo->query("
-        SELECT c.*, u.username, COUNT(l.id) as like_count 
+        SELECT c.*, u.username, u.profile_picture, COUNT(l.id) as like_count 
         FROM comments c
         LEFT JOIN users u ON c.user_id = u.id
         LEFT JOIN likes l ON c.id = l.comment_id
@@ -140,12 +140,13 @@ function getParentComments()
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 // Fonction pour obtenir les réponses à un commentaire
 function getReplies($comment_id)
 {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT c.*, u.username, COUNT(l.id) as like_count 
+        SELECT c.*, u.username, u.profile_picture, COUNT(l.id) as like_count 
         FROM comments c
         LEFT JOIN users u ON c.user_id = u.id
         LEFT JOIN likes l ON c.id = l.comment_id

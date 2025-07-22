@@ -20,6 +20,7 @@ $file_ext = strtolower(pathinfo($file['file_name'], PATHINFO_EXTENSION));
 $user = getUserById($_SESSION['user_id']);
 $owner = getUserById($file['owner_id']);
 
+
 require_once '../includes/header.php';
 ?>
 

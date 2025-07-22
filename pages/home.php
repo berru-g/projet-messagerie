@@ -7,7 +7,11 @@ if (!isLoggedIn()) {
     exit;
 }
 
-$user = getUserById($_SESSION['user_id']);
+$userId = $_SESSION['user_id']; // l'utilisateur connecté
+$user = getUserById($userId);   // ses infos
+
+$profileUserId = isset($_GET['user_id']) ? intval($_GET['user_id']) : $userId;
+$profileUser = getUserById($profileUserId);
 //$owner = getUserById($file['user_id']); // affcihe img otheruser - ajouter sql
 //$comments = getAllComments();
 $comments = getParentComments(); // pour afficher le com sous un post ciblé ? 1h pour trouver ce bug gael vas te coucher (ouai je me parle tout seul putain je suis fou ça y'est. ..)
@@ -88,12 +92,14 @@ require_once '../includes/header.php';
 
     <div class="comments">
         <h2>Posts commun</h2>
+        
         <?php foreach ($comments as $comment): ?>
+            
             <div class="comment">
 
                 <?php if (!empty($comment['profile_picture'])): ?>
                     <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>"
-                        alt="Photo de <?= htmlspecialchars($comment['username']) ?>" class="profile-picture-thumbnail">
+                        alt="" class="profile-picture-thumbnail">
                 <?php else: ?>
                     <i class="fas fa-user-circle"></i>
                 <?php endif; ?>
@@ -148,8 +154,7 @@ require_once '../includes/header.php';
             <?php foreach (getReplies($comment['id']) as $reply): ?>
                 <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
                     <?php if (!empty($reply['profile_picture'])): ?>
-                        <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>"
-                            alt="Photo de <?= htmlspecialchars($reply['username']) ?>" class="profile-picture-thumbnail">
+                        <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>" class="profile-picture-thumbnail">
                     <?php else: ?>
                         <i class="fas fa-user-circle"></i>
                     <?php endif; ?>
