@@ -1,7 +1,7 @@
 <?php
 // Configuration de base
 session_start();
-define('BASE_URL', 'http://localhost/projet-messagerie');
+define('BASE_URL', 'http://gael-berru/projet-messagerie');
 define('SITE_NAME', 'FileShare');
 
 // Détecte les tentatives d'injection dans les URLs
