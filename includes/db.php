@@ -1,8 +1,8 @@
 <?php
-// db.php - Version sécurisée
+/*
 $dbHost = 'mysql.hostinger.com';      // Hôte Hostinger
-$dbName = 'u123456789_messagerie';    // Nom DB
-$dbUser = 'u123456789_tonuser';       // Ton user
+$dbName = '#';    // Nom DB
+$dbUser = '#';       // Ton user
 $dbPass = 'tonMotDePasseUltraSecret'; // Ton password
 
 try {
@@ -15,8 +15,8 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
+*/
 
-/*
 require_once  'config.php';
 
 $host = 'localhost';
@@ -29,5 +29,5 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données: " . $e->getMessage());
-}*/
+}
 ?>
