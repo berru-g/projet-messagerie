@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/config.php';
+require_once __DIR__ . '/../includes/config.php';
 require_once '../includes/functions.php';
 // Attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant
 if (!isLoggedIn()) {
