@@ -1,9 +1,9 @@
 <?php
-
-$dbHost = 'localhost';      // Hôte Hostinger
-$dbName = 'u446441289_fileshare';    // Nom DB
-$dbUser = 'u446441289_berru';       // Ton user
-$dbPass = 'm@bddSQL'; // Ton password
+/*
+$dbHost = 'mysql.hostinger.com';      // Hôte Hostinger
+$dbName = '#';    // Nom DB
+$dbUser = '#';       // Ton user
+$dbPass = 'tonMotDePasseUltraSecret'; // Ton password
 
 try {
     $pdo = new PDO(
@@ -15,8 +15,8 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
+*/
 
-/*
 require_once  'config.php';
 
 $host = 'localhost';
@@ -29,5 +29,5 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données: " . $e->getMessage());
-}*/
+}
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/config.php';
+require_once '../includes/config.php';
 require_once '../includes/functions.php';
 // Attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant
 if (!isLoggedIn()) {
@@ -72,7 +72,7 @@ require_once '../includes/header.php';
                                     <?php case 'json': ?>
                                         <i class="fas fa-file-code"></i>
                                         <?php break; ?>
-                                    <!--<?php default: ?>-->
+                                    <?php default: ?>
                                         <i class="fas fa-file"></i>
                                 <?php endswitch; ?>
                             </div>
