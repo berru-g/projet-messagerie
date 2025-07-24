@@ -1,7 +1,7 @@
 <?php
 // Configuration de base
 session_start();
-define('BASE_URL', 'http://fileshare/gael-berru.com');
+define('BASE_URL', 'https://moccasin-trout-851542.hostingersite.com/');
 define('SITE_NAME', 'FileShare');
 
 // Détecte les tentatives d'injection dans les URLs

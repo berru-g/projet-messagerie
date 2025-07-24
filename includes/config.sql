@@ -1,6 +1,6 @@
 -- Création de la base de données
-CREATE DATABASE IF NOT EXISTS messagerie_collegues;
-USE messagerie_collegues;
+CREATE DATABASE IF NOT EXISTS fileshare;
+USE fileshare;
 
 -- Table des utilisateurs
 CREATE TABLE users (

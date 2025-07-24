@@ -72,7 +72,7 @@ require_once '../includes/header.php';
                                     <?php case 'json': ?>
                                         <i class="fas fa-file-code"></i>
                                         <?php break; ?>
-                                    <?php default: ?>
+                                    <!--<?php default: ?>-->
                                         <i class="fas fa-file"></i>
                                 <?php endswitch; ?>
                             </div>
