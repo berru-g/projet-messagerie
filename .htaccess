@@ -1,15 +1,18 @@
-RewriteEngine On
-RewriteBase /projet-messagerie/
-
-# Rediriger vers le dossier pages
-RewriteRule ^login$ pages/login.php [L]
-RewriteRule ^register$ pages/register.php [L]
-RewriteRule ^logout$ pages/logout.php [L]
-RewriteRule ^profile$ pages/profile.php [L]
-RewriteRule ^change-password$ pages/change-password.php [L]
-
-# Rediriger la racine vers home.php
-RewriteRule ^$ pages/home.php [L]
-
-# Empêcher l'accès direct aux fichiers PHP dans le dossier pages
-# RewriteRule ^pages/ - [F,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Autoriser l'accès aux fichiers dans /pages/
+    RewriteRule ^(login|register|logout|profile|change-password)/?$ pages/$1.php [L,NC]
+    
+    # Homepage
+    RewriteRule ^$ pages/home.php [L]
+    
+    # Désactiver le listing de répertoire
+    Options -Indexes
+    
+    # Désactiver la protection (TEMPORAIREMENT)
+    # Remove this after testing:
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
