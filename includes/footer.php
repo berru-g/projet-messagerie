@@ -61,7 +61,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>© <?= date('Y') ?> <?= SITE_NAME ?> by <a href="https://gael-berru.netlify.app">berru-g</a> - Tous droits réservés</p>
+    <p>© <?= date('Y') ?> <?= SITE_NAME ?> by <a href="https://gael-berru.com">berru-g</a> - Tous droits réservés</p>
     <div class="legal-links">
       <a href="#">CGU</a> | <a href="#">Confidentialité</a>
     </div>
