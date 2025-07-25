@@ -1,9 +1,9 @@
 <?php
 
-$dbHost = 'localhost';      
-$dbName = 'u667977963_saas';    
-$dbUser = 'u667977963_berru_saas';      
-$dbPass = 'm@bddSQL25'; 
+$dbHost = 'localhost';      // Hôte Hostinger
+$dbName = 'u667977963_saas';    // Nom DB
+$dbUser = 'u667977963_berru_saas';       // Ton user
+$dbPass = 'm@bddSQL25'; // Ton password
 
 try {
     $pdo = new PDO(
