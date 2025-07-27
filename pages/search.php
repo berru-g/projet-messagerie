@@ -78,7 +78,13 @@ require_once '../includes/header.php';
                             </div>
                             <div class="file-info">
                                 <h5><?= htmlspecialchars($file['file_name']) ?></h5>
-                                <small>Propriétaire: <?= htmlspecialchars($file['owner_email']) ?></small>
+                                <!--<small>Propriétaire: <?= htmlspecialchars($file['owner_email']) ?></small>--><!--chaque $file contient :user_id : l'ID du propriétaire owner_email : son email Pas besoin de $owner séparé-->
+                                <small>Propriétaire:
+                                    <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $file['user_id'] ?>"
+                                        class="owner-link">
+                                        <?= htmlspecialchars($file['owner_email']) ?>
+                                    </a>
+                                </small>
                                 <small><?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></small>
                                 <small class="file-type <?= $file['file_type'] ?>">
                                     <?= strtoupper($file['file_type']) ?>

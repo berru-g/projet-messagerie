@@ -1203,6 +1203,15 @@ input {
   margin-top: 30px;
 }
 
+.profile-picture-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+.profile-picture-link:hover {
+    opacity: 0.8;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

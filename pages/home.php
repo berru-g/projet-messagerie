@@ -92,17 +92,27 @@ require_once '../includes/header.php';
 
     <div class="comments">
         <h2>Posts commun</h2>
-        
+
         <?php foreach ($comments as $comment): ?>
-            
+
             <div class="comment">
 
-                <?php if (!empty($comment['profile_picture'])): ?>
+                <!--<?php if (!empty($comment['profile_picture'])): ?>
                     <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>"
                         alt="" class="profile-picture-thumbnail">
                 <?php else: ?>
                     <i class="fas fa-user-circle"></i>
-                <?php endif; ?>
+                <?php endif; ?>-->
+                
+                <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $comment['user_id'] ?>"
+                    class="profile-picture-link">
+                    <?php if (!empty($comment['profile_picture'])): ?>
+                        <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>" alt="Photo de profil"
+                            class="profile-picture-thumbnail">
+                    <?php else: ?>
+                        <i class="fas fa-user-circle"></i>
+                    <?php endif; ?>
+                </a>
 
                 <span class="comment-date">
                     <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
@@ -154,7 +164,8 @@ require_once '../includes/header.php';
             <?php foreach (getReplies($comment['id']) as $reply): ?>
                 <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
                     <?php if (!empty($reply['profile_picture'])): ?>
-                        <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>" class="profile-picture-thumbnail">
+                        <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>"
+                            class="profile-picture-thumbnail">
                     <?php else: ?>
                         <i class="fas fa-user-circle"></i>
                     <?php endif; ?>
