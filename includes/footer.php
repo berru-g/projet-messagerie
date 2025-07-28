@@ -41,7 +41,7 @@
         <li><i class="fas fa-file-export"></i> Exports</li>
         <!--<li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
         <li><i class="fas fa-sync-alt"></i> Mises à jour automatiques des prix</li>-->
-        <li><i class="fas fa-code"></i><a href="../pages/codepen.php"></a> Codepen</li>
+        <li><i class="fas fa-code"></i><a href="../pages/codepen.php"> Codepen</a></li>
         <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
       </ul>
     </div>

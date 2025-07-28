@@ -602,6 +602,7 @@ h3 {
   height: auto; 
   display: block; 
   margin: 0 auto; 
+  border-radius: 12px;
 }
 
 @media (min-width: 1200px) {
@@ -609,7 +610,10 @@ h3 {
     max-width: 500px; 
   }
 }
-
+.owner-link {
+  text-decoration: none;
+  color: var(--primary-color);
+}
 /* Styles pour les réponses aux commentaires */
 .reply-form {
   margin-top: 10px;
@@ -1063,12 +1067,21 @@ input {
 }
 
 .profile-picture {
-    width: 150px;
-    height: 150px;
+    width: 170px;
+    height: 170px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #ab9ff2;
     margin-bottom: 10px;
+}
+
+.profile-picture-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+.profile-picture-link:hover {
+    opacity: 0.8;
 }
 
 .profile-picture-form {
@@ -1203,14 +1216,7 @@ input {
   margin-top: 30px;
 }
 
-.profile-picture-link {
-    text-decoration: none;
-    color: inherit;
-    display: inline-block;
-}
-.profile-picture-link:hover {
-    opacity: 0.8;
-}
+
 
 .btn {
   display: inline-flex;
