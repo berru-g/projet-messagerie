@@ -102,18 +102,72 @@ require_once '../includes/header.php';
     </div>
 </section>-->
 
-<section class="w-full px-4 py-8 bg-gray-50 border-b border-gray-200">
-  <div class="max-w-xl mx-auto text-center">
-    <img src="<?= BASE_URL ?>/assets/img/agora-logo.png" alt="Logo Agora" class="mx-auto w-20 h-20 mb-4 rounded-xl shadow-md object-contain">
-    
-    <h1 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-2">Bienvenue sur Agora</h1>
+<style>
+  .intro-section {
+    background-color: #f9f9fb;
+    border-bottom: 1px solid #ddd;
+    padding: 40px 20px;
+    text-align: center;
+  }
 
-    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-      Ceci est un <strong>MVP</strong> (version minimale viable ou prototype) en phase de test et en recherche de niche. Vos retours sont <strong>les bienvenus</strong> pour améliorer la plateforme.<br class="hidden sm:block" />
-      Nous croyons en une communauté bienveillante : <span class="text-red-600 font-semibold">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
-    </p>
-  </div>
+  .intro-section img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 16px;
+    margin-bottom: 20px;
+  }
+
+  .intro-section h1 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .intro-section p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .intro-section strong {
+    font-weight: 600;
+    color: #222;
+  }
+
+  .intro-section .warning {
+    color: #60d394;
+    font-weight: bold;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 480px) {
+    .intro-section {
+      padding: 30px 15px;
+    }
+
+    .intro-section h1 {
+      font-size: 1.5em;
+    }
+
+    .intro-section p {
+      font-size: 0.95em;
+    }
+  }
+</style>
+
+<section class="intro-section">
+  <img src="<?= BASE_URL ?>/assets/img/agora-logo.png" alt="Logo Agora" />
+  <h1>Bienvenue sur Agora</h1>
+  <p>
+    Ceci est un <strong>MVP</strong> (version minimale viable ou prototype) actuellement en phase de test et en recherche de niche. 
+    <strong>Vos retours sont les bienvenus</strong> pour nous aider à améliorer la plateforme.<br /><br />
+    Nous tenons à préserver un espace respectueux et bienveillant : <span class="warning">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
+  </p>
 </section>
+
 
 
 <div class="container auth-container" id="seconnecter">
