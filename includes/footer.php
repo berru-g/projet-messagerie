@@ -37,6 +37,7 @@
         <li><i class="fa-solid fa-comments"></i><a href="../pages/home.php">Social Feed - Post/comment/like</a></li>
         <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to Chart/PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
+        <li><i class="fas fa-file-export"></i><a href="../pages/search.php"> Public Data</a></li>
         <!--<li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>
         <li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
