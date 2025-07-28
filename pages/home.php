@@ -163,12 +163,23 @@ require_once '../includes/header.php';
             <!-- Affichage des réponses -->
             <?php foreach (getReplies($comment['id']) as $reply): ?>
                 <div class="reply" style="margin-left: 40px; border-left: 2px solid #ccc; padding-left: 10px;">
-                    <?php if (!empty($reply['profile_picture'])): ?>
+                    <!--<?php if (!empty($reply['profile_picture'])): ?>
                         <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>"
                             class="profile-picture-thumbnail">
                     <?php else: ?>
                         <i class="fas fa-user-circle"></i>
-                    <?php endif; ?>
+                    <?php endif; ?>-->
+                    
+                    <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $reply['user_id'] ?>"
+                        class="profile-picture-link">
+                        <?php if (!empty($reply['profile_picture'])): ?>
+                            <img src="<?= htmlspecialchars($reply['profile_picture']) ?>?<?= time() ?>"
+                                class="profile-picture-thumbnail">
+                        <?php else: ?>
+                            <i class="fas fa-user-circle"></i>
+                        <?php endif; ?>
+                    </a>
+
                     <p><strong><?= htmlspecialchars($reply['username']) ?></strong> a répondu :</p>
 
                     <?php if (!empty($reply['content'])): ?>

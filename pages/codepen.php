@@ -11,9 +11,17 @@ $user = getUserById($_SESSION['user_id']);
 
 require_once '../includes/header.php';
 ?>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/eclipse.min.css">
 <style>
     :root {
-        --bg: #1e1e1e;
+        --bg: #2a2734;
         --text: #ccc;
         --border: #ab9ff2;
         --accent: #61dafb;
@@ -40,10 +48,13 @@ require_once '../includes/header.php';
         font-family: 'Fira Code', monospace;
         background-color: var(--bg);
         color: var(--text);
-
+        min-height: 100vh;
+        height: auto;
+        display: flex;
+        flex-direction: column;
     }
 
-    .head {
+    header {
         background-color: var(--bg);
         color: var(--text);
         text-align: center;
@@ -54,7 +65,7 @@ require_once '../includes/header.php';
         align-items: center;
     }
 
-    .head h1 {
+    header h1 {
         font-size: 1.3rem;
     }
 
@@ -109,6 +120,8 @@ require_once '../includes/header.php';
 
     /* Textareas style */
     textarea.editor {
+        font-family: 'Fira Code', monospace;
+        tab-size: 4;
         background-color: var(--bg);
         color: var(--text);
         border-radius: 5px;
@@ -118,6 +131,7 @@ require_once '../includes/header.php';
         resize: vertical;
         min-height: 150px;
         line-height: 1.5;
+        caret-color: var(--text);
     }
 
     textarea.editor:focus {
@@ -140,7 +154,7 @@ require_once '../includes/header.php';
     }
 
     /* Desktop layout */
-    @media (min-width: 700px) {
+    @media (min-width: 600px) {
         .main-layout {
             flex-direction: row;
         }
@@ -158,21 +172,47 @@ require_once '../includes/header.php';
             border-top: none;
         }
     }
+
+    .CodeMirror {
+        border-radius: 5px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        background-color: var(--bg);
+        color: var(--text);
+        caret-color: var(--text);
+        min-height: 150px;
+    }
+
+    .cm-tag {
+        color: #4aa3ff;
+    }
+
+    .cm-attribute {
+        color: #ffe100;
+    }
+
+    .cm-string {
+        color: #a6e22e;
+    }
+
+    .cm-bracket {
+        color: #ff5e99;
+    }
+
+    .cm-qualifier {
+        color: #ffe100;
+    }
 </style>
 
 
-<div class="head">
+<!--V1--<div class="head">
     <h1>Live Code Editor</h1>
-    <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <div class="controls">
         <button id="toggleMode">🌙 Mode</button>
         <button id="reset">♻️ Reset</button>
         <a href="../"><button>⬅️ Back</button></a>
     </div>
 </div>
-
-
-
 <div class="main-layout">
     <div class="editor-panel">
         <div class="editor-block">
@@ -192,34 +232,74 @@ require_once '../includes/header.php';
     <div class="preview-panel">
         <iframe id="preview"></iframe>
     </div>
+</div>-->
+
+<header>
+    <h1>Live Code Editor</h1>
+    <div class="controls">
+        <button id="themeToggle"><i class="fa-solid fa-palette"></i> Thème</button>
+        <button id="reset"><i class="fa-solid fa-trash-arrow-up"></i> Reset</button>
+        <button id="save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+        <a href="https://github.com/berru-g/berru-g/blob/main/codepen/"><button>opensrc</button></a>
+    </div>
+</header>
+
+<div class="main-layout">
+    <div class="editor-panel">
+        <div class="editor-block">
+            <label for="htmlEditor">HTML</label>
+            <textarea id="htmlEditor" placeholder="Dev by berru-g"><h1>Live code editor</h1></textarea>
+        </div>
+        <div class="editor-block">
+            <label for="cssEditor">CSS</label>
+            <textarea id="cssEditor">h1, p {
+  color: #ab9ff2;
+  text-align: center;
+  margin-top: 40px;
+}</textarea>
+        </div>
+    </div>
+    <div class="preview-panel">
+        <iframe id="preview"></iframe>
+    </div>
 </div>
 
-
-
-
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
 
 <script>
-    document.getElementById("toggleMode").addEventListener("click", () => {
-        document.body.classList.toggle("light");
+    const htmlEditor = CodeMirror.fromTextArea(document.getElementById("htmlEditor"), {
+        mode: "htmlmixed",
+        theme: "material",
+        lineNumbers: true,
+        tabSize: 2,
+        autoCloseBrackets: true,
+        matchBrackets: true
     });
 
-    document.getElementById("reset").addEventListener("click", () => {
-        localStorage.clear();
-        resetAll();
+    const cssEditor = CodeMirror.fromTextArea(document.getElementById("cssEditor"), {
+        mode: "css",
+        theme: "material",
+        lineNumbers: true,
+        tabSize: 2,
+        autoCloseBrackets: true,
+        matchBrackets: true
     });
 
-    const html = document.getElementById("html");
-    const css = document.getElementById("css");
-    const iframe = document.querySelector("iframe");
+    const iframe = document.getElementById("preview");
 
     function updatePreview() {
+        const html = htmlEditor.getValue();
+        const css = cssEditor.getValue();
         const content = `
-         <html>
-            <head>
-               <style>${css.value}</style>
-            </head>
-            <body>${html.value}</body>
-         </html>
+        <html>
+          <head><style>${css}</style></head>
+          <body>${html}</body>
+        </html>
       `;
         const preview = iframe.contentDocument || iframe.contentWindow.document;
         preview.open();
@@ -227,12 +307,34 @@ require_once '../includes/header.php';
         preview.close();
     }
 
-    html.addEventListener("input", updatePreview);
-    css.addEventListener("input", updatePreview);
+    htmlEditor.on("change", updatePreview);
+    cssEditor.on("change", updatePreview);
 
-    // Initial load
+    // LocalStorage save/load
+    if (localStorage.getItem("htmlCode")) htmlEditor.setValue(localStorage.getItem("htmlCode"));
+    if (localStorage.getItem("cssCode")) cssEditor.setValue(localStorage.getItem("cssCode"));
+
+    htmlEditor.on("change", () => localStorage.setItem("htmlCode", htmlEditor.getValue()));
+    cssEditor.on("change", () => localStorage.setItem("cssCode", cssEditor.getValue()));
+
+    document.getElementById("reset").addEventListener("click", () => {
+        localStorage.clear();
+        htmlEditor.setValue("");
+        cssEditor.setValue("");
+        updatePreview();
+    });
+
+    // Theme switch
+    let isDark = true;
+    document.getElementById("themeToggle").addEventListener("click", () => {
+        isDark = !isDark;
+        const theme = isDark ? "material" : "eclipse";
+        htmlEditor.setOption("theme", theme);
+        cssEditor.setOption("theme", theme);
+        document.body.classList.toggle("light");
+    });
+
     updatePreview();
 </script>
-
 
 <?php require_once '../includes/footer.php'; ?>

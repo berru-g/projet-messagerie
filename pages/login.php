@@ -164,11 +164,10 @@ require_once '../includes/header.php';
   <h1>Bienvenue sur Agora</h1>
   <p>
     Ceci est un <strong>MVP</strong> (version minimale viable ou prototype) actuellement en phase de test et en recherche de niche. 
-    <strong>Vos retours sont les bienvenus</strong> pour nous aider à améliorer la plateforme.<br /><br />
-    Nous tenons à préserver un espace respectueux et bienveillant : <span class="warning">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
+    <strong>Vos retours sont les bienvenus</strong> pour nous aider à améliorer la plateforme. Que voulez faire de cette plateforme ? <br /><br />
+    Nous tenons à préserver un <strong>espace respectueux et bienveillant</strong> : <span class="warning">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
   </p>
 </section>
-
 
 
 <div class="container auth-container" id="seconnecter">

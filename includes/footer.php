@@ -13,13 +13,13 @@
     🕶️ Utilisation anonyme, sans traçage
      -->
     <div class="footer-brand">
-      <h3 class="app-name"><?= SITE_NAME ?></h3>
-      <p class="tagline">MVP (prototype) d'une plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key, (inscription anonyme sans vérification de mail).</p>
+      <h3 class="app-name"><?= SITE_NAME ?> Social Feed</h3>
+      <p class="tagline">MVP (prototype) Contient un Réseau social minimaliste et une plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key, no email verification required.</p>
       <div class="stats">
         <div class="stat-item">
           <i class="fas fa-database"></i>
           <span><?php echo number_format($pdo->query("SELECT COUNT(id) FROM user_files")->fetchColumn()); ?>
-            fichiers</span>
+            Data Files</span>
         </div>
         <div class="stat-item">
           <i class="fas fa-users"></i>
@@ -34,14 +34,14 @@
     <div class="footer-features">
       <h4>Fonctionnalités</h4>
       <ul>
-        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
-        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to Chart</a></li>
+        <li><i class="">Social Feed - Post, comment, like.</i></li>
+        <li><i class="fas fa-file-pdf"></i><a href="../pages/gallery.php"> Excel & Csv to Chart/PDF</a></li><!--attention tout les json ne se mette pas en tableau et le telechargement est uniquement en json, non en pdf pour l'instant-->
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
-        <li><i class="fas fa-download"></i> Imports</li>
+        <!--<li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>
-        <!--<li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
+        <li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
         <li><i class="fas fa-sync-alt"></i> Mises à jour automatiques des prix</li>-->
-        <li><i class="fas fa-code"></i><a href="../pages/codepen.php"> Codepen</a></li>
+        <li><i class="fas fa-code"></i><a href="../pages/codepen.php"> Live code editor</a></li>
         <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
       </ul>
     </div>
