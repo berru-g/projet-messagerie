@@ -12,8 +12,9 @@ $user = getUserById($_SESSION['user_id']);
 require_once '../includes/header.php';
 ?>
 
+<!--V2 with amchartjs 🫶-->
 <div class="data-visualizer-header">
-  <h1><i class="fas fa-chart-line"></i> Data Visualizer</h1>
+  <h1><i class="fas fa-chart-line"></i> Data Visualizer Pro</h1>
   <p>Transformez vos fichiers en insights visuels en 3 étapes</p>
   <div class="steps">
     <div class="step active">1 <span>Importer</span></div>
@@ -38,63 +39,146 @@ require_once '../includes/header.php';
 
 <div class="container mt-5">
   <div id="columnSelector" class="mb-4"></div>
-  <canvas id="myChart" height="120"></canvas>
-  <div class="mt-4 d-flex flex-wrap gap-2">
+  
+  <!-- Graphique Container avec options de style -->
+  <div id="chartdiv" style="width: 100%; height: 500px;"></div>
+  
+  <div class="mt-4 d-flex flex-wrap gap-2 align-items-center">
     <select id="chartType" class="form-select w-auto">
+      <option value="column">Colonnes</option>
       <option value="bar">Barres</option>
       <option value="line">Lignes</option>
       <option value="pie">Camembert</option>
-      <option value="doughnut">Donut</option>
+      <option value="donut">Donut</option>
       <option value="radar">Radar</option>
+      <option value="xy">XY (Nuage de points)</option>
+      
     </select>
-    <button id="exportPNG" class="btn btn-primary"><i class="fas fa-image"></i> PNG Graphique</button>
-    <button id="exportPDF" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> PDF Graphique</button>
+    
+    <select id="chartTheme" class="form-select w-auto">
+      <option value="am4themes_animated">Animé</option>
+      <option value="am4themes_dark">Sombre</option>
+      <option value="am4themes_dataviz">DataViz</option>
+      <option value="am4themes_material">Material</option>
+      <option value="am4themes_kelly">Kelly</option>
+      <option value="am4themes_frozen">Frozen</option>
+    </select>
+    
+    <button id="exportPNG" class="btn btn-primary"><i class="fas fa-image"></i> PNG</button>
+    <button id="exportPDF" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> PDF</button>
+    <button id="exportCSV" class="btn btn-success"><i class="fas fa-file-csv"></i> CSV</button>
   </div>
 
   <div class="table-responsive mt-4">
     <table id="dataTable" class="table table-bordered table-striped"></table>
   </div>
 
-  <div class="mt-4 d-flex flex-wrap gap-2">
-
-    <button id="exportTablePNG" class="btn btn-outline-primary"><i class="fas fa-image"></i> PNG Tableau</button>
-    <button id="exportTablePDF" class="btn btn-outline-secondary"><i class="fas fa-file-pdf"></i> PDF Tableau</button>
-  </div>
-
   <div class="mt-4">
     <h5>📁 Format de fichier idéal (CSV/Excel)</h5>
     <p>Assurez-vous que votre fichier respecte ce format de base :</p>
     <pre>
-Produit,Quantité
-Pommes,120
-Bananes,90
-Poires,60
+Produit,Quantité,Ventes
+Pommes,120,1500
+Bananes,90,1200
+Poires,60,800
     </pre>
-    <p>💡 Colonne 1 : catégorie ou nom / Colonne 2 : valeur numérique</p>
+    <p>💡 Colonne 1 : catégorie / Colonne 2 : valeur numérique / Colonne 3+ : séries supplémentaires</p>
   </div>
 </div>
 
-<link rel="stylesheet" href="../assets/css/data-to-chart.css">
+<!-- Styles -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+  .upload-dropzone {
+    border: 2px dashed #6c757d;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .upload-dropzone:hover, .upload-dropzone.dragover {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+  }
+  .steps {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  .step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    font-weight: bold;
+    position: relative;
+  }
+  .step.active {
+    background: #0d6efd;
+    color: white;
+  }
+  .step span {
+    position: absolute;
+    bottom: -25px;
+    font-size: 12px;
+    font-weight: normal;
+    white-space: nowrap;
+  }
+  .badge {
+    margin: 0 5px;
+  }
+  .badge-csv { background: #20c997; }
+  .badge-excel { background: #198754; }
+  .badge-json { background: #6f42c1; }
+  #chartdiv {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+</style>
+
+<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<!-- amCharts -->
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/dark.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/frozen.js"></script>
+
 <script>
-  const chartContainer = document.getElementById("myChart");
-  const columnSelector = document.getElementById("columnSelector");
-  const chartTypeSelect = document.getElementById("chartType");
+  // Références aux éléments DOM
   const dropZone = document.getElementById("dropZone");
   const fileInput = document.getElementById("dataUpload");
+  const columnSelector = document.getElementById("columnSelector");
+  const chartTypeSelect = document.getElementById("chartType");
+  const chartThemeSelect = document.getElementById("chartTheme");
   const dataTable = document.getElementById("dataTable");
+  
+  // Variables d'état
+  let currentData = [];
+  let currentFields = [];
+  let currentChart = null;
+  let currentTheme = null;
 
-  let chart;
-  let currentRows = [];
-  let currentLabel = "";
-  let currentValue = "";
-
+  // Initialisation amCharts
+  am4core.useTheme(am4themes_animated);
+  currentTheme = am4themes_animated;
+  
+  // Gestion des événements
   dropZone.addEventListener("click", () => fileInput.click());
   dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragover"); });
   dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
@@ -104,11 +188,21 @@ Poires,60
     handleFile(e.dataTransfer.files[0]);
   });
   fileInput.addEventListener("change", e => handleFile(e.target.files[0]));
+  
+  chartTypeSelect.addEventListener("change", updateChart);
+  chartThemeSelect.addEventListener("change", updateTheme);
+  
+  document.getElementById("exportPNG").addEventListener("click", exportPNG);
+  document.getElementById("exportPDF").addEventListener("click", exportPDF);
+  document.getElementById("exportCSV").addEventListener("click", exportCSV);
 
+  // Fonctions principales
   function handleFile(file) {
+    if (!file) return;
+    
     const reader = new FileReader();
     const ext = file.name.split(".").pop().toLowerCase();
-
+    
     if (ext === "csv") {
       reader.onload = e => parseCSV(e.target.result);
       reader.readAsText(file);
@@ -130,121 +224,274 @@ Poires,60
     try {
       const data = JSON.parse(jsonString);
       if (!Array.isArray(data)) throw new Error("JSON doit être un tableau de lignes.");
-
-      const headers = Object.keys(data[0]);
-      const rows = data.filter(row => row[headers[0]] && row[headers[1]]);
-      currentRows = rows;
-      currentLabel = headers[0];
-      currentValue = headers[1];
-
-      columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
-      renderChart(currentLabel, currentValue, rows);
-      renderTable(rows);
-      columnSelector.addEventListener("change", updateFromCheckbox);
+      
+      currentFields = Object.keys(data[0]);
+      currentData = data.filter(row => row[currentFields[0]]);
+      
+      updateColumnSelector();
+      renderTable();
+      updateChart();
     } catch (err) {
       alert("Erreur lors de l'analyse du JSON : " + err.message);
     }
   }
 
   function parseCSV(csv) {
-    const data = Papa.parse(csv, { header: true });
-    const headers = data.meta.fields;
-    const rows = data.data.filter(row => row[headers[0]] && row[headers[1]]);
-    currentRows = rows;
-    currentLabel = headers[0];
-    currentValue = headers[1];
-
-    columnSelector.innerHTML = headers.map(h => `<label class='me-2'><input type='checkbox' value='${h}' ${[headers[0], headers[1]].includes(h) ? 'checked' : ''}> ${h}</label>`).join("");
-    renderChart(currentLabel, currentValue, rows);
-    renderTable(rows);
-    columnSelector.addEventListener("change", updateFromCheckbox);
+    const result = Papa.parse(csv, { header: true });
+    currentFields = result.meta.fields;
+    currentData = result.data.filter(row => row[currentFields[0]]);
+    
+    updateColumnSelector();
+    renderTable();
+    updateChart();
   }
 
-  function updateFromCheckbox() {
-    const selected = [...columnSelector.querySelectorAll("input:checked")].map(el => el.value);
-    if (selected.length >= 2) {
-      currentLabel = selected[0];
-      currentValue = selected[1];
-      renderChart(currentLabel, currentValue, currentRows);
-      renderTable(currentRows);
-    }
-  }
-
-  function renderChart(labelKey, valueKey, rows) {
-    const labels = rows.map(r => r[labelKey]);
-    const values = rows.map(r => parseFloat(r[valueKey]));
-    const type = chartTypeSelect.value;
-    if (chart) chart.destroy();
-    chart = new Chart(chartContainer, {
-      type,
-      data: {
-        labels,
-        datasets: [{
-          label: `${valueKey} par ${labelKey}`,
-          data: values,
-          backgroundColor: "rgba(54, 162, 235, 0.5)",
-          borderColor: "rgba(54, 162, 235, 1)",
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "top" },
-          title: { display: true, text: "Visualisation des données" }
-        }
-      }
+  function updateColumnSelector() {
+    if (!currentFields || currentFields.length < 2) return;
+    
+    columnSelector.innerHTML = `
+      <div class="mb-3">
+        <label class="form-label">Colonne de catégories (axe X)</label>
+        <select id="categoryField" class="form-select">
+          ${currentFields.map(f => `<option value="${f}" ${f === currentFields[0] ? 'selected' : ''}>${f}</option>`).join("")}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Colonnes de valeurs (séries)</label>
+        ${currentFields.slice(1).map(f => `
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="${f}" id="series-${f}" checked>
+            <label class="form-check-label" for="series-${f}">${f}</label>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    
+    document.getElementById("categoryField").addEventListener("change", updateChart);
+    columnSelector.querySelectorAll("input[type='checkbox']").forEach(cb => {
+      cb.addEventListener("change", updateChart);
     });
   }
 
-  function renderTable(rows) {
-    if (!rows.length) return;
-    const headers = Object.keys(rows[0]);
-    const thead = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>`;
-    const tbody = `<tbody>${rows.map(r => `<tr>${headers.map(h => `<td>${r[h]}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  function updateTheme() {
+    const themeName = chartThemeSelect.value;
+    const theme = am4themes[themeName];
+    
+    if (theme) {
+      am4core.unuseTheme(currentTheme);
+      am4core.useTheme(theme);
+      currentTheme = theme;
+      
+      if (currentChart) {
+        currentChart.dispose();
+        updateChart();
+      }
+    }
+  }
+
+  function updateChart() {
+    if (!currentData.length || !currentFields.length) return;
+    
+    // Détruire le graphique existant
+    if (currentChart) {
+      currentChart.dispose();
+    }
+    
+    // Récupérer les sélections
+    const categoryField = document.getElementById("categoryField").value;
+    const selectedSeries = Array.from(columnSelector.querySelectorAll("input[type='checkbox']:checked")).map(cb => cb.value);
+    
+    if (selectedSeries.length === 0) {
+      alert("Veuillez sélectionner au moins une série de données");
+      return;
+    }
+    
+    const chartType = chartTypeSelect.value;
+    
+    // Créer le nouveau graphique
+    const chart = am4core.create("chartdiv", am4charts.XYChart);
+    currentChart = chart;
+    
+    // Configurer les données
+    chart.data = currentData.map(row => {
+      const item = { category: row[categoryField] };
+      selectedSeries.forEach(series => {
+        item[series] = parseFloat(row[series]) || 0;
+      });
+      return item;
+    });
+    
+    // Créer les axes
+    const categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 30;
+    
+    const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    
+    // Créer les séries en fonction du type de graphique
+    selectedSeries.forEach(series => {
+      let seriesInstance;
+      
+      switch(chartType) {
+        case "column":
+          seriesInstance = chart.series.push(new am4charts.ColumnSeries());
+          break;
+        case "bar":
+          seriesInstance = chart.series.push(new am4charts.ColumnSeries());
+          // Pour un bar chart, on inverse les axes
+          chart.xAxes.getIndex(0).renderer.opposite = true;
+          chart.yAxes.getIndex(0).renderer.opposite = true;
+          break;
+        case "line":
+          seriesInstance = chart.series.push(new am4charts.LineSeries());
+          seriesInstance.strokeWidth = 3;
+          seriesInstance.tensionX = 0.8;
+          break;
+        case "pie":
+          // Pour un pie chart, on crée un graphique différent
+          const pieChart = am4core.create("chartdiv", am4charts.PieChart);
+          pieChart.data = currentData.map(row => ({
+            category: row[categoryField],
+            value: parseFloat(row[series]) || 0
+          }));
+          
+          const pieSeries = pieChart.series.push(new am4charts.PieSeries());
+          pieSeries.dataFields.value = "value";
+          pieSeries.dataFields.category = "category";
+          pieSeries.slices.template.stroke = am4core.color("#fff");
+          pieSeries.slices.template.strokeWidth = 2;
+          pieSeries.slices.template.strokeOpacity = 1;
+          
+          pieSeries.labels.template.disabled = true;
+          pieSeries.ticks.template.disabled = true;
+          
+          pieChart.legend = new am4charts.Legend();
+          currentChart = pieChart;
+          return;
+        case "donut":
+          const donutChart = am4core.create("chartdiv", am4charts.PieChart);
+          donutChart.data = currentData.map(row => ({
+            category: row[categoryField],
+            value: parseFloat(row[series]) || 0
+          }));
+          
+          const donutSeries = donutChart.series.push(new am4charts.PieSeries());
+          donutSeries.dataFields.value = "value";
+          donutSeries.dataFields.category = "category";
+          donutSeries.slices.template.stroke = am4core.color("#fff");
+          donutSeries.slices.template.strokeWidth = 2;
+          donutSeries.slices.template.strokeOpacity = 1;
+          donutSeries.innerRadius = am4core.percent(50);
+          
+          donutSeries.labels.template.disabled = true;
+          donutSeries.ticks.template.disabled = true;
+          
+          donutChart.legend = new am4charts.Legend();
+          currentChart = donutChart;
+          return;
+        case "radar":
+          const radarChart = am4core.create("chartdiv", am4charts.RadarChart);
+          radarChart.data = currentData.map(row => ({
+            category: row[categoryField],
+            value: parseFloat(row[series]) || 0
+          }));
+          
+          const categoryAxisRadar = radarChart.xAxes.push(new am4charts.CategoryAxis());
+          categoryAxisRadar.dataFields.category = "category";
+          
+          const valueAxisRadar = radarChart.yAxes.push(new am4charts.ValueAxis());
+          
+          const radarSeries = radarChart.series.push(new am4charts.RadarSeries());
+          radarSeries.dataFields.valueY = "value";
+          radarSeries.dataFields.categoryX = "category";
+          radarSeries.name = series;
+          radarSeries.strokeWidth = 3;
+          radarSeries.tensionX = 0.8;
+          
+          radarChart.legend = new am4charts.Legend();
+          currentChart = radarChart;
+          return;
+        case "xy":
+          seriesInstance = chart.series.push(new am4charts.LineSeries());
+          seriesInstance.strokeWidth = 2;
+          seriesInstance.bullets.push(new am4charts.CircleBullet());
+          break;
+        default:
+          seriesInstance = chart.series.push(new am4charts.ColumnSeries());
+      }
+      
+      seriesInstance.dataFields.valueY = series;
+      seriesInstance.dataFields.categoryX = "category";
+      seriesInstance.name = series;
+      
+      if (chartType === "bar") {
+        seriesInstance.dataFields.valueX = series;
+        seriesInstance.dataFields.categoryY = "category";
+      }
+      
+      // Configurer le tooltip
+      seriesInstance.tooltipText = "{name}: [bold]{valueY}[/]";
+      
+      // Animation
+      seriesInstance.sequencedInterpolation = true;
+      seriesInstance.defaultState.transitionDuration = 1000;
+    });
+    
+    // Ajouter la légende
+    chart.legend = new am4charts.Legend();
+    
+    // Ajouter le curseur
+    if (["column", "bar", "line", "xy"].includes(chartType)) {
+      chart.cursor = new am4charts.XYCursor();
+      chart.cursor.lineY.opacity = 0;
+    }
+    
+    // Ajouter le défilement
+    if (currentData.length > 10) {
+      chart.scrollbarX = new am4core.Scrollbar();
+    }
+  }
+
+  function renderTable() {
+    if (!currentData.length) return;
+    
+    const thead = `<thead><tr>${currentFields.map(h => `<th>${h}</th>`).join("")}</tr></thead>`;
+    const tbody = `<tbody>${currentData.map(r => `<tr>${currentFields.map(h => `<td>${r[h]}</td>`).join("")}</tr>`).join("")}</tbody>`;
     dataTable.innerHTML = thead + tbody;
   }
 
-  chartTypeSelect.addEventListener("change", () => {
-    if (currentLabel && currentValue && currentRows.length > 0) {
-      renderChart(currentLabel, currentValue, currentRows);
+  function exportPNG() {
+    if (currentChart) {
+      currentChart.exporting.export("png");
     }
-  });
+  }
 
-  document.getElementById("exportPNG").addEventListener("click", () => {
-    const url = chart.toBase64Image();
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "chart.png";
-    a.click();
-  });
+  function exportPDF() {
+    if (currentChart) {
+      currentChart.exporting.export("pdf");
+    }
+  }
 
-  document.getElementById("exportPDF").addEventListener("click", () => {
-    html2canvas(chartContainer).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jspdf.jsPDF();
-      pdf.addImage(imgData, "PNG", 10, 10, 180, 100);
-      pdf.save("chart.pdf");
+  function exportCSV() {
+    if (!currentData.length) return;
+    
+    let csv = Papa.unparse({
+      fields: currentFields,
+      data: currentData
     });
-  });
-
-  document.getElementById("exportTablePNG").addEventListener("click", () => {
-    html2canvas(dataTable).then(canvas => {
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = "tableau.png";
-      link.click();
-    });
-  });
-
-  document.getElementById("exportTablePDF").addEventListener("click", () => {
-    html2canvas(dataTable).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jspdf.jsPDF();
-      pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
-      pdf.save("tableau.pdf");
-    });
-  });
+    
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", "data_export.csv");
+    link.style.visibility = "hidden";
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 </script>
-
 <?php require_once '../includes/footer.php'; ?>
