@@ -54,7 +54,7 @@ require_once '../includes/header.php';
         flex-direction: column;
     }
 
-    header {
+    .header {
         background-color: var(--bg);
         color: var(--text);
         text-align: center;
@@ -65,7 +65,7 @@ require_once '../includes/header.php';
         align-items: center;
     }
 
-    header h1 {
+    .header h1 {
         font-size: 1.3rem;
     }
 
@@ -234,7 +234,7 @@ require_once '../includes/header.php';
     </div>
 </div>-->
 
-<header>
+<div class="header">
     <h1>Live Code Editor</h1>
     <div class="controls">
         <button id="themeToggle"><i class="fa-solid fa-palette"></i> Thème</button>
@@ -242,7 +242,7 @@ require_once '../includes/header.php';
         <button id="save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
         <a href="https://github.com/berru-g/berru-g/blob/main/codepen/"><button>opensrc</button></a>
     </div>
-</header>
+</div>
 
 <div class="main-layout">
     <div class="editor-panel">
