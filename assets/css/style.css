@@ -1,6 +1,6 @@
 /* Modern CSS with your color scheme */
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700|Poppins:400,500,600,700&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
 :root {
   --background-color: #f1f1f1;
   --text-color: #000000;
@@ -40,7 +40,7 @@ h1 {
 h1,
 h2,
 h3 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   color: var(--titre-color);
 }
 

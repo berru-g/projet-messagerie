@@ -141,7 +141,7 @@ require_once __DIR__ . '/functions.php';
           <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-content">
-          <a href="<?= BASE_URL ?>/#mur"><i class="fa-solid fa-comments"></i> Comment</a>
+          <a href="<?= BASE_URL ?>"><i class="fa-solid fa-comments"></i> Comment</a>
           <?php if (isLoggedIn()): ?>
             <a href="<?= BASE_URL ?>/pages/view_file.php"><i class="fa-solid fa-inbox"></i> Public file</a>
             <a href="<?= BASE_URL ?>/pages/gallery.php"><i class="fas fa-download"></i> Upload</a>

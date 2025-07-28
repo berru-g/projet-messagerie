@@ -75,7 +75,7 @@ require_once '../includes/header.php';
 
 <div class="container" id="mur">
     <div class="comment-form">
-        <h2>Poster un commentaire <?= htmlspecialchars($user['username']) ?></h2>
+        <h2>Salut <?= htmlspecialchars($user['username']) ?></h2>
         <form method="POST" enctype="multipart/form-data" class="reply-form">
             <textarea name="content" placeholder="Exprimez-vous "></textarea>
 
@@ -103,7 +103,7 @@ require_once '../includes/header.php';
                 <?php else: ?>
                     <i class="fas fa-user-circle"></i>
                 <?php endif; ?>-->
-                
+                <!--(int) pour éviter les injections SQL et htmlspecialchars pour protéger contre les XSS --Normalement -->
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $comment['user_id'] ?>"
                     class="profile-picture-link">
                     <?php if (!empty($comment['profile_picture'])): ?>

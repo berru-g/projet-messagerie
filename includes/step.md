@@ -127,3 +127,38 @@ Tester sur mobile (responsive)
 🔚 Résultat attendu :
 
 Ton site PHP avec base MySQL fonctionne parfaitement, sécurisé avec HTTPS, en ligne sous ton propre domaine.
+
+
+# Config local/hebergemlent
+
+Checklist "Quick Setup" pour plus tard :
+
+    Crée 2 fichiers à la racine :
+
+        .env.local (pour ta config locale)
+
+        .env.prod (pour ton hébergeur)
+
+    Dans ton config.php :
+    php
+
+$isLocal = ($_SERVER['SERVER_ADDR'] === '127.0.0.1'); // Auto-détection
+require_once($isLocal ? '.env.local' : '.env.prod');
+
+GitIgnore :
+Ajoute cette ligne dans ton .gitignore :
+gitignore
+
+.env.local
+.env.prod
+
+Bonus Flemme Mode :
+Si t’as la flemme de gérer les variables d’env, fais juste ça :
+php
+
+// config.php
+if ($_SERVER['SERVER_NAME'] === 'localhost') {
+    // Tes params locaux
+} else {
+    // Tes params prod
+}

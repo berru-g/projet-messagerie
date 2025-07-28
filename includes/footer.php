@@ -14,7 +14,7 @@
      -->
     <div class="footer-brand">
       <h3 class="app-name"><?= SITE_NAME ?></h3>
-      <p class="tagline">Plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key, (inscription anonyme sans vérification de mail).</p>
+      <p class="tagline">MVP (prototype) d'une plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. Réseaux communautaire low key, (inscription anonyme sans vérification de mail).</p>
       <div class="stats">
         <div class="stat-item">
           <i class="fas fa-database"></i>
@@ -40,8 +40,8 @@
         <li><i class="fas fa-download"></i> Imports</li>
         <li><i class="fas fa-file-export"></i> Exports</li>
         <!--<li><i class="fa-solid fa-receipt"></i><a href="../pages/facture.php"> Create Invoice</a></li>
-        <li><i class="fas fa-sync-alt"></i> Mises à jour automatiques des prix</li>
-        <li><i class="fas fa-chart-line"></i> Analytics des prix</li>-->
+        <li><i class="fas fa-sync-alt"></i> Mises à jour automatiques des prix</li>-->
+        <li><i class="fas fa-code"></i><a href="../pages/codepen.php"></a> Codepen</li>
         <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
       </ul>
     </div>

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once '../includes/header.php';
 ?>
-<!-- presentation du tool -->
+<!-- presentation du tool
 <section class="data-tools-showcase">
     <div class="dt-container">
         <h2 class="dt-title">
@@ -44,7 +44,7 @@ require_once '../includes/header.php';
         </h2>
 
         <div class="dt-grid">
-            <!-- Carte CSV -->
+           
             <div class="dt-card">
                 <div class="dt-card-icon csv">
                     <i class="fa fa-file-csv"></i>
@@ -58,7 +58,7 @@ require_once '../includes/header.php';
                 </ul>
             </div>
 
-            <!-- Carte Excel -->
+            
             <div class="dt-card">
                 <div class="dt-card-icon excel">
                     <i class="fa fa-file-excel"></i>
@@ -72,7 +72,7 @@ require_once '../includes/header.php';
                 </ul>
             </div>
 
-            <!-- Carte JSON -->
+            
             <div class="dt-card">
                 <div class="dt-card-icon json">
                     <i class="fa fa-file-code"></i>
@@ -90,7 +90,7 @@ require_once '../includes/header.php';
         <div class="dt-cta">
             <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
             <div class="dt-buttons">
-                <!--<?= safe_url('/pages/search.php') ?>--remplace--<?= BASE_URL ?>-->
+                
                 <a href="#seconnecter" class="dt-btn primary">
                     <i class="fas fa-rocket"></i> Commencer
                 </a>
@@ -100,7 +100,7 @@ require_once '../includes/header.php';
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
 <div class="container auth-container" id="seconnecter">
     <h2>Connexion</h2>
