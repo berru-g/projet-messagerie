@@ -102,6 +102,20 @@ require_once '../includes/header.php';
     </div>
 </section>-->
 
+<section class="w-full px-4 py-8 bg-gray-50 border-b border-gray-200">
+  <div class="max-w-xl mx-auto text-center">
+    <img src="<?= BASE_URL ?>/assets/img/agora-logo.png" alt="Logo Agora" class="mx-auto w-20 h-20 mb-4 rounded-xl shadow-md object-contain">
+    
+    <h1 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-2">Bienvenue sur Agora</h1>
+
+    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+      Ceci est un <strong>MVP</strong> (version minimale viable ou prototype) en phase de test et en recherche de niche. Vos retours sont <strong>les bienvenus</strong> pour améliorer la plateforme.<br class="hidden sm:block" />
+      Nous croyons en une communauté bienveillante : <span class="text-red-600 font-semibold">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
+    </p>
+  </div>
+</section>
+
+
 <div class="container auth-container" id="seconnecter">
     <h2>Connexion</h2>
 

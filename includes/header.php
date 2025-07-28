@@ -9,29 +9,29 @@ require_once __DIR__ . '/functions.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= SITE_NAME ?></title>
-  <title>FileShare – Partage et visualisation intelligente de fichiers</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="<?= BASE_URL ?>/assets/img/agora-logo.png" type="image/x-icon">
   <meta name="description"
-    content="FileShare est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
+    content="Agora Social Feed est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
   <meta name="keywords"
     content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="FileShare">
+  <meta name="author" content="Agora Social Feed">
 
   <!-- Open Graph pour Facebook / LinkedIn -->
-  <meta property="og:title" content="FileShare – Partage intelligent de fichiers et données">
+  <meta property="og:title" content="Agora Social Feed – Partage intelligent de fichiers et données">
   <meta property="og:description"
     content="Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
-  <meta property="og:image" content="https://example.com/assets/share-image.png">
+  <meta property="og:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
   <meta property="og:url" content="https://example.com">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="FileShare – Partage et visualisation de fichiers CSV/Excel">
+  <meta name="twitter:title" content="Agora Social Feed – Partage et visualisation de fichiers CSV/Excel">
   <meta name="twitter:description"
-    content="Transformez vos données avec FileShare. Partagez, visualisez et exportez tous types de fichiers.">
-  <meta name="twitter:image" content="https://example.com/assets/share-image.png">
+    content="Transformez vos données avec Agora Social Feed. Partagez, visualisez et exportez tous types de fichiers.">
+  <meta name="twitter:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
   <!-- Canonical URL -->
   <link rel="canonical" href="https://example.com">
 
@@ -56,7 +56,7 @@ require_once __DIR__ . '/functions.php';
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "FileShare",
+  "name": "Agora Social Feed",
   "url": "https://example.com",
   "description": "Plateforme de partage et de visualisation de fichiers CSV, JSON, Excel, avec export PDF/PNG et messagerie collaborative.",
   "applicationCategory": "BusinessApplication",
@@ -74,11 +74,11 @@ require_once __DIR__ . '/functions.php';
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Comment utiliser FileShare pour transformer un fichier CSV en graphique PDF ?",
+  "name": "Comment utiliser Agora Social Feed pour transformer un fichier CSV en graphique PDF ?",
   "step": [
     {
       "@type": "HowToStep",
-      "text": "Connectez-vous à votre compte FileShare."
+      "text": "Connectez-vous à votre compte Agora Social Feed."
     },
     {
       "@type": "HowToStep",

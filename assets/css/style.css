@@ -97,7 +97,7 @@ h3 {
 }
 
 
-/* presentation */
+/* presentation 
 
 .data-tools-showcase {
   font-family: 'Inter', -apple-system, sans-serif;
@@ -259,7 +259,7 @@ h3 {
   background-color: rgba(67, 97, 238, 0.05);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .dt-grid {
     grid-template-columns: 1fr;
@@ -273,7 +273,7 @@ h3 {
     justify-content: center;
   }
 }
-
+*/
 .data-visualizer-header {
   text-align: center !important;
   display: flex;
