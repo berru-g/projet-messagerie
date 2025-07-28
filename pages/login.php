@@ -104,15 +104,16 @@ require_once '../includes/header.php';
 
 <style>
   .intro-section {
-    background-color: #f9f9fb;
+    background-color: transparent;
     border-bottom: 1px solid #ddd;
     padding: 40px 20px;
     text-align: center;
   }
 
   .intro-section img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     object-fit: contain;
     border-radius: 16px;
     margin-bottom: 20px;
@@ -138,7 +139,7 @@ require_once '../includes/header.php';
   }
 
   .intro-section .warning {
-    color: #60d394;
+    color: #e89690ff;
     font-weight: bold;
   }
 
