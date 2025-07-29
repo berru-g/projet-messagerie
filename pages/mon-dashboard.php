@@ -56,7 +56,7 @@ $stats['image_extensions'] = $pdo->query("
     GROUP BY extension
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// RANK
+/* RANK
 $stmt = $pdo->prepare("
     SELECT 
         u.id, 
@@ -81,7 +81,7 @@ foreach ($top_active_users as &$user) {
     $user['level'] = $level_info['level'];
     $user['next_level_xp'] = $level_info['next_level_xp'];
     $user['xp_percentage'] = $level_info['xp_percentage'];
-}
+}*/
 
 
 require_once '../includes/header.php';
