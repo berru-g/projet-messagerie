@@ -115,7 +115,8 @@ require_once '../includes/header.php';
             <div class="user-card">
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $user['id'] ?>" class="user-avatar-link">
                     <div class="user-avatar">
-                        <img src="<?= getAvatarUrl($user['id']) ?>" alt="<?= htmlspecialchars($user['username']) ?>">
+                        <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>" alt="Photo de profil"
+                            class="profile-picture-thumbnail">
                         <div class="user-level" title="Niveau <?= $user['level'] ?>">
                             <?= getLevelBadge($user['level']) ?>
                         </div>
