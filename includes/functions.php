@@ -343,4 +343,89 @@ function canAccessFile($user_id, $file_id)
     return $stmt->fetch() !== false;
 }
 
+// Fonction pour calculer le niveau et l'XP
+function calculateUserLevel($xp) {
+    $base_xp = 100;
+    $level = 1;
+    
+    while ($xp >= $base_xp) {
+        $xp -= $base_xp;
+        $base_xp = $base_xp * 1.5; // Augmentation exponentielle
+        $level++;
+    }
+    
+    return [
+        'level' => $level,
+        'current_xp' => $xp,
+        'next_level_xp' => $base_xp,
+        'xp_percentage' => round(($xp / $base_xp) * 100)
+    ];
+}
+
+// Fonction pour obtenir l'icône de niveau
+function getLevelBadge($level) {
+    if ($level >= 50) return '🏆';
+    if ($level >= 40) return '🎖️';
+    if ($level >= 30) return '🏅';
+    if ($level >= 20) return '🥈';
+    if ($level >= 10) return '🥉';
+    return '⭐';
+}
+
+// Fonction pour obtenir l'URL de l'avatar
+function getAvatarUrl($user_id) {
+    $avatar_path = "uploads/avatars/$user_id.jpg";
+    return file_exists("../$avatar_path") ? BASE_URL . "/$avatar_path" : BASE_URL . "/assets/images/default-avatar.jpg";
+}
+
+// Fonction pour récupérer le top des utilisateurs actifs
+function getTopActiveUsers($pdo, $limit = 5) {
+    $stmt = $pdo->prepare("
+        SELECT 
+            u.id, 
+            u.username,
+            u.email,
+            (SELECT COUNT(*) FROM user_files WHERE user_id = u.id) as uploads,
+            (SELECT COUNT(*) FROM comments WHERE user_id = u.id) as comments,
+            (SELECT COUNT(*) FROM likes WHERE user_id = u.id) as likes,
+            ((SELECT COUNT(*) FROM user_files WHERE user_id = u.id) * 10) + 
+            ((SELECT COUNT(*) FROM comments WHERE user_id = u.id) * 5) + 
+            ((SELECT COUNT(*) FROM likes WHERE user_id = u.id) * 3) as xp
+        FROM users u
+        ORDER BY xp DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Ajouter les infos de niveau
+    foreach ($users as &$user) {
+        $level_info = calculateUserLevel($user['xp']);
+        $user['level'] = $level_info['level'];
+        $user['next_level_xp'] = $level_info['next_level_xp'];
+        $user['xp_percentage'] = $level_info['xp_percentage'];
+    }
+    
+    return $users;
+}
+
+function addUserXp($pdo, $user_id, $action_type) {
+    $xp_values = [
+        'upload' => 10,
+        'comment' => 5,
+        'like' => 3,
+        'share' => 7
+    ];
+    
+    if (!isset($xp_values[$action_type])) return false;
+    
+    // Enregistrer dans l'historique
+    $stmt = $pdo->prepare("INSERT INTO user_xp_log (user_id, action_type, xp_gained) VALUES (?, ?, ?)");
+    $stmt->execute([$user_id, $action_type, $xp_values[$action_type]]);
+    
+    return true;
+}
+
 ?>

@@ -22,7 +22,8 @@ if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com'
 
 // Récupération des stats globales
 $stats = [];
-
+// Récupérer le top des utilisateurs actifs
+$top_active_users = getTopActiveUsers($pdo, 5);
 // Utilisateurs
 $stats['total_users'] = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $stats['new_users_last_30'] = $pdo->query("SELECT COUNT(*) FROM users WHERE created_at >= NOW() - INTERVAL 30 DAY")->fetchColumn();
@@ -59,28 +60,27 @@ $stats['image_extensions'] = $pdo->query("
 
 require_once '../includes/header.php';
 ?>
-
 <div class="container">
     <h2>📊 Statistiques Globales</h2>
 
     <div class="stats-grid">
         <div class="stat-card">
             <h3><i class="fas fa-users"></i> Utilisateurs</h3>
-            <canvas id="usersChart" height="100"></canvas>
+            <div id="usersChart" style="width: 100%; height: 200px;"></div>
             <p>Total : <?= $stats['total_users'] ?></p>
             <p>Nouveaux (30j) : <?= $stats['new_users_last_30'] ?></p>
         </div>
 
         <div class="stat-card">
             <h3><i class="fas fa-file-upload"></i> Fichiers</h3>
-            <canvas id="filesChart" height="100"></canvas>
+            <div id="filesChart" style="width: 100%; height: 200px;"></div>
             <p>Total : <?= $stats['total_files'] ?></p>
             <p>Publics : <?= $stats['public_files'] ?></p>
         </div>
 
         <div class="stat-card">
             <h3><i class="fas fa-image"></i> Types d'images</h3>
-            <canvas id="imagesChart" height="100"></canvas>
+            <div id="imagesChart" style="width: 100%; height: 200px;"></div>
             <ul>
                 <?php foreach ($stats['image_extensions'] as $ext): ?>
                     <li><?= htmlspecialchars($ext['extension']) ?> : <?= $ext['count'] ?></li>
@@ -90,112 +90,53 @@ require_once '../includes/header.php';
 
         <div class="stat-card">
             <h3><i class="fas fa-comments"></i> Interactions</h3>
-            <canvas id="interactionsChart" height="100"></canvas>
+            <div id="interactionsChart" style="width: 100%; height: 200px;"></div>
             <p>Commentaires : <?= $stats['comments_count'] ?></p>
             <p>Likes : <?= $stats['likes_count'] ?></p>
         </div>
 
         <div class="stat-card">
             <h3><i class="fas fa-trophy"></i> Top Uploaders</h3>
-            <ul>
-                <?php foreach ($stats['top_uploaders'] as $user): ?>
-                    <li><?= htmlspecialchars($user['username']) ?> : <?= $user['uploads'] ?> fichiers</li>
-                <?php endforeach; ?>
-            </ul>
+            <div id="uploadersChart" style="width: 100%; height: 200px;"></div>
         </div>
-
 
         <div class="stat-card">
             <h3><i class="fas fa-fire"></i> Plus actifs (posts)</h3>
-            <ul>
-                <?php foreach ($stats['top_commented'] as $user): ?>
-                    <li><?= htmlspecialchars($user['username']) ?> : <?= $user['comments'] ?> commentaires</li>
-                <?php endforeach; ?>
-            </ul>
+            <div id="activeUsersChart" style="width: 100%; height: 200px;"></div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const usersChart = new Chart(document.getElementById('usersChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Nouveaux (30j)', 'Anciens'],
-            datasets: [{
-                label: 'Utilisateurs',
-                data: [<?= $stats['new_users_last_30'] ?>, <?= $stats['total_users'] - $stats['new_users_last_30'] ?>],
-                backgroundColor: ['#ab9ff2', '#2575fc']
-            }]
-        },
-        options: { animation: { duration: 1000 } }
-    });
-
-    const filesChart = new Chart(document.getElementById('filesChart'), {
-        type: 'pie',
-        data: {
-            labels: [
-                <?php foreach ($stats['file_types'] as $type): ?>
-                        '<?= ucfirst($type['file_type']) ?>',
-                <?php endforeach; ?>
-            ],
-            datasets: [{
-                data: [
-                    <?php foreach ($stats['file_types'] as $type): ?>
-                            <?= $type['count'] ?>,
-                    <?php endforeach; ?>
-                ],
-                backgroundColor: ['#ffd97d', '#2575fc', '#60d394', '#ee6055']
-            }]
-        },
-        options: { animation: { duration: 1000 } }
-    });
-
-    const interactionsChart = new Chart(document.getElementById('interactionsChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Commentaires', 'Likes'],
-            datasets: [{
-                label: 'Interactions',
-                data: [<?= $stats['comments_count'] ?>, <?= $stats['likes_count'] ?>],
-                backgroundColor: ['#ee6055', '#2575fc']
-            }]
-        },
-        options: {
-            responsive: true,
-            animation: { duration: 1000 },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+<div class="container mt-5">
+    <h2>🏆 Classement des Utilisateurs</h2>
     
-    const imagesChart = new Chart(document.getElementById('imagesChart'), {
-        type: 'doughnut',
-        data: {
-            labels: [
-                <?php foreach ($stats['image_extensions'] as $ext): ?>
-                    '<?= $ext['extension'] ?>',
-                <?php endforeach; ?>
-            ],
-            datasets: [{
-                data: [
-                    <?php foreach ($stats['image_extensions'] as $ext): ?>
-                        <?= $ext['count'] ?>,
-                    <?php endforeach; ?>
-                ],
-                backgroundColor: ['#ffd97d', '#ab9ff2', '#60d394', '#ff7b89']
-            }]
-        },
-        options: {
-            animation: { duration: 1000 }
-        }
-    });
+    <div class="user-ranking">
+        <?php foreach ($top_active_users as $user): ?>
+            <div class="user-card" onclick="window.location='profile.php?id=<?= $user['id'] ?>'">
+                <div class="user-avatar">
+                    <img src="<?= getAvatarUrl($user['id']) ?>" alt="<?= htmlspecialchars($user['username']) ?>">
+                    <div class="user-level" title="Niveau <?= $user['level'] ?>">
+                        <?= getLevelBadge($user['level']) ?>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <h4><?= htmlspecialchars($user['username']) ?></h4>
+                    <div class="user-stats">
+                        <span><i class="fas fa-file-upload"></i> <?= $user['uploads'] ?></span>
+                        <span><i class="fas fa-comment"></i> <?= $user['comments'] ?></span>
+                        <span><i class="fas fa-heart"></i> <?= $user['likes'] ?></span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: <?= $user['xp_percentage'] ?>%"></div>
+                        <span>XP: <?= $user['xp'] ?>/<?= $user['next_level_xp'] ?></span>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
-</script>
-
+<!-- Styles (conservés identiques) -->
 <style>
     .stats-grid {
         display: grid;
@@ -237,15 +178,259 @@ require_once '../includes/header.php';
         margin-top: 0.5rem;
     }
 
-    canvas {
-        margin-bottom: 1rem;
-    }
-
     @media (max-width: 600px) {
         .stats-grid {
             grid-template-columns: 1fr;
         }
     }
+    .user-ranking {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .user-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .user-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .user-avatar {
+        position: relative;
+        width: 70px;
+        height: 70px;
+    }
+    
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #f5f7fa;
+    }
+    
+    .user-level {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: #2575fc;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.8rem;
+        border: 2px solid white;
+    }
+    
+    .user-info {
+        flex: 1;
+    }
+    
+    .user-info h4 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+    }
+    
+    .user-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .user-stats span {
+        color: #666;
+    }
+    
+    .progress-container {
+        background: #f5f7fa;
+        border-radius: 20px;
+        height: 20px;
+        position: relative;
+        margin-top: 0.5rem;
+    }
+    
+    .progress-bar {
+        background: linear-gradient(90deg, #ab9ff2, #2575fc);
+        border-radius: 20px;
+        height: 100%;
+    }
+    
+    .progress-container span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.7rem;
+        color: white;
+        font-weight: bold;
+    }
 </style>
+
+<!-- Scripts amCharts -->
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script>
+// Appliquer le thème
+am4core.useTheme(am4themes_animated);
+
+// Graphique Utilisateurs
+const usersChart = am4core.create("usersChart", am4charts.PieChart);
+usersChart.data = [{
+    "category": "Nouveaux (30j)",
+    "value": <?= $stats['new_users_last_30'] ?>
+}, {
+    "category": "Anciens",
+    "value": <?= $stats['total_users'] - $stats['new_users_last_30'] ?>
+}];
+const usersSeries = usersChart.series.push(new am4charts.PieSeries());
+usersSeries.dataFields.value = "value";
+usersSeries.dataFields.category = "category";
+usersSeries.slices.template.stroke = am4core.color("#fff");
+usersSeries.slices.template.strokeWidth = 2;
+usersSeries.colors.list = [
+    am4core.color("#ab9ff2"),
+    am4core.color("#2575fc")
+];
+
+// Graphique Types de fichiers
+const filesChart = am4core.create("filesChart", am4charts.PieChart);
+filesChart.data = [
+    <?php foreach ($stats['file_types'] as $type): ?>
+    {
+        "category": "<?= ucfirst($type['file_type']) ?>",
+        "value": <?= $type['count'] ?>
+    },
+    <?php endforeach; ?>
+];
+const filesSeries = filesChart.series.push(new am4charts.PieSeries());
+filesSeries.dataFields.value = "value";
+filesSeries.dataFields.category = "category";
+filesSeries.slices.template.stroke = am4core.color("#fff");
+filesSeries.slices.template.strokeWidth = 2;
+filesSeries.colors.list = [
+    am4core.color("#ffd97d"),
+    am4core.color("#2575fc"),
+    am4core.color("#60d394"),
+    am4core.color("#ee6055")
+];
+
+// Graphique Interactions
+const interactionsChart = am4core.create("interactionsChart", am4charts.XYChart);
+interactionsChart.data = [{
+    "category": "Commentaires",
+    "value": <?= $stats['comments_count'] ?>
+}, {
+    "category": "Likes",
+    "value": <?= $stats['likes_count'] ?>
+}];
+const categoryAxis = interactionsChart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.location = 0;
+const valueAxis = interactionsChart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.min = 0;
+const series = interactionsChart.series.push(new am4charts.ColumnSeries());
+series.dataFields.valueY = "value";
+series.dataFields.categoryX = "category";
+series.columns.template.fillOpacity = .8;
+series.columns.template.stroke = am4core.color("#fff");
+series.columns.template.strokeWidth = 2;
+series.columns.template.adapter.add("fill", function(fill, target) {
+    return target.dataItem.index === 0 
+        ? am4core.color("#ee6055") 
+        : am4core.color("#2575fc");
+});
+
+// Graphique Types d'images
+const imagesChart = am4core.create("imagesChart", am4charts.PieChart);
+imagesChart.data = [
+    <?php foreach ($stats['image_extensions'] as $ext): ?>
+    {
+        "category": "<?= $ext['extension'] ?>",
+        "value": <?= $ext['count'] ?>
+    },
+    <?php endforeach; ?>
+];
+const imagesSeries = imagesChart.series.push(new am4charts.PieSeries());
+imagesSeries.dataFields.value = "value";
+imagesSeries.dataFields.category = "category";
+imagesSeries.slices.template.stroke = am4core.color("#fff");
+imagesSeries.slices.template.strokeWidth = 2;
+imagesSeries.colors.list = [
+    am4core.color("#ffd97d"),
+    am4core.color("#ab9ff2"),
+    am4core.color("#60d394"),
+    am4core.color("#ff7b89")
+];
+
+// Graphique Top Uploaders
+const uploadersChart = am4core.create("uploadersChart", am4charts.XYChart);
+uploadersChart.data = [
+    <?php foreach ($stats['top_uploaders'] as $user): ?>
+    {
+        "name": "<?= htmlspecialchars($user['username']) ?>",
+        "uploads": <?= $user['uploads'] ?>
+    },
+    <?php endforeach; ?>
+];
+const uploadersCategoryAxis = uploadersChart.xAxes.push(new am4charts.CategoryAxis());
+uploadersCategoryAxis.dataFields.category = "name";
+uploadersCategoryAxis.renderer.grid.template.location = 0;
+const uploadersValueAxis = uploadersChart.yAxes.push(new am4charts.ValueAxis());
+uploadersValueAxis.min = 0;
+const uploadersSeries = uploadersChart.series.push(new am4charts.ColumnSeries());
+uploadersSeries.dataFields.valueY = "uploads";
+uploadersSeries.dataFields.categoryX = "name";
+uploadersSeries.columns.template.fill = am4core.color("#60d394");
+uploadersSeries.columns.template.stroke = am4core.color("#fff");
+uploadersSeries.columns.template.strokeWidth = 2;
+
+// Graphique Utilisateurs actifs
+const activeUsersChart = am4core.create("activeUsersChart", am4charts.XYChart);
+activeUsersChart.data = [
+    <?php foreach ($stats['top_commented'] as $user): ?>
+    {
+        "name": "<?= htmlspecialchars($user['username']) ?>",
+        "comments": <?= $user['comments'] ?>
+    },
+    <?php endforeach; ?>
+];
+const activeCategoryAxis = activeUsersChart.xAxes.push(new am4charts.CategoryAxis());
+activeCategoryAxis.dataFields.category = "name";
+activeCategoryAxis.renderer.grid.template.location = 0;
+const activeValueAxis = activeUsersChart.yAxes.push(new am4charts.ValueAxis());
+activeValueAxis.min = 0;
+const activeSeries = activeUsersChart.series.push(new am4charts.ColumnSeries());
+activeSeries.dataFields.valueY = "comments";
+activeSeries.dataFields.categoryX = "name";
+activeSeries.columns.template.fill = am4core.color("#ff7b89");
+activeSeries.columns.template.stroke = am4core.color("#fff");
+activeSeries.columns.template.strokeWidth = 2;
+
+// Désinitialisation propre quand on quitte la page
+window.addEventListener('beforeunload', function() {
+    [usersChart, filesChart, interactionsChart, imagesChart, uploadersChart, activeUsersChart].forEach(chart => {
+        if (chart) {
+            chart.dispose();
+        }
+    });
+});
+</script>
 
 <?php require_once '../includes/footer.php'; ?>
