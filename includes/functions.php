@@ -428,4 +428,5 @@ function addUserXp($pdo, $user_id, $action_type) {
     return true;
 }
 
+
 ?>

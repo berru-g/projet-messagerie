@@ -56,6 +56,32 @@ $stats['image_extensions'] = $pdo->query("
     GROUP BY extension
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// RANK
+$stmt = $pdo->prepare("
+    SELECT 
+        u.id, 
+        u.username,
+        u.profile_picture,
+        (SELECT COUNT(*) FROM user_files WHERE user_id = u.id) as uploads,
+        (SELECT COUNT(*) FROM comments WHERE user_id = u.id) as comments,
+        (SELECT COUNT(*) FROM likes WHERE user_id = u.id) as likes,
+        ((SELECT COUNT(*) FROM user_files WHERE user_id = u.id) * 10) + 
+        ((SELECT COUNT(*) FROM comments WHERE user_id = u.id) * 5) + 
+        ((SELECT COUNT(*) FROM likes WHERE user_id = u.id) * 3) as xp
+    FROM users u
+    ORDER BY xp DESC
+    LIMIT 5
+");
+$stmt->execute();
+$top_active_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Calcul des niveaux
+foreach ($top_active_users as &$user) {
+    $level_info = calculateUserLevel($user['xp']);
+    $user['level'] = $level_info['level'];
+    $user['next_level_xp'] = $level_info['next_level_xp'];
+    $user['xp_percentage'] = $level_info['xp_percentage'];
+}
 
 
 require_once '../includes/header.php';
@@ -382,8 +408,8 @@ require_once '../includes/header.php';
     series.columns.template.strokeWidth = 2;
     series.columns.template.adapter.add("fill", function (fill, target) {
         return target.dataItem.index === 0
-            ? am4core.color("#ee6055")
-            : am4core.color("#2575fc");
+            ? am4core.color("#ffd97d")
+            : am4core.color("#77a9ffff");
     });
 
     // Graphique Types d'images
