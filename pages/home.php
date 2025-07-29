@@ -91,7 +91,7 @@ require_once '../includes/header.php';
     </div>
 
     <div class="comments">
-        <h2>Posts commun</h2>
+        <h2>Social Feed</h2>
 
         <?php foreach ($comments as $comment): ?>
 
