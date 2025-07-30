@@ -56,7 +56,7 @@ $stats['image_extensions'] = $pdo->query("
     GROUP BY extension
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// RANK
+/* RANK
 $stmt = $pdo->prepare("
     SELECT 
         u.id, 
@@ -81,7 +81,7 @@ foreach ($top_active_users as &$user) {
     $user['level'] = $level_info['level'];
     $user['next_level_xp'] = $level_info['next_level_xp'];
     $user['xp_percentage'] = $level_info['xp_percentage'];
-}
+}*/
 
 
 require_once '../includes/header.php';
@@ -140,14 +140,14 @@ require_once '../includes/header.php';
         <?php foreach ($top_active_users as $user): ?>
             <div class="user-card">
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $user['id'] ?>" class="user-avatar-link">
-                    <div class="user-avatar">
+                    <!--<div class="user-avatar">
                         <?php if (!empty($user['profile_picture'])): ?>
                             <img src="<?= htmlspecialchars($user['profile_picture']) ?>?<?= time() ?>" alt="Photo de profil"
                                 class="profile-picture-thumbnail">
                         <?php else: ?>
                             <div class="default-avatar">
                                 <i class="fas fa-user-circle"></i>
-                            </div>
+                            </div>-->
                         <?php endif; ?>
                         <div class="user-level" title="Niveau <?= $user['level'] ?>">
                             <?= getLevelBadge($user['level']) ?>
