@@ -1,40 +1,43 @@
 <?php
+// Chemin absolu pour éviter tout problème
+$env_file = __DIR__ . '/.env';
 
-// Chemin absolu pour être sûr
-$envPath = __DIR__.'/.env';
-
-// Vérifie si le fichier .env existe
-if (!file_exists($envPath)) {
-    die("Fichier .env introuvable à l'emplacement : ".$envPath);
+// Charge le .env si existe, sinon utilise les valeurs par défaut
+if (file_exists($env_file)) {
+    $env = parse_ini_file($env_file);
+} else {
+    die("Fichier .env manquant !");
 }
 
-// Charge le fichier en forçant le mode scalar (valeurs simples)
-$env = parse_ini_file($envPath, false, INI_SCANNER_TYPED);
+// Configuration avec fallback sécurisé
+$dbHost = $env['$dbHost'] ?? 'localhost';
+$dbName = $env['$dbName'] ?? '';
+$dbUser = $env['$dbUser'] ?? '';
+$dbPass = $env['$dbPass'] ?? '';
 
-// Vérifie les clés obligatoires
-$requiredKeys = ['dbHost', 'dbName', 'dbUser', 'dbPass', 'dbCharset'];
-foreach ($requiredKeys as $key) {
-    if (!isset($env[$key])) {
-        die("Clé $key manquante dans le .env");
-    }
+// Vérification des credentials
+if (empty($dbName) || empty($dbUser)) {
+    die("Configuration DB incomplète dans .env");
 }
 
 try {
     $pdo = new PDO(
-        "mysql:host={$env['dbHost']};dbname={$env['dbName']};charset={$env['dbCharset']}",
-        $env['dbUser'],
-        $env['dbPass'],
+        "mysql:host=$dbHost;dbname=$dbName;charset=utf8",
+        $dbUser,
+        $dbPass,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
     
-    // TEST : Si tu arrives ici, la connexion marche
-    echo "Connexion réussie !";
+    // Optionnel : message de test (à retirer en production)
+    // echo "Connexion réussie !";
     
 } catch (PDOException $e) {
-    die("Erreur de connexion MySQL : " . $e->getMessage());
+    // Message générique en production
+    die("Erreur de connexion à la base de données");
+    // Pour le debug : die("Erreur DB: " . $e->getMessage());
 }
 
 /*
