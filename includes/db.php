@@ -10,10 +10,10 @@ if (file_exists($env_file)) {
 }
 
 // Configuration avec fallback sécurisé
-$dbHost = $env['$dbHost'] ?? 'localhost';
-$dbName = $env['$dbName'] ?? '';
-$dbUser = $env['$dbUser'] ?? '';
-$dbPass = $env['$dbPass'] ?? '';
+$dbHost = $env['DB_HOST'] ?? 'localhost';
+$dbName = $env['DB_NAME'] ?? '';
+$dbUser = $env['DB_USER'] ?? '';
+$dbPass = $env['DB_PASS'] ?? '';
 
 // Vérification des credentials
 if (empty($dbName) || empty($dbUser)) {
