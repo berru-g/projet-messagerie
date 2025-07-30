@@ -1,9 +1,6 @@
 <?php
 
-$dbHost = 'localhost';     
-$dbName = 'u667977963_saas';    
-$dbUser = 'u667977963_berru_saas';      
-$dbPass = 'm@bddSQL25'; 
+$env = parse_ini_file(__DIR__.'/.env');
 
 try {
     $pdo = new PDO(
