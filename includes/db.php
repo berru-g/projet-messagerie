@@ -4,11 +4,14 @@ $env = parse_ini_file(__DIR__.'/.env');
 
 try {
     $pdo = new PDO(
-        "mysql:host=$dbHost;dbname=$dbName;charset=utf8",
-        $dbUser,
-        $dbPass
+        "mysql:host={$env['DB_HOST']};dbname={$env['DB_NAME']};charset={$env['DB_CHARSET']}",
+        $env['DB_USER'],
+        $env['DB_PASS'],
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
     );
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
