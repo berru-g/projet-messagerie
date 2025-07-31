@@ -72,7 +72,7 @@ ADD COLUMN profile_picture VARCHAR(255) NULL,
 ADD COLUMN website_url VARCHAR(255) NULL;
 
 -- afficher img profile du propriétaire ( pas encore push dans la bdd )
-SELECT f.*, u.id as owner_id, u.username, u.profile_picture, u.email
-FROM user_files f
-JOIN users u ON f.user_id = u.id
-WHERE f.id = ? -- bug pas l
+--SELECT f.*, u.id as owner_id, u.username, u.profile_picture, u.email
+--FROM user_files f
+--JOIN users u ON f.user_id = u.id
+--WHERE f.id = ? -- bug pas l
