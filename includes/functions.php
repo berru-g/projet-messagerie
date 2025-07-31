@@ -364,12 +364,23 @@ function calculateUserLevel($xp) {
 
 // Fonction pour obtenir l'icône de niveau
 function getLevelBadge($level) {
-    if ($level >= 50) return '🏆';
-    if ($level >= 40) return '🎖️';
-    if ($level >= 30) return '🏅';
-    if ($level >= 20) return '🥈';
-    if ($level >= 10) return '🥉';
-    return '⭐';
+    $level = (int)$level; // Assurance que c'est un entier
+    $badges = [
+        50 => '🏆', // Niveau 50+
+        40 => '🎖️', // Niveau 40-49
+        30 => '🏅', // Niveau 30-39
+        20 => '🥈', // Niveau 20-29
+        10 => '🥉', // Niveau 10-19
+        0 => '⭐'   // Niveau 1-9
+    ];
+    
+    foreach ($badges as $min_level => $badge) {
+        if ($level >= $min_level) {
+            return $badge;
+        }
+    }
+    
+    return '⭐'; // Valeur par défaut
 }
 
 // Fonction pour obtenir l'URL de l'avatar

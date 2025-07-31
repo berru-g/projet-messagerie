@@ -180,8 +180,8 @@ require_once '../includes/header.php';
                                 <i class="fas fa-user-circle"></i>
                             </div>
                         <?php endif; ?>
-                        <div class="user-level" title="Niveau <?= $user['level'] ?>">
-                            <?= getLevelBadge($user['level']) ?>
+                        <div class="user-level" title="Niveau <?= $rank_user['level'] ?>">
+                            <?= getLevelBadge($rank_user['level']) ?>
                         </div>
                     </div>
                 </a>
@@ -199,8 +199,8 @@ require_once '../includes/header.php';
                         <span>XP: <?= $user['xp'] ?>/<?= $user['next_level_xp'] ?></span>
                     </div>
                 </div>
-                <span><i class="fas fa-comment"></i> <?= $rank_user['comments_count'] ?></span>
-                <span><i class="fas fa-heart"></i> <?= $rank_user['likes_count'] ?></span>
+                <!--<span><i class="fas fa-comment"></i> <?= $rank_user['comments_count'] ?></span>
+                <span><i class="fas fa-heart"></i> <?= $rank_user['likes_count'] ?></span>-->
             </div>
         <?php endforeach; ?>
     </div>
