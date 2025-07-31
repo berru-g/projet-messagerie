@@ -74,7 +74,7 @@ require_once '../includes/header.php';
 
 
 <div class="container" id="mur">
-    <div class="comment-form">
+    <!--<div class="comment-form">
         <h2>Salut <?= htmlspecialchars($user['username']) ?></h2>
         <form method="POST" enctype="multipart/form-data" class="reply-form">
             <textarea name="content" placeholder="Exprimez-vous "></textarea>
@@ -88,7 +88,7 @@ require_once '../includes/header.php';
                 <i class="fas fa-paper-plane"></i> Poster
             </button>
         </form>
-    </div>
+    </div>-->
 
     <div class="comments">
         <h2>Social Feed</h2>
@@ -169,7 +169,7 @@ require_once '../includes/header.php';
                     <?php else: ?>
                         <i class="fas fa-user-circle"></i>
                     <?php endif; ?>-->
-                    
+
                     <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $reply['user_id'] ?>"
                         class="profile-picture-link">
                         <?php if (!empty($reply['profile_picture'])): ?>
@@ -200,6 +200,25 @@ require_once '../includes/header.php';
 
         <?php endforeach; ?>
     </div>
+
+    <!--nouveau form fixé en bas -->
+    <div class="comment-post">
+        <form method="POST" enctype="multipart/form-data" class="reply-post">
+            <textarea name="content" placeholder="Exprimez-vous"></textarea>
+
+            <!-- Bouton Parcourir (icone image) -->
+            <label for="file-main" class="file-post" title="Parcourir">
+                <i class="fas fa-image"></i><input type="file" name="file" id="file-main" accept="image/*,video/*">
+            </label>
+
+
+            <!-- Bouton Envoyer (icone avion) -->
+            <button type="submit" name="comment" class="btn-post" title="Poster">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
 </div>
 
 

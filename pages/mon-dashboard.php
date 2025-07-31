@@ -133,21 +133,21 @@ require_once '../includes/header.php';
     </div>
 </div>
 
-<div class="container mt-5">
+<!--<div class="container mt-5">
     <h2>🏆 Classement des Utilisateurs</h2>
 
     <div class="user-ranking">
         <?php foreach ($top_active_users as $user): ?>
             <div class="user-card">
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $user['id'] ?>" class="user-avatar-link">
-                    <!--<div class="user-avatar">
+                    <div class="user-avatar">
                         <?php if (!empty($user['profile_picture'])): ?>
                             <img src="<?= htmlspecialchars($user['profile_picture']) ?>?<?= time() ?>" alt="Photo de profil"
                                 class="profile-picture-thumbnail">
                         <?php else: ?>
                             <div class="default-avatar">
                                 <i class="fas fa-user-circle"></i>
-                            </div>-->
+                            </div>
                         <?php endif; ?>
                         <div class="user-level" title="Niveau <?= $user['level'] ?>">
                             <?= getLevelBadge($user['level']) ?>
@@ -171,7 +171,7 @@ require_once '../includes/header.php';
             </div>
         <?php endforeach; ?>
     </div>
-</div>
+</div>-->
 
 <!-- Styles (conservés identiques) -->
 <style>
