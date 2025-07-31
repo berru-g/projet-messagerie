@@ -49,8 +49,8 @@ require_once '../includes/header.php';
                 <div class="dt-card-icon csv">
                     <i class="fa fa-file-csv"></i>
                 </div>
-                <h3>CSV Transformer</h3>
-                <p>Conversion vers multiples formats</p>
+                <h3 data-i18n-card-title>CSV Transformer</h3>
+                <p data-i18n-card-text>Conversion vers multiples formats</p>
                 <ul class="dt-features">
                     <li><i class="fas fa-chart-bar"></i> Graphiques dynamiques</li>
                     <li><i class="fas fa-table"></i> Tableaux interactifs</li>
@@ -63,8 +63,8 @@ require_once '../includes/header.php';
                 <div class="dt-card-icon excel">
                     <i class="fa fa-file-excel"></i>
                 </div>
-                <h3>Excel Magic</h3>
-                <p>Analyse avancée</p>
+                <h3 data-i18n-card-title>Excel Magic</h3>
+                <p data-i18n-card-text>Analyse avancée</p>
                 <ul class="dt-features">
                     <li><i class="fas fa-project-diagram"></i> Visualisations 3D</li>
                     <li><i class="fas fa-bolt"></i> Traitement rapide</li>
@@ -77,8 +77,8 @@ require_once '../includes/header.php';
                 <div class="dt-card-icon json">
                     <i class="fa fa-file-code"></i>
                 </div>
-                <h3>JSON Explorer</h3>
-                <p>Analyse de structures</p>
+                <h3 data-i18n-card-title>JSON Explorer</h3>
+                <p data-i18n-card-text>Analyse de structures</p>
                 <ul class="dt-features">
                     <li><i class="fas fa-sitemap"></i> Arborescence</li>
                     <li><i class="fas fa-filter"></i> Filtres intelligents</li>
@@ -88,7 +88,7 @@ require_once '../includes/header.php';
         </div>
 
         <div class="dt-cta">
-            <p>Explorez notre galerie publique ou uploader vos propres fichiers</p>
+            <p data-i18n-card-text>Explorez notre galerie publique ou uploader vos propres fichiers</p>
             <div class="dt-buttons">
                 
                 <a href="#seconnecter" class="dt-btn primary">
@@ -101,73 +101,145 @@ require_once '../includes/header.php';
         </div>
     </div>
 </section>-->
+<!-- FontAwesome CDN -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <style>
-  .intro-section {
-    background-color: transparent;
-    border-bottom: 1px solid #ddd;
-    padding: 40px 20px;
-    text-align: center;
-  }
+  @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
 
-  .intro-section img {
-    width: 90px;
-    height: 90px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    object-fit: contain;
-    border-radius: 16px;
-    margin-bottom: 20px;
-  }
-
-  .intro-section h1 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-    color: #333;
-  }
-
-  .intro-section p {
-    font-size: 1em;
-    color: #555;
-    line-height: 1.6;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .intro-section strong {
-    font-weight: 600;
+  .agora-intro {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: "Montserrat", sans-serif;
     color: #222;
   }
-
-  .intro-section .warning {
-    color: #e89690ff;
-    font-weight: bold;
+  .agora-intro img {
+    display: flex;
+    margin:0 auto;
+    width: 90px;
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    margin-bottom: 0px;
   }
 
+  .agora-intro h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .card {
+    flex: 1 1 180px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    padding: 25px 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card i {
+    font-size: 30px;
+    margin-bottom: 15px;
+  }
+
+  .card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #111;
+  }
+
+  .card p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* Icon Colors */
+  .icon-red { color: #ee6055; }
+  .icon-green { color: #60d394; }
+  .icon-blue { color: #3498db; }
+  .icon-yellow { color: #ffd97d; }
+  .icon-purple { color: #ab9ff2; }
+  .icon-orange { color: #f9b87fff; }
+
   /* Responsive */
-  @media screen and (max-width: 480px) {
-    .intro-section {
-      padding: 30px 15px;
-    }
-
-    .intro-section h1 {
-      font-size: 1.5em;
-    }
-
-    .intro-section p {
-      font-size: 0.95em;
+  @media screen and (max-width: 400px) {
+    .card {
+      flex: 1 1 100%;
     }
   }
 </style>
 
-<section class="intro-section">
+<section class="agora-intro">
   <img src="<?= BASE_URL ?>/assets/img/agora-logo.png" alt="Logo Agora" />
-  <h1>Bienvenue sur Agora</h1>
-  <p>
-    Ceci est un <strong>MVP</strong> (version minimale viable ou prototype) actuellement en phase de test et en recherche de niche. 
-    <strong>Vos retours sont les bienvenus</strong> pour nous aider à améliorer la plateforme. Que voulez faire de cette plateforme ? <br /><br />
-    Nous tenons à préserver un <strong>espace respectueux et bienveillant</strong> : <span class="warning">tout comportement violent ou malveillant entraînera un bannissement immédiat</span>.
-  </p>
+  <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong></h2>
+
+  <div class="card-grid">
+
+    <div class="card" data-i18n-card data-i18n-card>
+      <i class="fas fa-user-secret icon-purple"></i>
+      <h3 data-i18n-card-title data-i18n-card-title>Inscription anonyme</h3>
+      <p data-i18n-card-text>Aucun mail vérifié requis. Crée un compte en quelques secondes, sans friction ni identité imposée.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-clock icon-blue"></i>
+      <h3 data-i18n-card-title>Fil chronologique</h3>
+      <p data-i18n-card-text>Les publications sont affichées dans l’ordre réel, sans algorithme ni tri caché. Ce que tu vois est ce qui est posté.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-bolt icon-orange"></i>
+      <h3 data-i18n-card-title>Sans scroll infini</h3>
+      <p data-i18n-card-text>Tu parcours les posts à ton rythme, sans boucle addictive. Un usage sain et maîtrisé.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-eye-slash icon-red"></i>
+      <h3 data-i18n-card-title>Pas de tracking, pas de pub</h3>
+      <p data-i18n-card-text>Agora ne collecte pas tes données et ne te pousse pas à consommer. Aucune publicité, jamais.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-user-circle icon-green"></i>
+      <h3 data-i18n-card-title>Mini-profil optionnel</h3>
+      <p data-i18n-card-text>Tu peux ajouter une photo, un lien vers ton site, et voir tes stats (likes, commentaires, images postées).</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-heart icon-yellow"></i>
+      <h3 data-i18n-card-title>Respect obligatoire</h3>
+      <p data-i18n-card-text>Agora est un espace bienveillant. Tout comportement malveillant est banni sans préavis.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-flask icon-purple"></i>
+      <h3 data-i18n-card-title>En test, avec toi</h3>
+      <p data-i18n-card-text>Agora est un prototype évolutif. Tes retours sont les bienvenus pour co-construire un espace plus humain.</p>
+    </div>
+
+    <div class="card" data-i18n-card>
+      <i class="fas fa-lightbulb icon-green"></i>
+      <h3 data-i18n-card-title>Pourquoi Agora ?</h3>
+      <p data-i18n-card-text>Parce que tu mérites un lieu d’expression sans filtre ni influence. Sobre. Humaine. Authentique.</p>
+    </div>
+
+  </div>
 </section>
+
 
 
 <div class="container auth-container" id="seconnecter">
@@ -176,7 +248,7 @@ require_once '../includes/header.php';
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
             <?php foreach ($errors as $error): ?>
-                <p><?= $error ?></p>
+                <p data-i18n-card-text><?= $error ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
@@ -201,8 +273,10 @@ require_once '../includes/header.php';
         <button type="submit">Se connecter</button>
     </form>
 
-    <p>Pas encore de compte ? <a href="register.php">Inscrivez-vous</a></p>
-    <p><a href="forgot-password.php">Mot de passe oublié ?</a></p>
+    <p data-i18n-card-text>Pas encore de compte ? <a href="register.php">Inscrivez-vous</a></p>
+    <p data-i18n-card-text><a href="forgot-password.php">Mot de passe oublié ?</a></p>
 </div>
+
+<script src="/assets/js/lang.js"></script>
 
 <?php require_once '../includes/footer.php'; ?>
