@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
     }
 }
 
-// Gestion des mots redflaf à bannir
+/* Gestion des mots redflaf à bannir
 $badList = json_decode(file_get_contents(__DIR__ . '../lang/badwords.json'), true);
 $lang = 'fr'; // ou détecter la langue dynamiquement
 $words = $badList[$lang] ?? $badList['fr'];
@@ -83,7 +83,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $suspectPosts[] = $row;
     }
 }
-
+*/
 
 require_once '../includes/header.php';
 ?>
