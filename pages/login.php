@@ -121,7 +121,7 @@ require_once '../includes/header.php';
     height: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
-    margin-bottom: 0px;
+    margin-bottom: 30px;
   }
 
   .agora-intro h2 {
@@ -185,7 +185,7 @@ require_once '../includes/header.php';
 
 <section class="agora-intro">
   <img src="<?= BASE_URL ?>/assets/img/agora-logo.png" alt="Logo Agora" />
-  <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong></h2>
+  <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong> Social Feed</h2>
 
   <div class="card-grid">
 

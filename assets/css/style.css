@@ -1569,3 +1569,9 @@ tbody td {
 .column-selectors select {
   min-width: 200px;
 }
+
+/* traduction */
+html[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+}

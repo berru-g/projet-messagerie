@@ -1,10 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
   const fallbackLang = 'fr'; // français par défaut
-  const supportedLangs = ['en', 'es'];
+  const supportedLangs = ['en', 'es', 'pt', 'ru', 'de', 'nl', 'ar', 'it'];
 
   // Détecter langue du navigateur (ex: "en-US" → "en")
   let lang = navigator.language.slice(0, 2);
   if (!supportedLangs.includes(lang)) lang = fallbackLang;
+
+  // Appliquer la langue sur la balise <html>
+  document.documentElement.lang = lang;
+
+  // Si langue RTL, activer RTL
+  if (lang === 'ar') {
+    document.documentElement.dir = 'rtl';
+  }
 
   // Charger le fichier de langue correspondant
   if (lang !== 'fr') {
