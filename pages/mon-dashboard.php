@@ -503,6 +503,21 @@ $sql = "SELECT p.id, p.content, p.created_at, u.id as user_id, u.email, u.profil
         FROM posts p 
         JOIN users u ON p.user_id = u.id";
 $posts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query("
+  SELECT comments.id, comments.content, comments.created_at, users.email, users.profile_img 
+  FROM comments 
+  JOIN users ON comments.user_id = users.id
+  ORDER BY comments.created_at DESC
+");
+
+$suspectComments = [];
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $content = $row['content'] ?? '';
+    if (preg_match($pattern, $content)) {
+        $suspectComments[] = $row;
+    }
+}
 
 $suspects = array_filter($posts, function($post) use ($pattern) {
     return preg_match($pattern, $post['content']);
@@ -545,6 +560,24 @@ $suspects = array_filter($posts, function($post) use ($pattern) {
     </ul>
   </div>
 <?php endif; ?>
+<?php if (!empty($suspectComments)): ?>
+  <div style="padding:1em; background:#fff4e5; border:1px solid #ffa726; margin-top:2em;">
+    <h3>⚠️ Commentaires suspects :</h3>
+    <ul>
+      <?php foreach ($suspectComments as $comment): ?>
+        <li style="margin:1em 0; display:flex; align-items:center;">
+          <img src="<?= htmlspecialchars($comment['profile_img']) ?>" alt="avatar" width="32" height="32" style="border-radius:50%;margin-right:0.5em;">
+          <div>
+            <strong><?= htmlspecialchars($comment['email']) ?></strong> :<br>
+            <?= htmlspecialchars($comment['content']) ?><br>
+            <a href="/profil.php?u=<?= urlencode($comment['email']) ?>">Voir profil</a>
+          </div>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+<?php endif; ?>
+
 
 
 <?php require_once '../includes/footer.php'; ?>
