@@ -346,19 +346,12 @@ function canAccessFile($user_id, $file_id)
 // Fonction pour calculer le niveau et l'XP
 function calculateUserLevel($xp) {
     $base_xp = 100;
-    $level = 1;
-    
-    while ($xp >= $base_xp) {
-        $xp -= $base_xp;
-        $base_xp = $base_xp * 1.5; // Augmentation exponentielle
-        $level++;
-    }
+    $level = floor(pow($xp / 100, 0.7)); // Formule plus progressive
     
     return [
         'level' => $level,
-        'current_xp' => $xp,
-        'next_level_xp' => $base_xp,
-        'xp_percentage' => round(($xp / $base_xp) * 100)
+        'next_level_xp' => pow($level + 1, 1/0.7) * 100, // XP nécessaire pour le prochain niveau
+        'xp_percentage' => ($xp / pow($level + 1, 1/0.7) * 100) % 100
     ];
 }
 
