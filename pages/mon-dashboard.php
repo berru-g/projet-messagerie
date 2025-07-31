@@ -488,4 +488,64 @@ require_once '../includes/header.php';
     });
 </script>
 
+<!-- le coin du modérateur -- promis on automatisera ça à l'avenir -->
+ <?php
+require_once 'includes/db.php';
+
+// Charger la liste de mots interdits
+$badWordsFile = __DIR__ . '/lang/badwords.json';
+$badWords = json_decode(file_get_contents($badWordsFile), true);
+
+// Préparer une regex propre
+$pattern = '/' . implode('|', array_map('preg_quote', $badWords)) . '/i';
+
+// Chercher les posts suspects
+$sql = "SELECT p.id, p.content, p.created_at, u.id as user_id, u.email, u.profile_img 
+        FROM posts p 
+        JOIN users u ON p.user_id = u.id";
+$posts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+$suspects = array_filter($posts, function($post) use ($pattern) {
+    return preg_match($pattern, $post['content']);
+});
+?>
+
+<div style="margin-top: 4rem;">
+  <h2 style="color:#d9534f; font-weight:bold;">🛑 Contenus suspects détectés</h2>
+
+  <?php if (empty($suspects)): ?>
+    <p style="color:gray;">Aucun contenu suspect pour le moment.</p>
+  <?php else: ?>
+    <?php foreach ($suspects as $s): ?>
+      <div style="border:1px solid #ccc; padding:1em; margin-bottom:1em; background:#fff5f5; border-left:5px solid #d9534f;">
+        <div style="display:flex; align-items:center;">
+          <img src="<?= htmlspecialchars($s['profile_img']) ?>" alt="pp" style="width:40px; height:40px; border-radius:50%; margin-right:1em;">
+          <a href="/profil.php?u=<?= $s['user_id'] ?>" style="font-weight:bold; color:#d9534f;">
+            <?= htmlspecialchars($s['email']) ?>
+          </a>
+        </div>
+        <p style="margin-top:0.5em;"><?= nl2br(htmlspecialchars($s['content'])) ?></p>
+        <small>Posté le : <?= date('d/m/Y H:i', strtotime($s['created_at'])) ?></small>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
+
+<!--deuz-->
+<?php if (!empty($suspectPosts)): ?>
+  <div style="padding:1em; background:#ffecec; border:1px solid #ff5c5c; margin-top:2em;">
+    <h3>🚨 Contenus suspects détectés :</h3>
+    <ul>
+      <?php foreach ($suspectPosts as $post): ?>
+        <li style="margin:1em 0;">
+          <strong><?= htmlspecialchars($post['author']) ?></strong> :
+          <?= htmlspecialchars($post['content']) ?><br>
+          <a href="/profile.php?user=<?= urlencode($post['author']) ?>">Voir le profil</a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+<?php endif; ?>
+
+
 <?php require_once '../includes/footer.php'; ?>

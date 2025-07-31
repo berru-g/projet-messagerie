@@ -68,6 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
     }
 }
 
+// Gestion des mots redflaf à bannir
+$badList = json_decode(file_get_contents(__DIR__ . '../lang/badwords_multilang.json'), true);
+$lang = 'fr'; // ou détecter la langue dynamiquement
+$words = $badList[$lang] ?? $badList['fr'];
+$pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
+
+$stmt = $pdo->query("SELECT * FROM comments ORDER BY created_at DESC");
+$suspectPosts = [];
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $content = $row['content'] ?? '';
+    if (preg_match($pattern, $content)) {
+        $suspectPosts[] = $row;
+    }
+}
+
 
 require_once '../includes/header.php';
 ?>
