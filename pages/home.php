@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reply']) && isset($_P
 }
 
 // Gestion des mots redflaf à bannir
-$badList = json_decode(file_get_contents(__DIR__ . '../lang/badwords_multilang.json'), true);
+$badList = json_decode(file_get_contents(__DIR__ . '../lang/badwords.json'), true);
 $lang = 'fr'; // ou détecter la langue dynamiquement
 $words = $badList[$lang] ?? $badList['fr'];
 $pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';

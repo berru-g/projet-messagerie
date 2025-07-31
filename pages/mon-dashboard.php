@@ -490,7 +490,6 @@ require_once '../includes/header.php';
 
 <!-- le coin du modérateur -- promis on automatisera ça à l'avenir -->
  <?php
-require_once 'includes/db.php';
 
 // Charger la liste de mots interdits
 $badWordsFile = __DIR__ . '/lang/badwords.json';
