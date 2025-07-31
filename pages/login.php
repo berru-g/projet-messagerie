@@ -137,7 +137,7 @@ require_once '../includes/header.php';
   }
 
   .card {
-    flex: 1 1 200px;
+    flex: 1 1 250px;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
