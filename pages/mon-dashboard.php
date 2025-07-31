@@ -84,23 +84,29 @@ foreach ($top_active_users as &$user) {
 }*/
 
 // Charger la liste de mots interdits
-    $badWordsFile = __DIR__ . '/../lang/badwords.json';
-    $badWords = json_decode(file_get_contents($badWordsFile), true);
-    $lang = 'fr'; // ou détecter dynamiquement la langue
-    $words = $badWords[$lang] ?? $badWords['fr'];
-    $pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
+    // Charger la liste de mots interdits
+$badWordsFile = __DIR__ . '/../lang/badwords.json';
+$badWords = json_decode(file_get_contents($badWordsFile), true);
+$lang = 'fr';
+$words = $badWords[$lang] ?? $badWords['fr'];
+$pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
 
-    // Récupérer les commentaires suspects
-    $suspectComments = $pdo->query("
-        SELECT c.id, c.content, c.created_at, c.file_path, 
-               u.id as user_id, u.username, u.email, u.profile_picture
-        FROM comments c
-        JOIN users u ON c.user_id = u.id
-        WHERE c.content REGEXP ?
-        ORDER BY c.created_at DESC
-    ", [$pattern])->fetchAll(PDO::FETCH_ASSOC);
+// Récupérer tous les commentaires récents
+$sql = "
+    SELECT c.id, c.content, c.created_at, c.file_path, 
+           u.id as user_id, u.username, u.email, u.profile_picture
+    FROM comments c
+    JOIN users u ON c.user_id = u.id
+    ORDER BY c.created_at DESC
+    LIMIT 1000
+";
+$allComments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-    
+// Filtrer en PHP
+$suspectComments = array_filter($allComments, function($comment) use ($pattern) {
+    return preg_match($pattern, $comment['content']);
+});
+
 require_once '../includes/header.php';
 ?>
 <div class="container">
