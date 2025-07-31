@@ -83,7 +83,24 @@ foreach ($top_active_users as &$user) {
     $user['xp_percentage'] = $level_info['xp_percentage'];
 }*/
 
+// Charger la liste de mots interdits
+    $badWordsFile = __DIR__ . '/../lang/badwords.json';
+    $badWords = json_decode(file_get_contents($badWordsFile), true);
+    $lang = 'fr'; // ou détecter dynamiquement la langue
+    $words = $badWords[$lang] ?? $badWords['fr'];
+    $pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
 
+    // Récupérer les commentaires suspects
+    $suspectComments = $pdo->query("
+        SELECT c.id, c.content, c.created_at, c.file_path, 
+               u.id as user_id, u.username, u.email, u.profile_picture
+        FROM comments c
+        JOIN users u ON c.user_id = u.id
+        WHERE c.content REGEXP ?
+        ORDER BY c.created_at DESC
+    ", [$pattern])->fetchAll(PDO::FETCH_ASSOC);
+
+    
 require_once '../includes/header.php';
 ?>
 <div class="container">
@@ -511,24 +528,6 @@ require_once '../includes/header.php';
 <div class="container mt-5">
     <h2 style="color: #d9534f;">🚨 Contenus suspects (bad words)</h2>
 
-    <?php
-    // Charger la liste de mots interdits
-    $badWordsFile = __DIR__ . '/../lang/badwords.json';
-    $badWords = json_decode(file_get_contents($badWordsFile), true);
-    $lang = 'fr'; // ou détecter dynamiquement la langue
-    $words = $badWords[$lang] ?? $badWords['fr'];
-    $pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
-
-    // Récupérer les commentaires suspects
-    $suspectComments = $pdo->query("
-        SELECT c.id, c.content, c.created_at, c.file_path, 
-               u.id as user_id, u.username, u.email, u.profile_picture
-        FROM comments c
-        JOIN users u ON c.user_id = u.id
-        WHERE c.content REGEXP ?
-        ORDER BY c.created_at DESC
-    ", [$pattern])->fetchAll(PDO::FETCH_ASSOC);
-    ?>
 
     <?php if (empty($suspectComments)): ?>
         <div class="alert alert-success">Aucun contenu suspect détecté.</div>
