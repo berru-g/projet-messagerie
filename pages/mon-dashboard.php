@@ -335,6 +335,24 @@ require_once '../includes/header.php';
         color: white;
         font-weight: bold;
     }
+
+    .suspect-comments {
+        max-height: 600px;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        border: 1px solid #eee;
+    }
+
+    .suspect-comments .card {
+        transition: transform 0.2s;
+    }
+
+    .suspect-comments .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 </style>
 
 <!-- Scripts amCharts -->
@@ -368,7 +386,7 @@ require_once '../includes/header.php';
     const filesChart = am4core.create("filesChart", am4charts.PieChart);
     filesChart.data = [
         <?php foreach ($stats['file_types'] as $type): ?>
-            {
+                {
                 "category": "<?= ucfirst($type['file_type']) ?>",
                 "value": <?= $type['count'] ?>
             },
@@ -416,7 +434,7 @@ require_once '../includes/header.php';
     const imagesChart = am4core.create("imagesChart", am4charts.PieChart);
     imagesChart.data = [
         <?php foreach ($stats['image_extensions'] as $ext): ?>
-            {
+                {
                 "category": "<?= $ext['extension'] ?>",
                 "value": <?= $ext['count'] ?>
             },
@@ -438,7 +456,7 @@ require_once '../includes/header.php';
     const uploadersChart = am4core.create("uploadersChart", am4charts.XYChart);
     uploadersChart.data = [
         <?php foreach ($stats['top_uploaders'] as $user): ?>
-            {
+                {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "uploads": <?= $user['uploads'] ?>
             },
@@ -460,7 +478,7 @@ require_once '../includes/header.php';
     const activeUsersChart = am4core.create("activeUsersChart", am4charts.XYChart);
     activeUsersChart.data = [
         <?php foreach ($stats['top_commented'] as $user): ?>
-            {
+                {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "comments": <?= $user['comments'] ?>
             },
@@ -489,94 +507,80 @@ require_once '../includes/header.php';
 </script>
 
 <!-- le coin du modérateur -- promis on automatisera ça à l'avenir -->
- <?php
+<!-- Section Modération - Contenus suspects -->
+<div class="container mt-5">
+    <h2 style="color: #d9534f;">🚨 Contenus suspects (bad words)</h2>
 
-// Charger la liste de mots interdits
-$badWordsFile = __DIR__ . '/lang/badwords.json';
-$badWords = json_decode(file_get_contents($badWordsFile), true);
+    <?php
+    // Charger la liste de mots interdits
+    $badWordsFile = __DIR__ . '/../lang/badwords.json';
+    $badWords = json_decode(file_get_contents($badWordsFile), true);
+    $lang = 'fr'; // ou détecter dynamiquement la langue
+    $words = $badWords[$lang] ?? $badWords['fr'];
+    $pattern = '/' . implode('|', array_map('preg_quote', $words)) . '/i';
 
-// Préparer une regex propre
-$pattern = '/' . implode('|', array_map('preg_quote', $badWords)) . '/i';
+    // Récupérer les commentaires suspects
+    $suspectComments = $pdo->query("
+        SELECT c.id, c.content, c.created_at, c.file_path, 
+               u.id as user_id, u.username, u.email, u.profile_picture
+        FROM comments c
+        JOIN users u ON c.user_id = u.id
+        WHERE c.content REGEXP ?
+        ORDER BY c.created_at DESC
+    ", [$pattern])->fetchAll(PDO::FETCH_ASSOC);
+    ?>
 
-// Chercher les posts suspects
-$sql = "SELECT p.id, p.content, p.created_at, u.id as user_id, u.email, u.profile_img 
-        FROM posts p 
-        JOIN users u ON p.user_id = u.id";
-$posts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-$stmt = $pdo->query("
-  SELECT comments.id, comments.content, comments.created_at, users.email, users.profile_img 
-  FROM comments 
-  JOIN users ON comments.user_id = users.id
-  ORDER BY comments.created_at DESC
-");
-
-$suspectComments = [];
-
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $content = $row['content'] ?? '';
-    if (preg_match($pattern, $content)) {
-        $suspectComments[] = $row;
-    }
-}
-
-$suspects = array_filter($posts, function($post) use ($pattern) {
-    return preg_match($pattern, $post['content']);
-});
-?>
-
-<div style="margin-top: 4rem;">
-  <h2 style="color:#d9534f; font-weight:bold;">🛑 Contenus suspects détectés</h2>
-
-  <?php if (empty($suspects)): ?>
-    <p style="color:gray;">Aucun contenu suspect pour le moment.</p>
-  <?php else: ?>
-    <?php foreach ($suspects as $s): ?>
-      <div style="border:1px solid #ccc; padding:1em; margin-bottom:1em; background:#fff5f5; border-left:5px solid #d9534f;">
-        <div style="display:flex; align-items:center;">
-          <img src="<?= htmlspecialchars($s['profile_img']) ?>" alt="pp" style="width:40px; height:40px; border-radius:50%; margin-right:1em;">
-          <a href="/profil.php?u=<?= $s['user_id'] ?>" style="font-weight:bold; color:#d9534f;">
-            <?= htmlspecialchars($s['email']) ?>
-          </a>
+    <?php if (empty($suspectComments)): ?>
+        <div class="alert alert-success">Aucun contenu suspect détecté.</div>
+    <?php else: ?>
+        <div class="alert alert-danger">
+            <?= count($suspectComments) ?> commentaire(s) suspect(s) détecté(s)
         </div>
-        <p style="margin-top:0.5em;"><?= nl2br(htmlspecialchars($s['content'])) ?></p>
-        <small>Posté le : <?= date('d/m/Y H:i', strtotime($s['created_at'])) ?></small>
-      </div>
-    <?php endforeach; ?>
-  <?php endif; ?>
-</div>
 
-<!--deuz-->
-<?php if (!empty($suspectPosts)): ?>
-  <div style="padding:1em; background:#ffecec; border:1px solid #ff5c5c; margin-top:2em;">
-    <h3>🚨 Contenus suspects détectés :</h3>
-    <ul>
-      <?php foreach ($suspectPosts as $post): ?>
-        <li style="margin:1em 0;">
-          <strong><?= htmlspecialchars($post['author']) ?></strong> :
-          <?= htmlspecialchars($post['content']) ?><br>
-          <a href="/profile.php?user=<?= urlencode($post['author']) ?>">Voir le profil</a>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  </div>
-<?php endif; ?>
-<?php if (!empty($suspectComments)): ?>
-  <div style="padding:1em; background:#fff4e5; border:1px solid #ffa726; margin-top:2em;">
-    <h3>⚠️ Commentaires suspects :</h3>
-    <ul>
-      <?php foreach ($suspectComments as $comment): ?>
-        <li style="margin:1em 0; display:flex; align-items:center;">
-          <img src="<?= htmlspecialchars($comment['profile_img']) ?>" alt="avatar" width="32" height="32" style="border-radius:50%;margin-right:0.5em;">
-          <div>
-            <strong><?= htmlspecialchars($comment['email']) ?></strong> :<br>
-            <?= htmlspecialchars($comment['content']) ?><br>
-            <a href="/profil.php?u=<?= urlencode($comment['email']) ?>">Voir profil</a>
-          </div>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  </div>
-<?php endif; ?>
+        <div class="suspect-comments">
+            <?php foreach ($suspectComments as $comment): ?>
+                <div class="card mb-3 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <img src="<?= htmlspecialchars($comment['profile_picture'] ?? '') ?>" alt="Photo de profil"
+                                    class="rounded-circle me-2" width="30" height="30">
+                                <strong><?= htmlspecialchars($comment['username']) ?></strong>
+                                (<?= htmlspecialchars($comment['email']) ?>)
+                            </div>
+                            <small>
+                                <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+
+                        <?php if (!empty($comment['file_path'])): ?>
+                            <?php if (strpos($comment['file_path'], '.jpg') !== false || strpos($comment['file_path'], '.png') !== false): ?>
+                                <img src="<?= htmlspecialchars($comment['file_path']) ?>" class="img-fluid rounded mt-2"
+                                    style="max-height: 200px;">
+                            <?php elseif (strpos($comment['file_path'], '.mp4') !== false): ?>
+                                <video controls class="mt-2" style="max-width: 300px;">
+                                    <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
+                                </video>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $comment['user_id'] ?>"
+                            class="btn btn-sm btn-outline-primary">
+                            Voir profil
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger float-end">
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
 
 
 
