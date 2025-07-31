@@ -108,7 +108,7 @@ require_once '../includes/header.php';
   @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
 
   .agora-intro {
-    max-width: 1100px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 20px;
     font-family: "Montserrat", sans-serif;
@@ -137,7 +137,7 @@ require_once '../includes/header.php';
   }
 
   .card {
-    flex: 1 1 180px;
+    flex: 1 1 200px;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);

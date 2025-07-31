@@ -13,12 +13,12 @@ if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com'
     http_response_code(403);
     exit("⛔ Accès interdit.");
 }*/
-/* redirection
+// redirection
 if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com') {
-    header("Location: " . BASE_URL . "/403.php");
+    header("Location: " . BASE_URL . "/profile.php");
     exit;
 }
-*/
+
 
 // Récupération des stats globales
 $stats = [];
