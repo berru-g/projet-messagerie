@@ -1,7 +1,12 @@
 <?php
 
+$dbHost = 'localhost';     
+$dbName = 'u667977963_saas';    
+$dbUser = 'u667977963_berru_saas';      
+$dbPass = 'm@bddSQL25'; 
+
 try {
-    $dbConfig = require __DIR__ . '/../db_config.php';
+    //$dbConfig = require __DIR__ . '/../db_config.php';
     $pdo = new PDO(
         "mysql:host=$dbHost;dbname=$dbName;charset=utf8",
         $dbUser,
@@ -9,12 +14,8 @@ try {
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // En production, on ne montre pas le message exact
-    error_log("Erreur de connexion BDD : " . $e->getMessage()); // Log serveur
-    http_response_code(500); // Code erreur HTTP
-    die("Erreur interne. Merci de réessayer plus tard.");
+    die("Erreur de connexion : " . $e->getMessage());
 }
-
 
 /*
 require_once  'config.php';
