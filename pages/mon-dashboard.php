@@ -56,6 +56,30 @@ $stats['image_extensions'] = $pdo->query("
     GROUP BY extension
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// RANK - Version corrigée
+$current_user_id = $_SESSION['user_id']; // On stocke l'ID de l'user connecté
+
+$stmt = $pdo->prepare("
+    SELECT 
+        u.id, 
+        u.username,
+        u.profile_picture,
+        
+    FROM users u
+    ORDER BY xp DESC
+    LIMIT 5
+");
+$stmt->execute();
+$top_active_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($top_active_users as &$user) {
+    // On ajoute un flag pour identifier l'user courant
+    $user['is_current_user'] = ($user['id'] === $current_user_id);
+    $level_info = calculateUserLevel($user['xp']);
+    $user['level'] = $level_info['level'];
+    $user['next_level_xp'] = $level_info['next_level_xp'];
+    $user['xp_percentage'] = $level_info['xp_percentage'];
+}
 /* RANK
 $stmt = $pdo->prepare("
     SELECT 
@@ -156,7 +180,7 @@ require_once '../includes/header.php';
     </div>
 </div>
 
-<!--<div class="container mt-5">
+<div class="container mt-5">
     <h2>🏆 Classement des Utilisateurs</h2>
 
     <div class="user-ranking">
@@ -194,7 +218,7 @@ require_once '../includes/header.php';
             </div>
         <?php endforeach; ?>
     </div>
-</div>-->
+</div>
 
 <!-- Styles (conservés identiques) -->
 <style>
@@ -532,7 +556,7 @@ require_once '../includes/header.php';
 <!-- le coin du modérateur -- promis on automatisera ça à l'avenir -->
 <!-- Section Modération - Contenus suspects -->
 <div class="container mt-5">
-    <h2 style="color: #d9534f;">🚨 Contenus suspects (bad words)</h2>
+    <h2>🚩 Contenus suspects</h2>
 
 
     <?php if (empty($suspectComments)): ?>
