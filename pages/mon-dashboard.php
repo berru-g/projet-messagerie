@@ -56,59 +56,43 @@ $stats['image_extensions'] = $pdo->query("
     GROUP BY extension
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// RANK - Version corrigée
-$current_user_id = $_SESSION['user_id']; // On stocke l'ID de l'user connecté
+// RANK - Version corrigée et sécurisée
+$current_user_id = $_SESSION['user_id'];
 
-$stmt = $pdo->prepare("
-    SELECT 
-        u.id, 
-        u.username,
-        u.profile_picture,
-        
-    FROM users u
-    ORDER BY xp DESC
-    LIMIT 5
-");
-$stmt->execute();
-$top_active_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $rank_query = "
+        SELECT 
+            u.id, 
+            u.username,
+            u.profile_picture,
+            (SELECT COUNT(*) FROM user_files WHERE user_id = u.id) as uploads,
+            (SELECT COUNT(*) FROM comments WHERE user_id = u.id) as comments_count,
+            (SELECT COUNT(*) FROM likes WHERE user_id = u.id) as likes_count,
+            ((SELECT COUNT(*) FROM user_files WHERE user_id = u.id) * 10) + 
+            ((SELECT COUNT(*) FROM comments WHERE user_id = u.id) * 5) + 
+            ((SELECT COUNT(*) FROM likes WHERE user_id = u.id) * 3) as xp
+        FROM users u
+        ORDER BY xp DESC
+        LIMIT 5
+    ";
 
-foreach ($top_active_users as &$user) {
-    // On ajoute un flag pour identifier l'user courant
-    $user['is_current_user'] = ($user['id'] === $current_user_id);
-    $level_info = calculateUserLevel($user['xp']);
-    $user['level'] = $level_info['level'];
-    $user['next_level_xp'] = $level_info['next_level_xp'];
-    $user['xp_percentage'] = $level_info['xp_percentage'];
+    $stmt = $pdo->query($rank_query);
+    $top_active_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($top_active_users as &$rank_user) {
+        $rank_user['is_current'] = ($rank_user['id'] == $current_user_id);
+        $level_info = calculateUserLevel($rank_user['xp']);
+        $rank_user['level'] = $level_info['level'];
+        $rank_user['next_level_xp'] = $level_info['next_level_xp'];
+        $rank_user['xp_percentage'] = $level_info['xp_percentage'];
+    }
+} catch (PDOException $e) {
+    error_log("Erreur RANK: " . $e->getMessage());
+    $top_active_users = []; // Retourne un tableau vide en cas d'erreur
 }
-/* RANK
-$stmt = $pdo->prepare("
-    SELECT 
-        u.id, 
-        u.username,
-        u.profile_picture,
-        (SELECT COUNT(*) FROM user_files WHERE user_id = u.id) as uploads,
-        (SELECT COUNT(*) FROM comments WHERE user_id = u.id) as comments,
-        (SELECT COUNT(*) FROM likes WHERE user_id = u.id) as likes,
-        ((SELECT COUNT(*) FROM user_files WHERE user_id = u.id) * 10) + 
-        ((SELECT COUNT(*) FROM comments WHERE user_id = u.id) * 5) + 
-        ((SELECT COUNT(*) FROM likes WHERE user_id = u.id) * 3) as xp
-    FROM users u
-    ORDER BY xp DESC
-    LIMIT 5
-");
-$stmt->execute();
-$top_active_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Calcul des niveaux
-foreach ($top_active_users as &$user) {
-    $level_info = calculateUserLevel($user['xp']);
-    $user['level'] = $level_info['level'];
-    $user['next_level_xp'] = $level_info['next_level_xp'];
-    $user['xp_percentage'] = $level_info['xp_percentage'];
-}*/
 
 // Charger la liste de mots interdits
-    // Charger la liste de mots interdits
+// Charger la liste de mots interdits
 $badWordsFile = __DIR__ . '/../lang/badwords.json';
 $badWords = json_decode(file_get_contents($badWordsFile), true);
 $lang = 'fr';
@@ -127,7 +111,7 @@ $sql = "
 $allComments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 // Filtrer en PHP
-$suspectComments = array_filter($allComments, function($comment) use ($pattern) {
+$suspectComments = array_filter($allComments, function ($comment) use ($pattern) {
     return preg_match($pattern, $comment['content']);
 });
 
@@ -185,7 +169,7 @@ require_once '../includes/header.php';
 
     <div class="user-ranking">
         <?php foreach ($top_active_users as $user): ?>
-            <div class="user-card">
+            <div class="user-card <?= $rank_user['is_current'] ? 'current-user' : '' ?>">
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $user['id'] ?>" class="user-avatar-link">
                     <div class="user-avatar">
                         <?php if (!empty($user['profile_picture'])): ?>
@@ -215,6 +199,8 @@ require_once '../includes/header.php';
                         <span>XP: <?= $user['xp'] ?>/<?= $user['next_level_xp'] ?></span>
                     </div>
                 </div>
+                <span><i class="fas fa-comment"></i> <?= $rank_user['comments_count'] ?></span>
+                <span><i class="fas fa-heart"></i> <?= $rank_user['likes_count'] ?></span>
             </div>
         <?php endforeach; ?>
     </div>
@@ -433,7 +419,7 @@ require_once '../includes/header.php';
     const filesChart = am4core.create("filesChart", am4charts.PieChart);
     filesChart.data = [
         <?php foreach ($stats['file_types'] as $type): ?>
-                {
+                    {
                 "category": "<?= ucfirst($type['file_type']) ?>",
                 "value": <?= $type['count'] ?>
             },
@@ -481,7 +467,7 @@ require_once '../includes/header.php';
     const imagesChart = am4core.create("imagesChart", am4charts.PieChart);
     imagesChart.data = [
         <?php foreach ($stats['image_extensions'] as $ext): ?>
-                {
+                    {
                 "category": "<?= $ext['extension'] ?>",
                 "value": <?= $ext['count'] ?>
             },
@@ -503,7 +489,7 @@ require_once '../includes/header.php';
     const uploadersChart = am4core.create("uploadersChart", am4charts.XYChart);
     uploadersChart.data = [
         <?php foreach ($stats['top_uploaders'] as $user): ?>
-                {
+                    {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "uploads": <?= $user['uploads'] ?>
             },
@@ -525,7 +511,7 @@ require_once '../includes/header.php';
     const activeUsersChart = am4core.create("activeUsersChart", am4charts.XYChart);
     activeUsersChart.data = [
         <?php foreach ($stats['top_commented'] as $user): ?>
-                {
+                    {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "comments": <?= $user['comments'] ?>
             },
