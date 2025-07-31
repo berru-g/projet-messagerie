@@ -380,7 +380,7 @@ function getLevelBadge($level) {
         }
     }
     
-    return '⭐'; // Valeur par défaut
+    return '🧑‍🚀'; // Valeur par défaut
 }
 
 // Fonction pour obtenir l'URL de l'avatar
