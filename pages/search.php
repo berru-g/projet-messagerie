@@ -38,6 +38,42 @@ $searchResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once '../includes/header.php';
 ?>
+<style>
+    /* Styles pour les prévisualisations d'images */
+    .file-preview {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #f8f9fa;
+        border-bottom: 1px solid #eee;
+    }
+
+    .file-preview img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .file-preview:hover img {
+        transform: scale(1.03);
+    }
+
+    /* Pour les file-card contenant des images */
+    .file-card.has-image .file-info {
+        padding: 15px;
+    }
+
+    /* Pour une meilleure apparence des miniatures */
+    .img-thumbnail {
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+    }
+</style>
 
 <div class="container">
     <h2>Explorer les fichiers partagés</h2>
@@ -189,8 +225,19 @@ require_once '../includes/header.php';
     </div>
 </div>
 
-<!-- Script pour l'autocomplétion et le filtrage en temps réel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <script>
+
+    // Configuration du lightbox pour la galerie
+    lightbox.option({
+        'albumLabel': 'Image %1 sur %2',
+        'wrapAround': true,
+        'fadeDuration': 200,
+        'imageFadeDuration': 200,
+        'resizeDuration': 200
+    });
+
+
     $(document).ready(function () {
         // Autocomplétion
         $("#file-search").autocomplete({
@@ -221,14 +268,7 @@ require_once '../includes/header.php';
         });
     });
 
-    // Configuration du lightbox pour la galerie
-    lightbox.option({
-        'albumLabel': 'Image %1 sur %2',
-        'wrapAround': true,
-        'fadeDuration': 200,
-        'imageFadeDuration': 200,
-        'resizeDuration': 200
-    });
+
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
 <?php require_once '../includes/footer.php'; ?>
