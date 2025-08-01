@@ -111,7 +111,6 @@ $userFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once '../includes/header.php';
 ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
 
 <div class="container profile-container">
 
