@@ -151,6 +151,7 @@ require_once '../includes/header.php';
                 <div class="file-icon">
                     <i class="fas fa-file<?= $file['file_type'] === 'csv' ? '-csv' : ($file['file_type'] === 'excel' ? '-excel' : ($file['file_type'] === 'json' ? '-code' : '')) ?>"></i>
                 </div>
+                <!-- à adapter comme gallery et search -->
                 <div class="file-info">
                     <h5><?= htmlspecialchars($file['file_name']) ?></h5>
                     <small><?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></small>
