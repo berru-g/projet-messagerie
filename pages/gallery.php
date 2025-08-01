@@ -111,6 +111,7 @@ $userFiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once '../includes/header.php';
 ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
 
 <div class="container profile-container">
 
@@ -162,27 +163,37 @@ require_once '../includes/header.php';
             <!-- Affichage des fichiers existants -->
             <?php foreach ($userFiles as $file): ?>
                 <div class="file-card">
-                    <div class="file-icon">
-                        <?php switch ($file['file_type']):
-                            case 'csv': ?>
-                                <i class="fas fa-file-csv"></i>
-                                <?php break; ?>
-                            <?php case 'excel': ?>
-                                <i class="fas fa-file-excel"></i>
-                                <?php break; ?>
-                            <?php case 'json': ?>
-                                <i class="fas fa-file-code"></i>
-                                <?php break; ?>
-                            <?php case 'googlesheet': ?>
-                                <i class="fab fa-google-drive"></i>
-                                <?php break; ?>
-                            <?php case 'image': ?> <!-- Ajouté -->
-                                <i class="fas fa-file-image"></i> <!-- Ajouté -->
-                                <?php break; ?>
-                            <?php default: ?>
-                                <i class="fas fa-file"></i>
-                        <?php endswitch; ?>
-                    </div>
+                    <?php if ($file['file_type'] === 'image'): ?>
+                        <!-- Affiche l'image avec un aperçu -->
+                        <div class="file-preview">
+                            <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>"
+                                data-lightbox="image-<?= $file['id'] ?>">
+                                <img src="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>"
+                                    alt="<?= htmlspecialchars($file['file_name']) ?>" class="img-thumbnail">
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <!-- Garde les icônes pour les autres types de fichiers -->
+                        <div class="file-icon">
+                            <?php switch ($file['file_type']):
+                                case 'csv': ?>
+                                    <i class="fas fa-file-csv"></i>
+                                    <?php break; ?>
+                                <?php case 'excel': ?>
+                                    <i class="fas fa-file-excel"></i>
+                                    <?php break; ?>
+                                <?php case 'json': ?>
+                                    <i class="fas fa-file-code"></i>
+                                    <?php break; ?>
+                                <?php case 'googlesheet': ?>
+                                    <i class="fab fa-google-drive"></i>
+                                    <?php break; ?>
+                                <?php default: ?>
+                                    <i class="fas fa-file"></i>
+                            <?php endswitch; ?>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="file-info">
                         <h5><?= htmlspecialchars($file['file_name']) ?></h5>
                         <small><?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></small>
@@ -297,6 +308,13 @@ require_once '../includes/header.php';
             checkbox.dispatchEvent(event);
         });
     });
+
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'disableScrolling': true
+    });
 </script>
 <script src="../assets/js/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <?php require_once '../includes/footer.php'; ?>
