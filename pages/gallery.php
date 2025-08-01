@@ -17,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
         'text/csv' => 'csv',
         'application/vnd.ms-excel' => 'excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
-        'application/json' => 'json'
+        'application/json' => 'json',
+        'image/png' => 'image',
+        'image/jpeg' => 'image',
+        'image/jpg' => 'image'
     ];
 
     // Debug: Vérifiez ce qui est reçu
@@ -32,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
         $valid = true;
     } else {
         // Fallback pour certains navigateurs qui ne renvoient pas le bon type MIME
-        $allowedExtensions = ['csv', 'xlsx', 'xls', 'json'];
+        $allowedExtensions = ['csv', 'xlsx', 'xls', 'json', 'png', 'jpg', 'jpeg'];
         if (in_array($fileExtension, $allowedExtensions)) {
             $valid = true;
             // Mappage manuel des extensions
@@ -40,7 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
                 'csv' => 'csv',
                 'xlsx' => 'excel',
                 'xls' => 'excel',
-                'json' => 'json'
+                'json' => 'json',
+                'png' => 'image',
+                'jpg' => 'image',
+                'jpeg' => 'image'
             ];
             $fileType = $typeMap[$fileExtension];
         }
@@ -128,8 +134,8 @@ require_once '../includes/header.php';
                     <label for="file-upload" class="upload-label">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span>1 - Ajouter un fichier</span>
-                        <input type="file" id="file-upload" name="uploaded_file" accept=".csv,.xlsx,.xls,.json"
-                            required>
+                        <input type="file" id="file-upload" name="uploaded_file"
+                            accept=".csv,.xlsx,.xls,.json,.png,.jpg,.jpeg" required>
                     </label>
                     <!--<div class="form-group mt-2">
             <label class="lock-toggle">
@@ -147,6 +153,8 @@ require_once '../includes/header.php';
                         <span class="badge badge-csv">.csv</span>
                         <span class="badge badge-excel">.xlsx</span>
                         <span class="badge badge-json">.json</span>
+                        <span class="badge badge-image">.png</span>
+                        <span class="badge badge-image">.jpg</span>
                     </div>
                 </form>
             </div>
@@ -168,6 +176,9 @@ require_once '../includes/header.php';
                             <?php case 'googlesheet': ?>
                                 <i class="fab fa-google-drive"></i>
                                 <?php break; ?>
+                            <?php case 'image': ?> <!-- Ajouté -->
+                                <i class="fas fa-file-image"></i> <!-- Ajouté -->
+                                <?php break; ?>
                             <?php default: ?>
                                 <i class="fas fa-file"></i>
                         <?php endswitch; ?>
@@ -181,15 +192,15 @@ require_once '../includes/header.php';
                         <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
                             class="btn btn-sm btn-success">
                             <i class="fas fa-download"></i>
-                
-                                <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
-                                    <i class="fas fa-chart-line"></i>
-                                </a>
-                
-                        <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
-                            data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
-                            <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
-                        </button>
+
+                            <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
+                                <i class="fas fa-chart-line"></i>
+                            </a>
+
+                            <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
+                                data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
+                                <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
+                            </button>
 
                     </div>
                 </div>

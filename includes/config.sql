@@ -76,3 +76,6 @@ ADD COLUMN website_url VARCHAR(255) NULL;
 --FROM user_files f
 --JOIN users u ON f.user_id = u.id
 --WHERE f.id = ? -- bug pas l
+
+-- Ajout des format img à la gallery upload
+ALTER TABLE user_files MODIFY COLUMN file_type ENUM('csv','excel','json','image','googlesheet') NOT NULL;
