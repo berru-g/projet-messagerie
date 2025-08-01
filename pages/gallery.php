@@ -195,31 +195,23 @@ require_once '../includes/header.php';
 
                     <div class="file-info">
                         <h5><?= htmlspecialchars($file['file_name']) ?></h5>
-                        <small>Propriétaire:
-                            <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $file['user_id'] ?>"
-                                class="owner-link">
-                                <?= htmlspecialchars($file['owner_email']) ?>
-                            </a>
-                        </small>
                         <small><?= date('d/m/Y H:i', strtotime($file['upload_date'])) ?></small>
-                        <small class="file-type <?= strtolower($file['file_type']) ?>">
-                            <?= strtoupper($file['file_type']) ?>
-                        </small>
-                        <?php if (!$file['is_public']): ?>
-                            <span class="badge badge-warning">Privé</span>
-                        <?php endif; ?>
+                        <small class="file-type <?= $file['file_type'] ?>"><?= strtoupper($file['file_type']) ?></small>
                     </div>
-
                     <div class="file-actions">
-                        <?php if (strtolower($file['file_type']) !== 'image'): ?>
-                            <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-sm btn-info" title="Visualiser">
+                        <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
+                            class="btn btn-sm btn-success">
+                            <i class="fas fa-download"></i>
+
+                            <a href="view_chart.php?id=<?= $file['id'] ?>" class="btn btn-info">
                                 <i class="fas fa-chart-line"></i>
                             </a>
-                        <?php endif; ?>
-                        <a href="<?= str_replace('../', BASE_URL . '/', $file['file_path']) ?>" download
-                            class="btn btn-sm btn-success" title="Télécharger">
-                            <i class="fas fa-download"></i>
-                        </a>
+
+                            <button class="btn btn-sm btn-<?= $file['is_public'] ? 'success' : 'secondary' ?> toggle-share"
+                                data-file-id="<?= $file['id'] ?>" title="<?= $file['is_public'] ? 'Public' : 'Privé' ?>">
+                                <i class="fas fa-<?= $file['is_public'] ? 'lock-open' : 'lock' ?>"></i>
+                            </button>
+
                     </div>
                 </div>
             <?php endforeach; ?>
