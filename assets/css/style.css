@@ -603,20 +603,20 @@ h3 {
 }
 
 /* Styles pour les médias uploadés */
-.img-partage, .videomp4 {
+.img-partage .videomp4 {
   max-width: 100%; 
   height: auto; 
   display: block; 
   margin: 0 auto; 
   border-radius: 12px;
 }
-/*
+
 @media (min-width: 1200px) {
-  .img-partage, .videomp4 {
+  .img-partage .videomp4 {
     max-width: 500px; 
   }
 }
-*/
+
 .owner-link {
   text-decoration: none;
   color: var(--primary-color);
