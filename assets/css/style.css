@@ -610,13 +610,13 @@ h3 {
   margin: 0 auto; 
   border-radius: 12px;
 }
-
+/*
 @media (min-width: 1200px) {
   .img-partage, .videomp4 {
     max-width: 500px; 
   }
 }
-
+*/
 .owner-link {
   text-decoration: none;
   color: var(--primary-color);
