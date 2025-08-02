@@ -603,7 +603,7 @@ h3 {
 }
 
 /* Styles pour les médias uploadés */
-.img-partage {
+.img-partage, .videomp4 {
   max-width: 100%; 
   height: auto; 
   display: block; 
@@ -612,10 +612,11 @@ h3 {
 }
 
 @media (min-width: 1200px) {
-  .img-partage {
+  .img-partage, .videomp4 {
     max-width: 500px; 
   }
 }
+
 .owner-link {
   text-decoration: none;
   color: var(--primary-color);

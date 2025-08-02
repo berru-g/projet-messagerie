@@ -127,7 +127,7 @@ require_once '../includes/header.php';
                     <?php if ($comment['file_type'] === 'image'): ?>
                         <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" class="img-partage">
                     <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls style="max-width:300px;">
+                        <video controls class="videomp4">
                             <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
                             Votre navigateur ne supporte pas la vidéo.
                         </video>
