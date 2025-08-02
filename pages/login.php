@@ -128,7 +128,7 @@ require_once '../includes/header.php';
   @media screen and (max-width: 400px) {
     .agora-intro img {
       width: 100%;
-      max-width: 200px;
+      max-width: 250px;
     }
   }
 

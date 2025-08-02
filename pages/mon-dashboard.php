@@ -190,9 +190,9 @@ require_once '../includes/header.php';
                         <h4><?= htmlspecialchars($user['username']) ?></h4>
                     </a>
                     <div class="user-stats">
-                        <span><i class="fas fa-file-upload"></i> <?= $rank_user['uploads'] ?></span>
-                        <span><i class="fas fa-comment"></i> <?= $rank_user['comments_count'] ?></span>
-                        <span><i class="fas fa-heart"></i> <?= $rank_user['likes_count'] ?></span>
+                        <span><i class="fas fa-file-upload"></i> <?= $user['uploads'] ?></span>
+                        <span><i class="fas fa-comment"></i> <?= $user['comments'] ?></span>
+                        <span><i class="fas fa-heart"></i> <?= $user['likes'] ?></span>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar" style="width: <?= $user['xp_percentage'] ?>%"></div>
@@ -419,7 +419,7 @@ require_once '../includes/header.php';
     const filesChart = am4core.create("filesChart", am4charts.PieChart);
     filesChart.data = [
         <?php foreach ($stats['file_types'] as $type): ?>
-                        {
+                    {
                 "category": "<?= ucfirst($type['file_type']) ?>",
                 "value": <?= $type['count'] ?>
             },
@@ -467,7 +467,7 @@ require_once '../includes/header.php';
     const imagesChart = am4core.create("imagesChart", am4charts.PieChart);
     imagesChart.data = [
         <?php foreach ($stats['image_extensions'] as $ext): ?>
-                        {
+                    {
                 "category": "<?= $ext['extension'] ?>",
                 "value": <?= $ext['count'] ?>
             },
@@ -489,7 +489,7 @@ require_once '../includes/header.php';
     const uploadersChart = am4core.create("uploadersChart", am4charts.XYChart);
     uploadersChart.data = [
         <?php foreach ($stats['top_uploaders'] as $user): ?>
-                        {
+                    {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "uploads": <?= $user['uploads'] ?>
             },
@@ -511,7 +511,7 @@ require_once '../includes/header.php';
     const activeUsersChart = am4core.create("activeUsersChart", am4charts.XYChart);
     activeUsersChart.data = [
         <?php foreach ($stats['top_commented'] as $user): ?>
-                        {
+                    {
                 "name": "<?= htmlspecialchars($user['username']) ?>",
                 "comments": <?= $user['comments'] ?>
             },
