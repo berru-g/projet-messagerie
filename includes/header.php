@@ -21,7 +21,7 @@ require_once __DIR__ . '/functions.php';
   <!-- Open Graph pour Facebook / LinkedIn -->
   <meta property="og:title" content="Agora Social Feed – Partage intelligent de fichiers et données">
   <meta property="og:description"
-    content="Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
+    content="Réseau social minimaliste. Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
   <meta property="og:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
   <meta property="og:url" content="https://example.com">
   <meta property="og:type" content="website">

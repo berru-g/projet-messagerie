@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once '../includes/header.php';
 ?>
-<!-- presentation du tool
+<!-- presentation des tools de Data Visualizer 
 <section class="data-tools-showcase">
     <div class="dt-container">
         <h2 class="dt-title">
@@ -195,7 +195,7 @@ require_once '../includes/header.php';
       <p data-i18n-card-text>Aucun mail vérifié requis. Crée un compte en quelques secondes, sans friction ni identité imposée.</p>
     </div>
 
-    <div class="card" data-i18n-card>
+    <!--<div class="card" data-i18n-card>
       <i class="fas fa-clock icon-blue"></i>
       <h3 data-i18n-card-title>Fil chronologique</h3>
       <p data-i18n-card-text>Les publications sont affichées dans l’ordre réel, sans algorithme ni tri caché. Ce que tu vois est ce qui est posté.</p>
@@ -205,37 +205,37 @@ require_once '../includes/header.php';
       <i class="fas fa-bolt icon-orange"></i>
       <h3 data-i18n-card-title>Sans scroll infini</h3>
       <p data-i18n-card-text>Tu parcours les posts à ton rythme, sans boucle addictive. Un usage sain et maîtrisé.</p>
-    </div>
+    </div>-->
 
     <div class="card" data-i18n-card>
-      <i class="fas fa-eye-slash icon-red"></i>
+      <i class="fas fa-eye-slash icon-green"></i>
       <h3 data-i18n-card-title>Pas de tracking, pas de pub</h3>
-      <p data-i18n-card-text>Agora ne collecte pas tes données et ne te pousse pas à consommer. Aucune publicité, jamais.</p>
+      <p data-i18n-card-text>Aucune collecte ou exploitation des données. Pas de pub ni de notif.</p>
     </div>
 
     <div class="card" data-i18n-card>
-      <i class="fas fa-user-circle icon-green"></i>
-      <h3 data-i18n-card-title>Mini-profil optionnel</h3>
-      <p data-i18n-card-text>Tu peux ajouter une photo, un lien vers ton site, et voir tes stats (likes, commentaires, images postées).</p>
+      <i class="fas fa-user-circle icon-blue"></i>
+      <h3 data-i18n-card-title>Features</h3>
+      <p data-i18n-card-text>Agora Social Feed contient un Réseau social minimaliste et une plateforme de partage et visualisation graphique de fichiers CSV, Excel et Json. </p>
     </div>
 
-    <div class="card" data-i18n-card>
+    <!--<div class="card" data-i18n-card>
       <i class="fas fa-heart icon-yellow"></i>
       <h3 data-i18n-card-title>Respect obligatoire</h3>
       <p data-i18n-card-text>Agora est un espace bienveillant. Tout comportement malveillant est banni sans préavis.</p>
-    </div>
+    </div>-->
 
     <div class="card" data-i18n-card>
-      <i class="fas fa-flask icon-purple"></i>
+      <i class="fas fa-flask icon-yellow"></i>
       <h3 data-i18n-card-title>En test, avec toi</h3>
-      <p data-i18n-card-text>Agora est un prototype évolutif. Tes retours sont les bienvenus pour co-construire un espace plus humain.</p>
+      <p data-i18n-card-text>Agora est un prototype. Tes retours sont les bienvenus pour co-construire cet espace.</p>
     </div>
 
-    <div class="card" data-i18n-card>
+    <!--<div class="card" data-i18n-card>
       <i class="fas fa-lightbulb icon-green"></i>
       <h3 data-i18n-card-title>Pourquoi Agora ?</h3>
       <p data-i18n-card-text>Parce que tu mérites un lieu d’expression sans filtre ni influence. Sobre. Humaine. Authentique.</p>
-    </div>
+    </div>-->
 
   </div>
 </section>
