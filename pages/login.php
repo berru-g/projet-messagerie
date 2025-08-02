@@ -118,7 +118,7 @@ require_once '../includes/header.php';
   .agora-intro img {
     display: flex;
     margin: 0 auto;
-    width: 250px;
+    width: 400px;
     height: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
@@ -202,7 +202,7 @@ require_once '../includes/header.php';
 </style>
 
 <section class="agora-intro">
-  <img src="<?= BASE_URL ?>/assets/img/AgoraSocialFee.gif" alt="Logo Agora" />
+  <img src="<?= BASE_URL ?>/assets/img/AgoraSocialFeed.gif" alt="Agora Social Feed - Motion Design" />
   <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong> Social Feed</h2>
 
   <div class="card-grid">
