@@ -125,6 +125,13 @@ require_once '../includes/header.php';
     margin-bottom: 30px;
   }
 
+  @media screen and (max-width: 400px) {
+    .agora-intro img {
+      width: 100%;
+      max-width: 200px;
+    }
+  }
+
   .agora-intro h2 {
     text-align: center;
     margin-bottom: 30px;
@@ -217,7 +224,8 @@ require_once '../includes/header.php';
     <div class="card" data-i18n-card data-i18n-card>
       <i class="fas fa-user-secret icon-purple"></i>
       <h3 data-i18n-card-title data-i18n-card-title>Anonyme</h3>
-      <p data-i18n-card-text>Inscription gratuite. Aucun mail vérifié requis. Crée un compte en quelques secondes, sans friction ni identité
+      <p data-i18n-card-text>Inscription gratuite. Aucun mail vérifié requis. Crée un compte en quelques secondes, sans
+        friction ni identité
         imposée.</p>
     </div>
 

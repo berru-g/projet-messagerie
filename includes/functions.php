@@ -37,16 +37,28 @@ function getUserById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Fonction pour ajouter un commentaire ( cohérence avec la table gael putain!!!!)
+/* Fonction pour ajouter un commentaire ( cohérence avec la table gael putain!!!!)
 function addComment($user_id, $content, $parent_id = null, $file_path = null, $file_type = null)
 {
     global $pdo;
     $stmt = $pdo->prepare("INSERT INTO comments (user_id, content, parent_id, file_path, file_type, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
     return $stmt->execute([$user_id, $content, $parent_id, $file_path, $file_type]);
+}*/
+// avec calcul pour le rank
+function addComment($user_id, $content, $parent_id = null, $file_path = null, $file_type = null)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("INSERT INTO comments (user_id, content, parent_id, file_path, file_type, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+    $success = $stmt->execute([$user_id, $content, $parent_id, $file_path, $file_type]);
+    
+    if ($success) {
+        addUserXp($pdo, $user_id, 'comment');
+    }
+    
+    return $success;
 }
 
-
-// Fonction pour liker un commentaire
+/* Fonction pour liker un commentaire
 function likeComment($user_id, $comment_id)
 {
     global $pdo;
@@ -64,7 +76,36 @@ function likeComment($user_id, $comment_id)
         $stmt = $pdo->prepare("INSERT INTO likes (user_id, comment_id) VALUES (?, ?)");
         return $stmt->execute([$user_id, $comment_id]);
     }
+}*/
+// avec calcul pour le rank
+function likeComment($user_id, $comment_id)
+{
+    global $pdo;
+
+    // Vérifier si l'utilisateur a déjà liké ce commentaire
+    $stmt = $pdo->prepare("SELECT id FROM likes WHERE user_id = ? AND comment_id = ?");
+    $stmt->execute([$user_id, $comment_id]);
+
+    if ($stmt->rowCount() > 0) {
+        // Retirer le like
+        $stmt = $pdo->prepare("DELETE FROM likes WHERE user_id = ? AND comment_id = ?");
+        $success = $stmt->execute([$user_id, $comment_id]);
+        if ($success) {
+            // Optionnel: retirer les XP si vous voulez pénaliser le "unlike"
+            // removeUserXp($pdo, $user_id, 'like');
+        }
+        return $success;
+    } else {
+        // Ajouter le like
+        $stmt = $pdo->prepare("INSERT INTO likes (user_id, comment_id) VALUES (?, ?)");
+        $success = $stmt->execute([$user_id, $comment_id]);
+        if ($success) {
+            addUserXp($pdo, $user_id, 'like');
+        }
+        return $success;
+    }
 }
+
 // pour voir si user à liké ou non le post
 function hasUserLiked($commentId, $userId)
 {
@@ -344,13 +385,20 @@ function canAccessFile($user_id, $file_id)
 }
 
 // Fonction pour calculer le niveau et l'XP
-function calculateUserLevel($xp) {
+function calculateUserLevel($user_id) {
+    global $pdo;
+    
+    // Récupérer l'XP depuis la base de données
+    $stmt = $pdo->prepare("SELECT xp FROM user_xp WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $xp = $stmt->fetchColumn() ?? 0;
+    
     $base_xp = 100;
     $level = 1;
     
     while ($xp >= $base_xp) {
         $xp -= $base_xp;
-        $base_xp = $base_xp * 1.5; // Augmentation exponentielle
+        $base_xp = $base_xp * 1.5;
         $level++;
     }
     
@@ -432,11 +480,16 @@ function addUserXp($pdo, $user_id, $action_type) {
     
     if (!isset($xp_values[$action_type])) return false;
     
+    $xp_gained = $xp_values[$action_type];
+    
     // Enregistrer dans l'historique
     $stmt = $pdo->prepare("INSERT INTO user_xp_log (user_id, action_type, xp_gained) VALUES (?, ?, ?)");
-    $stmt->execute([$user_id, $action_type, $xp_values[$action_type]]);
+    $stmt->execute([$user_id, $action_type, $xp_gained]);
     
-    return true;
+    // Mettre à jour le total XP
+    $stmt = $pdo->prepare("INSERT INTO user_xp (user_id, xp) VALUES (?, ?) 
+                          ON DUPLICATE KEY UPDATE xp = xp + VALUES(xp)");
+    return $stmt->execute([$user_id, $xp_gained]);
 }
 
 
