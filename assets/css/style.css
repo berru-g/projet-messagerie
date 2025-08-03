@@ -611,7 +611,7 @@ h3 {
   border-radius: 12px;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 200px) {
   .img-partage .videomp4 {
     max-width: 500px; 
   }
