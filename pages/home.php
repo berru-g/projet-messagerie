@@ -122,7 +122,7 @@ require_once '../includes/header.php';
                 <?php if (!empty($comment['content'])): ?>
                     <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
                 <?php endif; ?>
-
+<!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
                 <?php if (!empty($comment['file_path'])): ?>
                     <?php if ($comment['file_type'] === 'image'): ?>
                         <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" class="img-partage">
