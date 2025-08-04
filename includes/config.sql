@@ -79,3 +79,18 @@ ADD COLUMN website_url VARCHAR(255) NULL;
 
 -- Ajout des format img à la gallery upload
 ALTER TABLE user_files MODIFY COLUMN file_type ENUM('csv','excel','json','image','googlesheet') NOT NULL;
+
+
+-- Les features de mon https://crypto-free-tools.netlify.app
+
+CREATE TABLE user_crypto_holdings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    crypto_id VARCHAR(50) NOT NULL,
+    crypto_name VARCHAR(100) NOT NULL,
+    purchase_price DECIMAL(20, 6) NOT NULL,
+    quantity DECIMAL(20, 6) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
