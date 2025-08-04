@@ -183,7 +183,7 @@ require_once '../includes/header.php';
         </form>
         <div class="action-buttons">
             <a href="change-password.php" class="btn-primary"><i class="fas fa-key"></i> Changer le mot de passe</a>
-            <a href="<?= BASE_URL ?>/pages/mon-dashboard.php" class="btn-ghost"><i class="fas fa-chart-pie"></i> Tableau de bord complet</a>
+            <a href="<?= BASE_URL ?>/wallet/wallet.php" class="btn-ghost"><i class="fas fa-chart-pie"></i> Wallet all in one</a>
         </div>
     </div>
     <?php endif; ?>
