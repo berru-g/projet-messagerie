@@ -209,7 +209,7 @@ require_once '../includes/header.php';
 </style>
 
 <section class="agora-intro">
-  <img src="<?= BASE_URL ?>/assets/img/AgoraSocialFeed.gif" alt="Agora Social Feed - Motion Design" />
+  <img src="<?= BASE_URL ?>/assets/img/fullmotion.gif" alt="Agora Social Feed - Motion Design" />
   <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong> Social Feed</h2>
 
   <div class="card-grid">
@@ -256,7 +256,7 @@ require_once '../includes/header.php';
     <div class="card" data-i18n-card>
       <i class="fas fa-flask icon-yellow"></i>
       <h3 data-i18n-card-title>En test, avec toi</h3>
-      <p data-i18n-card-text>Agora est un prototype. Tes retours sont les bienvenus pour co-construire cet espace.</p>
+      <p data-i18n-card-text>Agora est un prototype. Tes retours sont les bienvenus pour co-construire cet espace suivant les besoins de chacun.</p>
     </div>
 
     <!--<div class="card" data-i18n-card>
