@@ -50,6 +50,7 @@ if (!$user) die("Utilisateur non trouvé");
   </div>
 
   <script>const userId = <?= $userId ?>;</script>
+  <script src="../assets/js/wallet.js"></script>
   <script>
   const apiUrl = "/pages/api_wallet.php";
 
