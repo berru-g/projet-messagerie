@@ -7,49 +7,78 @@ if (!isLoggedIn()) {
     exit;
 }
 
-//$user = getUserById($_SESSION['user_id']);
-$userId = $_SESSION['user_id']; // l'utilisateur connecté
-$user = getUserById($userId);   // ses infos
-// Récupérer les cryptos de l'utilisateur
-$db = getDB();
-$stmt = $db->prepare("SELECT * FROM user_crypto_holdings WHERE user_id = ?");
-$stmt->execute([$user['id']]);
-$userCryptos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Récupération sécurisée de l'utilisateur
+$userId = intval($_SESSION['user_id']);
+$user = getUserById($userId);
 
-// Traitement du formulaire d'ajout/modification
+if (!$user) {
+    die("Utilisateur non trouvé");
+}
+
+// Initialisation de $pdo comme dans votre profil.php
+$pdo = getDB(); // Assurez-vous que getDB() retourne bien votre connexion PDO
+
+// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ajout/modification d'une crypto
     if (isset($_POST['add_crypto'])) {
         $cryptoId = trim($_POST['crypto_id']);
         $cryptoName = trim($_POST['crypto_name']);
-        $purchasePrice = (float)$_POST['purchase_price'];
-        $quantity = (float)$_POST['quantity'];
+        $purchasePrice = floatval($_POST['purchase_price']);
+        $quantity = floatval($_POST['quantity']);
         
-        // Vérifier si la crypto existe déjà pour cet utilisateur
-        $stmt = $db->prepare("SELECT id FROM user_crypto_holdings WHERE user_id = ? AND crypto_id = ?");
-        $stmt->execute([$user['id'], $cryptoId]);
-        $exists = $stmt->fetch();
-        
-        if ($exists) {
-            // Mise à jour si existe déjà
-            $stmt = $db->prepare("UPDATE user_crypto_holdings SET quantity = ?, purchase_price = ? WHERE id = ?");
-            $stmt->execute([$quantity, $purchasePrice, $exists['id']]);
-        } else {
-            // Insertion si nouvelle
-            $stmt = $db->prepare("INSERT INTO user_crypto_holdings (user_id, crypto_id, crypto_name, purchase_price, quantity) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$user['id'], $cryptoId, $cryptoName, $purchasePrice, $quantity]);
+        try {
+            // Vérification de l'existence
+            $stmt = $pdo->prepare("SELECT id FROM user_crypto_holdings WHERE user_id = ? AND crypto_id = ?");
+            $stmt->execute([$userId, $cryptoId]);
+            $exists = $stmt->fetch();
+            
+            if ($exists) {
+                // Mise à jour
+                $stmt = $pdo->prepare("UPDATE user_crypto_holdings SET quantity = ?, purchase_price = ?, crypto_name = ? WHERE id = ?");
+                $stmt->execute([$quantity, $purchasePrice, $cryptoName, $exists['id']]);
+            } else {
+                // Insertion
+                $stmt = $pdo->prepare("INSERT INTO user_crypto_holdings (user_id, crypto_id, crypto_name, purchase_price, quantity) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $cryptoId, $cryptoName, $purchasePrice, $quantity]);
+            }
+            
+            $_SESSION['success'] = "Portefeuille mis à jour avec succès";
+            header("Location: " . BASE_URL . "/pages/wallet.php");
+            exit;
+            
+        } catch (PDOException $e) {
+            error_log("Erreur DB: " . $e->getMessage());
+            $_SESSION['error'] = "Erreur lors de la mise à jour du portefeuille";
         }
-        
-        // Redirection pour éviter le rechargement du formulaire
-        header("Location: " . BASE_URL . "/pages/profile.php");
-        exit;
-    } elseif (isset($_POST['delete_crypto'])) {
-        $cryptoId = $_POST['crypto_id'];
-        $stmt = $db->prepare("DELETE FROM user_crypto_holdings WHERE user_id = ? AND crypto_id = ?");
-        $stmt->execute([$user['id'], $cryptoId]);
-        
-        header("Location: " . BASE_URL . "/pages/profile.php");
-        exit;
     }
+    // Suppression d'une crypto
+    elseif (isset($_POST['delete_crypto'])) {
+        $cryptoId = $_POST['crypto_id'];
+        
+        try {
+            $stmt = $pdo->prepare("DELETE FROM user_crypto_holdings WHERE user_id = ? AND crypto_id = ?");
+            $stmt->execute([$userId, $cryptoId]);
+            
+            $_SESSION['success'] = "Crypto supprimée du portefeuille";
+            header("Location: " . BASE_URL . "/pages/wallet.php");
+            exit;
+            
+        } catch (PDOException $e) {
+            error_log("Erreur DB: " . $e->getMessage());
+            $_SESSION['error'] = "Erreur lors de la suppression";
+        }
+    }
+}
+
+// Récupération des cryptos de l'utilisateur
+try {
+    $stmt = $pdo->prepare("SELECT * FROM user_crypto_holdings WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $userCryptos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Erreur DB: " . $e->getMessage());
+    $userCryptos = [];
 }
 
 require_once '../includes/header.php';
@@ -143,200 +172,161 @@ require_once '../includes/header.php';
     }
 }
 </style>
-<div class="container profile-container">
-    <h2><?= htmlspecialchars($user['username']) ?></h2>
 
-    <div class="profile-info">
-        <div id="portfolio-total">0.00 $</div>
-    </div>
+<div class="container wallet-container">
+    <h2>Mon Portefeuille Crypto</h2>
+    
+    <!-- Messages d'erreur/succès -->
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
+    
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <?php endif; ?>
 
-    <!-- Formulaire pour ajouter/modifier une crypto -->
-    <div class="crypto-form">
-        <h3>Ajouter/Modifier une crypto</h3>
-        <form method="POST">
-            <div class="form-group">
-                <label for="crypto_id">ID Crypto (ex: bitcoin):</label>
-                <input type="text" id="crypto_id" name="crypto_id" required>
-            </div>
-            <div class="form-group">
-                <label for="crypto_name">Nom complet (ex: Bitcoin):</label>
-                <input type="text" id="crypto_name" name="crypto_name" required>
-            </div>
-            <div class="form-group">
-                <label for="purchase_price">Prix d'achat ($):</label>
-                <input type="number" step="0.000001" id="purchase_price" name="purchase_price" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity">Quantité:</label>
-                <input type="number" step="0.000001" id="quantity" name="quantity" required>
-            </div>
-            <button type="submit" name="add_crypto" class="button">Enregistrer</button>
-        </form>
-    </div>
-
-    <!-- Liste des cryptos de l'utilisateur -->
-    <div class="user-cryptos">
-        <h3>Vos cryptos</h3>
-        <?php if (empty($userCryptos)): ?>
-            <p>Aucune crypto enregistrée.</p>
-        <?php else: ?>
-            <ul id="user-crypto-list">
-                <?php foreach ($userCryptos as $crypto): ?>
-                    <li>
-                        <?= htmlspecialchars($crypto['crypto_name']) ?> - 
-                        Quantité: <?= $crypto['quantity'] ?> - 
-                        Prix d'achat: <?= $crypto['purchase_price'] ?>$
-                        <form method="POST" style="display: inline;">
-                            <input type="hidden" name="crypto_id" value="<?= $crypto['crypto_id'] ?>">
-                            <button type="submit" name="delete_crypto" class="button-delete">Supprimer</button>
-                        </form>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </div>
-
-    <div id="crypto-prices-container">
-        <div class="address-container">
-            <button class="copy-button" data-target="sol-address">SOL <span class="address"
-                    id="sol-address">D6khWoqvc2zX46HVtSZcNrPumnPLPM72SnSuDhBrZeTC</span></button>
-            <button class="copy-button" data-target="eth-address">ETH <span class="address"
-                    id="eth-address">0x026e9B43BAB0881FD55625ac1dB6dC418162eDAd</span></button>
+    <!-- Formulaire d'ajout -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Ajouter/Modifier une crypto</h3>
         </div>
-        <div id="crypto-prices"></div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="crypto_id">ID Crypto (ex: bitcoin):</label>
+                    <input type="text" class="form-control" id="crypto_id" name="crypto_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="crypto_name">Nom complet (ex: Bitcoin):</label>
+                    <input type="text" class="form-control" id="crypto_name" name="crypto_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="purchase_price">Prix d'achat ($):</label>
+                    <input type="number" step="0.000001" class="form-control" id="purchase_price" name="purchase_price" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantité:</label>
+                    <input type="number" step="0.000001" class="form-control" id="quantity" name="quantity" required>
+                </div>
+                <button type="submit" name="add_crypto" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des cryptos -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Vos actifs cryptos</h3>
+        </div>
+        <div class="card-body">
+            <?php if (empty($userCryptos)): ?>
+                <p>Aucune crypto enregistrée dans votre portefeuille.</p>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Crypto</th>
+                                <th>Quantité</th>
+                                <th>Prix d'achat</th>
+                                <th>Valeur actuelle</th>
+                                <th>Profit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crypto-list">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-3">
+                    <h4 id="portfolio-total">Total: Chargement...</h4>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-    // Fonction pour charger les données des cryptos de l'utilisateur
-    async function loadUserCryptos() {
-        try {
-            const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250');
-            const allCryptos = await response.json();
-            
-            // Récupérer les cryptos de l'utilisateur via AJAX ou les passer en JSON depuis PHP
-            const userCryptos = <?= json_encode($userCryptos) ?>;
-            
-            if (userCryptos.length === 0) {
-                document.getElementById('portfolio-total').innerHTML = '<h3 style="color:#ab9ff2">0.00 $</h3>';
-                return;
-            }
-            
-            // Créer une liste des IDs de cryptos à suivre
-            const cryptoIds = userCryptos.map(crypto => crypto.crypto_id).join(',');
-            
-            // Récupérer les prix des cryptos de l'utilisateur
-            const priceResponse = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${cryptoIds}`);
-            const priceData = await priceResponse.json();
-            
-            const container = document.getElementById('crypto-prices');
-            container.innerHTML = '';
-            
-            let totalPortfolioValue = 0;
-            let totalInvestment = 0;
-            let totalProfit = 0;
-            
-            // Afficher chaque crypto avec ses données
-            userCryptos.forEach(userCrypto => {
-                const cryptoData = priceData.find(c => c.id === userCrypto.crypto_id);
-                
-                if (cryptoData) {
-                    const currentPrice = cryptoData.current_price;
-                    const change24h = cryptoData.price_change_percentage_24h.toFixed(2);
-                    const holdings = parseFloat(userCrypto.quantity);
-                    const totalValue = (currentPrice * holdings).toFixed(2);
-                    const investment = (userCrypto.purchase_price * holdings).toFixed(2);
-                    const profit = (totalValue - investment).toFixed(2);
-                    const profitPercentage = ((profit / investment) * 100).toFixed(2);
-                    
-                    totalPortfolioValue += parseFloat(totalValue);
-                    totalInvestment += parseFloat(investment);
-                    totalProfit += parseFloat(profit);
-                    
-                    const cryptoElement = document.createElement('div');
-                    cryptoElement.id = userCrypto.crypto_id;
-                    cryptoElement.classList.add('crypto-item');
-                    cryptoElement.innerHTML = `
-                        <p style="display: flex; align-items: center;">
-                            <img src="${cryptoData.image}" alt="${userCrypto.crypto_id} logo" style="width: 30px; height: 30px; margin-right: 10px;">
-                            <span>${userCrypto.crypto_name} (${cryptoData.symbol.toUpperCase()})</span>
-                        </p>
-                        <p class="price" style="color:#333;">${currentPrice}$</p>
-                        <p class="holdings" style="color:grey;">Quantité: ${holdings}</p>
-                        <p class="value" style="color:grey;">Valeur: ${totalValue}$</p>
-                        <p class="investment">Investi: ${investment}$</p>
-                        <p class="profit" style="color: ${profit >= 0 ? '#3ad38b' : '#f56545'}">
-                            Profit: ${profit}$ (${profitPercentage}%)
-                        </p>
-                        <p class="change">24h: ${change24h}%</p>
-                    `;
-                    container.appendChild(cryptoElement);
-                    
-                    const changeElement = cryptoElement.querySelector('.change');
-                    changeElement.style.color = change24h < 0 ? '#f56545' : '#3ad38b';
-                }
-            });
-            
-            // Afficher le total du portefeuille
-            const totalProfitPercentage = ((totalProfit / totalInvestment) * 100).toFixed(2);
-            document.getElementById('portfolio-total').innerHTML = `
-                <h3 style="color:#ab9ff2">
-                    Total: ${totalPortfolioValue.toFixed(2)}$<br>
-                    Investi: ${totalInvestment.toFixed(2)}$<br>
-                    Profit: <span style="color: ${totalProfit >= 0 ? '#3ad38b' : '#f56545'}">
-                        ${totalProfit.toFixed(2)}$ (${totalProfitPercentage}%)
-                    </span>
-                </h3>
-            `;
-            
-        } catch (error) {
-            console.error('Erreur lors de la récupération des données:', error);
+// Fonction pour charger les données des cryptos
+async function loadWalletData() {
+    try {
+        // Récupérer les cryptos de l'utilisateur depuis PHP
+        const userCryptos = <?= json_encode($userCryptos) ?>;
+        
+        if (userCryptos.length === 0) {
+            document.getElementById('portfolio-total').textContent = 'Total: 0.00 $';
+            return;
         }
-    }
-    
-    // Charger les cryptos au démarrage
-    loadUserCryptos();
-    
-    // Recharger toutes les 5 minutes
-    setInterval(loadUserCryptos, 300000);
-
-    // Gestion du menu hamburger
-    const hamburgerMenu = document.querySelector('.hamburger-menu');
-    if (hamburgerMenu) {
-        hamburgerMenu.addEventListener('click', () => {
-            Swal.fire({
-                title: '0x',
-                html: '<ul><li><a href="https://accounts.binance.com/register?ref=">Binance</a>.com</li><li><a href="https://shop.ledger.com/?r=">Ledger</a>/live</li><li><a href="https://app.uniswap.org">Uniswap</a>.org<li><a href="#">Phantom</a>/app</li><li><a href="https://solscan.io/account/D6khWoqvc2zX46HVtSZcNrPumnPLPM72SnSuDhBrZeTC#portfolio">Solscan</a>.io</li><li><a href="https://pump.fun/profile/D6khWo">Pump</a>.fun</li><li><a href="https://jup.ag">jup</a>.ag</li></ul>',
-                showCloseButton: true,
-                showConfirmButton: false,
-                customClass: {
-                    popup: 'custom-swal-popup',
-                    closeButton: 'custom-swal-close-button',
-                    content: 'custom-swal-content',
-                }
-            });
+        
+        // Récupérer les prix depuis CoinGecko
+        const cryptoIds = userCryptos.map(c => c.crypto_id).join(',');
+        const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${cryptoIds}`);
+        const prices = await response.json();
+        
+        let totalValue = 0;
+        let totalInvestment = 0;
+        let html = '';
+        
+        userCryptos.forEach(crypto => {
+            const priceData = prices.find(p => p.id === crypto.crypto_id);
+            if (priceData) {
+                const currentPrice = priceData.current_price;
+                const holdings = parseFloat(crypto.quantity);
+                const value = currentPrice * holdings;
+                const investment = crypto.purchase_price * holdings;
+                const profit = value - investment;
+                const profitPercent = (profit / investment) * 100;
+                
+                totalValue += value;
+                totalInvestment += investment;
+                
+                html += `
+                    <tr>
+                        <td>
+                            <img src="${priceData.image}" alt="${crypto.crypto_name}" style="width: 20px; height: 20px; margin-right: 5px;">
+                            ${crypto.crypto_name} (${priceData.symbol.toUpperCase()})
+                        </td>
+                        <td>${holdings}</td>
+                        <td>${parseFloat(crypto.purchase_price).toFixed(6)} $</td>
+                        <td>${value.toFixed(2)} $</td>
+                        <td style="color: ${profit >= 0 ? 'green' : 'red'}">
+                            ${profit.toFixed(2)} $ (${profitPercent.toFixed(2)}%)
+                        </td>
+                        <td>
+                            <form method="POST" style="display: inline;">
+                                <input type="hidden" name="crypto_id" value="${crypto.crypto_id}">
+                                <button type="submit" name="delete_crypto" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                `;
+            }
         });
+        
+        const totalProfit = totalValue - totalInvestment;
+        const totalProfitPercent = (totalProfit / totalInvestment) * 100;
+        
+        document.getElementById('crypto-list').innerHTML = html;
+        document.getElementById('portfolio-total').innerHTML = `
+            Total: ${totalValue.toFixed(2)} $<br>
+            Investi: ${totalInvestment.toFixed(2)} $<br>
+            Profit: <span style="color: ${totalProfit >= 0 ? 'green' : 'red'}">
+                ${totalProfit.toFixed(2)} $ (${totalProfitPercent.toFixed(2)}%)
+            </span>
+        `;
+        
+    } catch (error) {
+        console.error("Erreur:", error);
+        document.getElementById('portfolio-total').textContent = 'Erreur de chargement';
     }
+}
 
-    // Gestion des boutons de copie
-    document.querySelectorAll('.copy-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const targetId = this.getAttribute('data-target');
-            const addressElement = document.getElementById(targetId);
-            const address = addressElement.textContent;
+// Chargement initial
+loadWalletData();
 
-            navigator.clipboard.writeText(address).then(() => {
-                Toastify({
-                    text: "✅ Adresse copiée !",
-                    duration: 2000,
-                    gravity: "center",
-                    position: "center",
-                    backgroundColor: "",
-                }).showToast();
-            });
-        });
-    });
+// Actualisation toutes les 5 minutes
+setInterval(loadWalletData, 300000);
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
