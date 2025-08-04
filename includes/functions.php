@@ -443,13 +443,21 @@ function addUserXp($pdo, $user_id, $action_type) {
 function getDB() {
     static $db = null;
     if ($db === null) {
+        $config = require __DIR__ . '/config.php';
+
         try {
-            $db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8', DB_USER, DB_PASS);
+            $db = new PDO(
+                'mysql:host=' . $config['db_host'] . ';dbname=' . $config['db_name'] . ';charset=utf8',
+                $config['db_user'],
+                $config['db_pass']
+            );
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            die('Erreur de connexion : '.$e->getMessage());
+            die('Erreur de connexion : ' . $e->getMessage());
         }
     }
     return $db;
 }
+
+
 ?>

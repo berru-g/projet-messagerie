@@ -1,174 +1,128 @@
-:root {
-  --bg: #f4f7fc;
-  --card-bg: #ffffff;
-  --primary: #4e91fc;
-  --danger: #ff5c5c;
-  --text: #333;
-  --text-light: #666;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --radius: 12px;
-  --transition: 0.3s ease;
-}
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap');
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--bg);
   margin: 0;
   padding: 0;
-  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  background: #0d1117;
+  color: #e5e5e5;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
   padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0, 255, 231, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 231, 0.1);
 }
 
 h1 {
   text-align: center;
+  color: #00ffe7;
   font-size: 2em;
   margin-bottom: 30px;
-  color: var(--primary);
 }
 
 .form-card {
-  background: var(--card-bg);
+  display: grid;
+  gap: 12px;
+  background: #161b22;
   padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: 12px;
+  box-shadow: inset 0 0 10px rgba(0, 255, 231, 0.05);
   margin-bottom: 30px;
 }
 
-.form-card label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.form-card input {
-  width: calc(100% - 12px);
-  padding: 10px;
-  margin-bottom: 12px;
-  border-radius: var(--radius);
-  border: 1px solid #ccc;
-  transition: border-color var(--transition);
-}
-
-.form-card input:focus {
-  border-color: var(--primary);
-  outline: none;
-}
-
-#add-btn {
-  width: 100%;
+input[type="text"],
+input[type="number"] {
   padding: 12px;
-  background: var(--primary);
-  color: #fff;
   border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: bold;
-  transition: background var(--transition);
+  border-radius: 8px;
+  background: #21262d;
+  color: #fff;
+  font-size: 1em;
+  outline: none;
+  transition: 0.2s ease;
 }
 
-#add-btn:hover {
-  background: #367efc;
+input:focus {
+  box-shadow: 0 0 0 2px #00ffe7;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #00ffe7, #9f7bff);
+  color: #0d1117;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 231, 0.3);
 }
 
 #autocomplete-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid #ccc;
-  border-radius: var(--radius);
-  background: #fff;
-  max-height: 150px;
-  overflow-y: auto;
-  position: absolute;
-  z-index: 10;
+  background: #1e2228;
+  border-radius: 8px;
+  margin-top: -8px;
+  overflow: hidden;
 }
 
 #autocomplete-list li {
   padding: 10px;
   cursor: pointer;
-  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
 }
 
 #autocomplete-list li:hover {
-  background: #f2f2f2;
+  background: #2a2f37;
 }
 
 #wallet-list {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
-.crypto-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 15px;
-  margin-bottom: 15px;
+.crypto-item {
   display: flex;
   justify-content: space-between;
+  background: #161b22;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 12px;
   align-items: center;
-  transition: transform 0.2s ease;
+  transition: 0.2s ease;
 }
 
-.crypto-card:hover {
-  transform: scale(1.01);
-}
-
-.crypto-info {
-  display: flex;
-  flex-direction: column;
+.crypto-item:hover {
+  box-shadow: 0 0 10px rgba(0, 255, 231, 0.05);
 }
 
 .crypto-name {
-  font-weight: bold;
-  font-size: 1.1em;
+  font-weight: 600;
+  color: #00ffe7;
 }
 
-.crypto-stats {
-  color: var(--text-light);
+.crypto-meta {
   font-size: 0.9em;
+  color: #aaa;
+  margin-top: 5px;
 }
 
-.delete-btn {
-  background: var(--danger);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 8px 12px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background var(--transition);
+.crypto-actions button {
+  margin-left: 10px;
+  background: none;
+  color: #ff7070;
+  border: 1px solid #ff7070;
 }
 
-.delete-btn:hover {
-  background: #e04e4e;
-}
-
-.wallet-summary {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-top: 30px;
-  font-size: 1.1em;
-}
-
-.wallet-summary span {
-  font-weight: bold;
-  color: var(--primary);
-}
-
-@media (max-width: 600px) {
-  .crypto-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .delete-btn {
-    margin-top: 10px;
-  }
+.crypto-actions button:hover {
+  background: #ff7070;
+  color: #0d1117;
 }

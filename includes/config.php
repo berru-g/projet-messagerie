@@ -1,7 +1,7 @@
 <?php
 // Configuration de base
 session_start();
-define('BASE_URL', 'https://bisque-mallard-923914.hostingersite.com/');
+define('BASE_URL', 'https://bisque-mallard-923914.hostingersite.com');
 define('SITE_NAME', 'Agora');
 
 // Détecte les tentatives d'injection dans les URLs
