@@ -26,7 +26,7 @@ require_once '../includes/header.php';
 </head>
 <body>
   <div class="container">
-    <h1>Mon Portefeuille Crypto</h1>
+    <h3>Mon Portefeuille Crypto</h3>
     <div class="wallet-summary">
   <p>Total investi : <span id="total-invested">$0.00</span></p>
   <p>Valeur actuelle : <span id="current-value">$0.00</span></p>
@@ -54,7 +54,7 @@ require_once '../includes/header.php';
   <script>const userId = <?= $userId ?>;</script>
   <script src="../assets/js/wallet.js"></script>
   <script>
-  const apiUrl = "/pages/api_wallet.php";
+  const apiUrl = "/wallet/api_wallet.php";
 
   async function fetchWallet() {
     const res = await fetch(`${apiUrl}?action=get&user_id=${userId}`);
