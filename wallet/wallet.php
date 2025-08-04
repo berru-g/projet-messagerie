@@ -11,6 +11,8 @@ if (!isLoggedIn()) {
 $userId = intval($_SESSION['user_id']);
 $user = getUserById($userId);
 if (!$user) die("Utilisateur non trouvé");
+
+require_once '../includes/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
