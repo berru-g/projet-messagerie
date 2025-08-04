@@ -209,7 +209,7 @@ require_once '../includes/header.php';
 </style>
 
 <section class="agora-intro">
-  <img src="<?= BASE_URL ?>/assets/img/fullmotion.gif" alt="Agora Social Feed - Motion Design" />
+  <img src="<?= BASE_URL ?>/assets/img/fullmotionpres.gif" alt="Agora Social Feed - Motion Design" />
   <h2 data-i18n="title">Bienvenue sur <strong>Agora</strong> Social Feed</h2>
 
   <div class="card-grid">
