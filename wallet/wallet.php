@@ -7,8 +7,9 @@ if (!isLoggedIn()) {
     exit;
 }
 
-$user = getUserById($_SESSION['user_id']);
-
+//$user = getUserById($_SESSION['user_id']);
+$userId = $_SESSION['user_id']; // l'utilisateur connecté
+$user = getUserById($userId);   // ses infos
 // Récupérer les cryptos de l'utilisateur
 $db = getDB();
 $stmt = $db->prepare("SELECT * FROM user_crypto_holdings WHERE user_id = ?");
