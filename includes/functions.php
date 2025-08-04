@@ -439,5 +439,17 @@ function addUserXp($pdo, $user_id, $action_type) {
     return true;
 }
 
-
+// fonction pour le WALLET ALL IN ONE
+function getDB() {
+    static $db = null;
+    if ($db === null) {
+        try {
+            $db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8', DB_USER, DB_PASS);
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die('Erreur de connexion : '.$e->getMessage());
+        }
+    }
+    return $db;
+}
 ?>
