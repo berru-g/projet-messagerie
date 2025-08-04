@@ -1,5 +1,5 @@
 // wallet.js
-const API_URL = '/api/api_wallet.php';
+const API_URL = '/wallet/api_wallet.php';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price';
 
 let holdings = [];

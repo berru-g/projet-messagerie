@@ -1,0 +1,174 @@
+:root {
+  --bg: #f4f7fc;
+  --card-bg: #ffffff;
+  --primary: #4e91fc;
+  --danger: #ff5c5c;
+  --text: #333;
+  --text-light: #666;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 30px;
+  color: var(--primary);
+}
+
+.form-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+.form-card label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.form-card input {
+  width: calc(100% - 12px);
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  border: 1px solid #ccc;
+  transition: border-color var(--transition);
+}
+
+.form-card input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+#add-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: background var(--transition);
+}
+
+#add-btn:hover {
+  background: #367efc;
+}
+
+#autocomplete-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  background: #fff;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 10;
+}
+
+#autocomplete-list li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+#autocomplete-list li:hover {
+  background: #f2f2f2;
+}
+
+#wallet-list {
+  margin-top: 20px;
+}
+
+.crypto-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.crypto-card:hover {
+  transform: scale(1.01);
+}
+
+.crypto-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.crypto-name {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.crypto-stats {
+  color: var(--text-light);
+  font-size: 0.9em;
+}
+
+.delete-btn {
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 8px 12px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.delete-btn:hover {
+  background: #e04e4e;
+}
+
+.wallet-summary {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-top: 30px;
+  font-size: 1.1em;
+}
+
+.wallet-summary span {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .crypto-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delete-btn {
+    margin-top: 10px;
+  }
+}
