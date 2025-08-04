@@ -7,12 +7,16 @@ if (!isLoggedIn()) {
     exit;
 }
 
-// Récupération sécurisée de l'utilisateur
-$userId = intval($_SESSION['user_id']);
-$user = getUserById($userId);
-
-if (!$user) {
-    die("Utilisateur non trouvé");
+$user = getUserById($_SESSION['user_id']);
+/* Un seul accé autorisé ...
+if ($user['username'] !== 'berru' || $user['email'] !== 'g.leberruyer@gmail.com') {
+    http_response_code(403);
+    exit("⛔ Accès interdit.");
+}*/
+// redirection
+if ($user['username'] !== 'admin' || $user['email'] !== 'g.leberruyer@gmail.com') {
+    header("Location: " . BASE_URL . "/pages/profile.php");
+    exit;
 }
 
 // Initialisation de $pdo comme dans votre profil.php
