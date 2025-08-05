@@ -475,11 +475,12 @@ h3 {
   border-radius: 12px;
   border: 1px solid #ec3333;
 }
+
 /* Conteneur parent critique */
 .comment {
   position: relative;
   overflow: hidden;
-  /* Contient les floats */
+  /* Contient les floats NUL C EST FAUX */
 }
 
 /* Correction spécifique pour mobile */
@@ -487,6 +488,8 @@ h3 {
 
   .comment {
     padding: 15px !important;
+    position: relative;
+    overflow: hidden;
   }
 }
 
@@ -494,7 +497,7 @@ h3 {
 .comment img,
 .comment video {
   margin: 0 auto;
-  width: 100% !important;
+  max-width: 300px !important;
   height: auto !important;
   border: 1px dashed var(--primary-color);
 }
