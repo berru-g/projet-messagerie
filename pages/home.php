@@ -96,12 +96,6 @@ require_once '../includes/header.php';
 
             <div class="comment">
 
-                <!--<?php if (!empty($comment['profile_picture'])): ?>
-                    <img src="<?= htmlspecialchars($comment['profile_picture']) ?>?<?= time() ?>"
-                        alt="" class="profile-picture-thumbnail">
-                <?php else: ?>
-                    <i class="fas fa-user-circle"></i>
-                <?php endif; ?>-->
                 <!--(int) pour éviter les injections SQL et htmlspecialchars pour protéger contre les XSS --Normalement -->
                 <a href="<?= BASE_URL ?>/pages/profile.php?user_id=<?= (int) $comment['user_id'] ?>"
                     class="profile-picture-link">
@@ -125,9 +119,9 @@ require_once '../includes/header.php';
 <!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
                 <?php if (!empty($comment['file_path'])): ?>
                     <?php if ($comment['file_type'] === 'image'): ?>
-                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;"><!--class="img-partage"-->
+                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:500px;"><!--class="img-partage"-->
                     <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls style="max-width:300px;"><!--class="videomp4"-->
+                        <video controls style="max-width:500px;"><!--class="videomp4"-->
                             <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
                             Votre navigateur ne supporte pas la vidéo.
                         </video>
