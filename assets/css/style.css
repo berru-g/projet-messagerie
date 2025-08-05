@@ -489,21 +489,13 @@ h3 {
   .videomp4 {
     width: 100% !important;
     margin: 0 auto !important;
-    max-width: 100% !important;
+    max-width: 500px !important;
     height: auto !important;
   }
 
   .comment {
     padding: 15px !important;
   }
-}
-
-/* Reset des styles conflictuels */
-.comment img,
-.comment video {
-  margin: 0 auto;
-  max-width: 100% !important;
-  height: auto !important;
 }
 
 
