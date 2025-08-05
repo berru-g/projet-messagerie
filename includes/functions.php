@@ -440,6 +440,7 @@ function addUserXp($pdo, $user_id, $action_type) {
 }
 
 // fonction pour le WALLET ALL IN ONE
+// recup les data de user_crytpo (bug)
 function getDB() {
     static $db = null;
     if ($db === null) {

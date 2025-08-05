@@ -797,8 +797,8 @@ h3 {
     padding-left: 10px;
   }
 
-  .comment-media img,
-  .comment-media video {
+  .comment img,
+  .comment video {
     max-width: 100%;
   }
 
