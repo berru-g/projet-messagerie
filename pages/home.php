@@ -181,9 +181,9 @@ require_once '../includes/header.php';
 
                     <?php if (!empty($reply['file_path'])): ?>
                         <?php if ($reply['file_type'] === 'image'): ?>
-                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:200px;" alt="image réponse">
+                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" class="img-partage" alt="image réponse">
                         <?php elseif ($reply['file_type'] === 'video'): ?>
-                            <video controls style="max-width:200px;">
+                            <video controls class="videomp4">
                                 <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
                             </video>
                         <?php endif; ?>

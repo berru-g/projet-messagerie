@@ -468,7 +468,7 @@ h3 {
 /* PAGES - HOME média partagé */
 .img-partage,
 .videomp4 {
-  max-width: 100% !important;
+  max-width: 200px !important;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -485,13 +485,6 @@ h3 {
 /* Correction spécifique pour mobile */
 @media (max-width: 768px) {
 
-  .img-partage,
-  .videomp4 {
-    width: 100% !important;
-    margin: 0 auto !important;
-    max-width: 100% !important;
-    height: auto !important;
-  }
 
   .comment {
     padding: 15px !important;
