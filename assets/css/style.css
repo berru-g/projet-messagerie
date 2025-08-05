@@ -652,6 +652,7 @@ h3 {
 /* Reset des styles conflictuels */
 .comment img, 
 .comment video {
+  margin: 0 auto;
   max-width: 100% !important;
   height: auto !important;
 }
