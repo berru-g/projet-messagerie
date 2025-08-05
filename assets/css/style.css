@@ -473,7 +473,7 @@ h3 {
   display: block;
   margin: 0 auto;
   border-radius: 12px;
-  border: 1px solid #eee;
+  border: 1px solid #ec3333;
 }
 /* Conteneur parent critique */
 .comment {
@@ -484,7 +484,6 @@ h3 {
 
 /* Correction spécifique pour mobile */
 @media (max-width: 768px) {
-
 
   .comment {
     padding: 15px !important;
