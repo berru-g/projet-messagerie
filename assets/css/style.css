@@ -494,7 +494,7 @@ h3 {
 .comment img,
 .comment video {
   margin: 0 auto;
-  max-width: 200px !important;
+  width: 100% !important;
   height: auto !important;
   border: 1px dashed var(--primary-color);
 }

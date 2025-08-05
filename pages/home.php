@@ -119,9 +119,9 @@ require_once '../includes/header.php';
 <!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
                 <?php if (!empty($comment['file_path'])): ?>
                     <?php if ($comment['file_type'] === 'image'): ?>
-                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" class="img-partage"><!--class="img-partage"-->
+                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;"><!--style="max-width:300px;"-->
                     <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls class="videomp4"><!--class="videomp4"-->
+                        <video controls style="max-width:300px;"><!--style="max-width:300px;"-->
                             <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
                             Votre navigateur ne supporte pas la vidéo.
                         </video>
@@ -181,9 +181,9 @@ require_once '../includes/header.php';
 
                     <?php if (!empty($reply['file_path'])): ?>
                         <?php if ($reply['file_type'] === 'image'): ?>
-                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" class="img-partage" alt="image réponse">
+                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:300px;" alt="image réponse">
                         <?php elseif ($reply['file_type'] === 'video'): ?>
-                            <video controls class="videomp4">
+                            <video controls style="max-width:300px;">
                                 <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
                             </video>
                         <?php endif; ?>
