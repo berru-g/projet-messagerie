@@ -602,7 +602,7 @@ h3 {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Styles pour les médias uploadés 
+/* Styles pour les médias uploadés */
 .img-partage .videomp4 {
   max-width: 100%; 
   height: auto; 
@@ -611,12 +611,13 @@ h3 {
   border-radius: 12px;
 }
 
+
 @media (min-width: 200px) {
   .img-partage .videomp4 {
     max-width: 500px; 
   }
 }
-*/
+
 .owner-link {
   text-decoration: none;
   color: var(--primary-color);
@@ -791,7 +792,7 @@ h3 {
 
 }
 
-/* Responsive spécifique pour les médias */
+/* Responsive spécifique pour les médias 
 @media (max-width: 768px) {
   .replies {
     padding-left: 10px;
@@ -801,7 +802,7 @@ h3 {
   .comment video {
     max-width: 100%;
   }
-
+*/
   .reply {
     padding: 10px;
   }
