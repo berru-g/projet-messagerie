@@ -193,7 +193,64 @@ require_once '../includes/header.php';
 
         <?php endforeach; ?>
     </div>
-   
+    <style>
+        /*test input en bas */
+        .comment-post {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            padding: 10px 15px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #ddd;
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .reply-post {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reply-post textarea {
+            flex: 1;
+            resize: none;
+            height: 50px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 24px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+        }
+
+        .file-post,
+        .btn-post {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .file-post:hover,
+        .btn-post:hover {
+            background: var(--accent-color);
+        }
+
+        .file-post input {
+            display: none;
+        }
+    </style>
     <!--nouveau form fixé en bas -->
     <div class="comment-post">
         <form method="POST" enctype="multipart/form-data" class="reply-post">

@@ -119,7 +119,7 @@ h3 {
   text-decoration: none;
   border-radius: 12px;
   right: 0;
-  padding: 15px 15px;
+  padding: 12px 12px;
   transform-origin: top right;
   animation: fadeIn 0.2s ease-out;
   border: 1px solid var(--border-color);
@@ -207,8 +207,8 @@ h3 {
 
 /* Style pour l'image dans le dropdown */
 .profile-picture-small {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 8px;
@@ -489,13 +489,21 @@ h3 {
   .videomp4 {
     width: 100% !important;
     margin: 0 auto !important;
-    max-width: 500px !important;
+    max-width: 100% !important;
     height: auto !important;
   }
 
   .comment {
     padding: 15px !important;
   }
+}
+
+/* Reset des styles conflictuels */
+.comment img,
+.comment video {
+  margin: 0 auto;
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 
