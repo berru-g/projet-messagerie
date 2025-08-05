@@ -125,9 +125,9 @@ require_once '../includes/header.php';
 <!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
                 <?php if (!empty($comment['file_path'])): ?>
                     <?php if ($comment['file_type'] === 'image'): ?>
-                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" class="img-partage">
+                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:200px;"><!--class="img-partage"-->
                     <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls class="videomp4">
+                        <video controls style="max-width:200px;"><!--class="videomp4"-->
                             <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
                             Votre navigateur ne supporte pas la vidéo.
                         </video>
