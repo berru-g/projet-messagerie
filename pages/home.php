@@ -116,12 +116,13 @@ require_once '../includes/header.php';
                 <?php if (!empty($comment['content'])): ?>
                     <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
                 <?php endif; ?>
-<!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
+                <!--Ajouter l'envoie à la table user_xp , pour afficher le rank -->
                 <?php if (!empty($comment['file_path'])): ?>
                     <?php if ($comment['file_type'] === 'image'): ?>
-                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée" style="max-width:300px;"><!--style="max-width:300px;"-->
+                        <img src="<?= htmlspecialchars($comment['file_path']) ?>" alt="image partagée"
+                            style="max-width:200px;"><!--style="max-width:200px;"-->
                     <?php elseif ($comment['file_type'] === 'video'): ?>
-                        <video controls style="max-width:300px;"><!--style="max-width:300px;"-->
+                        <video controls style="max-width:200px;"><!--style="max-width:200px;"-->
                             <source src="<?= htmlspecialchars($comment['file_path']) ?>" type="video/mp4">
                             Votre navigateur ne supporte pas la vidéo.
                         </video>
@@ -181,9 +182,9 @@ require_once '../includes/header.php';
 
                     <?php if (!empty($reply['file_path'])): ?>
                         <?php if ($reply['file_type'] === 'image'): ?>
-                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:300px;" alt="image réponse">
+                            <img src="<?= htmlspecialchars($reply['file_path']) ?>" style="max-width:200px;" alt="image réponse">
                         <?php elseif ($reply['file_type'] === 'video'): ?>
-                            <video controls style="max-width:300px;">
+                            <video controls style="max-width:200px;">
                                 <source src="<?= htmlspecialchars($reply['file_path']) ?>" type="video/mp4">
                             </video>
                         <?php endif; ?>
@@ -271,5 +272,17 @@ require_once '../includes/header.php';
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script>
+
+    // Configuration du lightbox pour la galerie
+    lightbox.option({
+        'albumLabel': 'Image %1 sur %2',
+        'wrapAround': true,
+        'fadeDuration': 200,
+        'imageFadeDuration': 200,
+        'resizeDuration': 200
+    });
+</script>
 
 <?php require_once '../includes/footer.php'; ?>

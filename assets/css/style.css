@@ -497,9 +497,9 @@ h3 {
 .comment img,
 .comment video {
   margin: 0 auto;
-  max-width: 300px !important;
+  max-width: 200px !important;
   height: auto !important;
-  border: 1px dashed var(--primary-color);
+  border-radius: 12px;
 }
 
 
