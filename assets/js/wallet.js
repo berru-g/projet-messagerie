@@ -1,234 +1,246 @@
 // Configuration
-const API_URL = '/wallet/api_wallet.php';
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
+const SERVER_API = '/api/wallet.php'; // À adapter selon votre structure
 
 // Éléments DOM
-const searchInput = document.getElementById("search-crypto");
-const cryptoIdInput = document.getElementById("crypto-id");
-const cryptoNameInput = document.getElementById("crypto-name");
-const autocompleteList = document.getElementById("autocomplete-list");
-const walletList = document.getElementById("wallet-list");
+const timeRange = document.getElementById('timeRange');
+const ctx = document.getElementById('cryptoChart').getContext('2d');
+const cryptoSearch = document.getElementById('crypto-search');
+const cryptoResults = document.getElementById('crypto-results');
+const selectedCryptoId = document.getElementById('selected-crypto-id');
+const addToWalletBtn = document.getElementById('add-to-wallet');
+const walletHoldings = document.getElementById('wallet-holdings');
 
-// Charger la liste des cryptos au démarrage
-async function loadCryptoList() {
-    try {
-        const response = await fetch(`${COINGECKO_API}/coins/list`);
-        if (!response.ok) throw new Error("Erreur de chargement");
-        return await response.json();
-    } catch (error) {
-        console.error("Erreur:", error);
-        return [];
-    }
-}
+// Narratifs crypto (votre configuration existante)
+const narratives = {
+    bitcoin: "Réserve de valeur numérique (PoW)",
+    ethereum: "Blockchain de smart contracts",
+    solana: "Blockchain de smart contracts scalable (Layer 1)",
+    aave: "DeFi (Prêts et emprunts décentralisés)",
+    "the-graph": "IA et Big Data",
+    centrifuge: "RWA (Tokenisation d'actifs réels)",
+    polkadot: "Interopérabilité",
+    monero: "Confidentialité",
+    "axie-infinity": "Gaming (Play-to-Earn)",
+    chainlink: "Infrastructure Blockchain (Oracles)",
+    makerdao: "Stablecoins (DAI)",
+    helium: "Réseaux IoT décentralisés"
+};
 
-// Autocomplétion
-searchInput.addEventListener("input", async (e) => {
-    const query = e.target.value.trim();
-    if (query.length < 2) {
-        autocompleteList.innerHTML = '';
-        return;
-    }
+// 1. Système de comparaison (votre code existant amélioré)
+let comparisonChart;
 
-    try {
-        const response = await fetch(`${COINGECKO_API}/search?query=${query}`);
-        const data = await response.json();
-        displayAutocompleteResults(data.coins.slice(0, 5));
-    } catch (error) {
-        console.error("Erreur:", error);
-    }
-});
-
-function displayAutocompleteResults(coins) {
-    autocompleteList.innerHTML = '';
-    coins.forEach(coin => {
-        const li = document.createElement("li");
-        li.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
-        li.onclick = () => {
-            searchInput.value = coin.name;
-            cryptoIdInput.value = coin.id;
-            cryptoNameInput.value = coin.name;
-            autocompleteList.innerHTML = '';
-        };
-        autocompleteList.appendChild(li);
+async function initComparisonChart() {
+    const days = timeRange.value;
+    const data = await fetchCryptoData(days);
+    
+    comparisonChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: data.map((coin, index) => ({
+                label: `${narratives[coin.id]} (${coin.symbol.toUpperCase()})`,
+                data: coin.sparkline_in_7d.price.map((price, i, arr) => ({
+                    x: new Date(Date.now() - (arr.length - 1 - i) * 86400000),
+                    y: ((price - arr[0]) / arr[0]) * 100
+                })),
+                borderColor: getColorForCrypto(coin.id),
+                fill: false,
+                tension: 0.1
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                zoom: {
+                    pan: { enabled: true, mode: 'x' },
+                    zoom: { enabled: true, mode: 'x' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y.toFixed(2);
+                            return `${label}: ${value}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { type: 'time', time: { unit: 'day' } },
+                y: { 
+                    beginAtZero: false,
+                    title: { display: true, text: 'Variation (%)' }
+                }
+            }
+        }
     });
 }
 
-// Gestion du portefeuille
+// 2. Système de wallet
 async function loadWallet() {
     try {
-        const response = await fetch(`${API_URL}?action=get&user_id=${userId}`);
+        const response = await fetch(`${SERVER_API}?action=get&user_id=${userId}`);
         const holdings = await response.json();
         
         if (!holdings.length) {
-            walletList.innerHTML = '<p>Portefeuille vide.</p>';
-            updateTotals(0, 0, 0);
+            walletHoldings.innerHTML = '<p>Aucune crypto dans votre portefeuille</p>';
             return;
         }
 
-        // Récupérer les prix actuels
-        const ids = holdings.map(c => c.crypto_id).join(',');
-        const pricesResponse = await fetch(`${COINGECKO_API}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
-        const prices = await pricesResponse.json();
+        // Récupération des prix actuels
+        const ids = holdings.map(h => h.crypto_id).join(',');
+        const pricesRes = await fetch(`${COINGECKO_API}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+        const prices = await pricesRes.json();
 
-        // Afficher les holdings
+        // Calcul des totaux
         let totalInvested = 0;
         let totalCurrent = 0;
-        let total24hChange = 0;
-
-        walletList.innerHTML = holdings.map(crypto => {
-            const currentPrice = prices[crypto.crypto_id]?.usd || 0;
-            const change24h = prices[crypto.crypto_id]?.usd_24h_change || 0;
-            const invested = crypto.purchase_price * crypto.quantity;
-            const currentValue = currentPrice * crypto.quantity;
-            const profitLoss = currentValue - invested;
-            const profitLossPercent = (profitLoss / invested) * 100;
-
-            totalInvested += invested;
+        
+        // Affichage des holdings
+        walletHoldings.innerHTML = holdings.map(holding => {
+            const currentPrice = prices[holding.crypto_id]?.usd || 0;
+            const currentValue = currentPrice * holding.quantity;
+            const investedValue = holding.purchase_price * holding.quantity;
+            const profit = currentValue - investedValue;
+            const profitPercentage = (profit / investedValue) * 100;
+            
+            totalInvested += investedValue;
             totalCurrent += currentValue;
-            total24hChange += (currentValue * (change24h / 100));
-
+            
             return `
-                <div class="crypto-item">
-                    <div>
-                        <span class="crypto-name">${crypto.crypto_name}</span>
-                        <div class="crypto-meta">
-                            ${crypto.quantity} @ $${crypto.purchase_price.toFixed(2)}
-                        </div>
+                <div class="holding">
+                    <img src="https://cryptoicon-api.vercel.app/api/icon/${holding.crypto_id.toLowerCase()}" alt="${holding.crypto_name}" width="24">
+                    <div class="holding-info">
+                        <h4>${holding.crypto_name}</h4>
+                        <p>${holding.quantity} @ $${holding.purchase_price.toFixed(6)}</p>
                     </div>
-                    <div>
-                        <span style="color: ${profitLoss >= 0 ? '#60d394' : '#ee6055'}">
-                            $${currentValue.toFixed(2)} (${profitLossPercent.toFixed(2)}%)
-                        </span>
-                        <button class="btn-wallet" onclick="deleteCrypto('${crypto.crypto_id}')">Supprimer</button>
+                    <div class="holding-value" style="color: ${profit >= 0 ? '#4CAF50' : '#F44336'}">
+                        $${currentValue.toFixed(2)} (${profitPercentage.toFixed(2)}%)
                     </div>
+                    <button class="delete-btn" data-id="${holding.crypto_id}">×</button>
                 </div>
             `;
         }).join('');
-
-        updateTotals(totalInvested, totalCurrent, total24hChange);
-        drawChart(holdings, prices);
-
+        
+        // Mise à jour du résumé
+        document.getElementById('total-invested').textContent = `$${totalInvested.toFixed(2)}`;
+        document.getElementById('current-value').textContent = `$${totalCurrent.toFixed(2)}`;
+        document.getElementById('performance').textContent = `${((totalCurrent - totalInvested) / totalInvested * 100).toFixed(2)}%`;
+        
+        // Mise à jour du graphique de comparaison avec les cryptos du wallet
+        updateComparisonChartWithWallet(holdings);
+        
     } catch (error) {
-        console.error("Erreur:", error);
-        walletList.innerHTML = '<p>Erreur de chargement du portefeuille</p>';
+        console.error('Erreur:', error);
+        walletHoldings.innerHTML = '<p>Erreur de chargement du portefeuille</p>';
     }
 }
 
-function updateTotals(invested, current, change24h) {
-    document.getElementById("total-invested").textContent = `$${invested.toFixed(2)}`;
-    document.getElementById("current-value").textContent = `$${current.toFixed(2)}`;
-    document.getElementById("performance-24h").textContent = `${((change24h / current) * 100).toFixed(2)}%`;
-}
-
-// Ajouter une crypto
-document.getElementById("add-btn").addEventListener("click", async () => {
-    const crypto_id = cryptoIdInput.value;
-    const crypto_name = cryptoNameInput.value;
-    const purchase_price = parseFloat(document.getElementById("purchase-price").value);
-    const quantity = parseFloat(document.getElementById("quantity").value);
-
-    if (!crypto_id || !purchase_price || !quantity) {
-        alert("Veuillez remplir tous les champs");
+// 3. Autocomplétion et gestion du formulaire
+cryptoSearch.addEventListener('input', async (e) => {
+    const query = e.target.value.trim();
+    if (query.length < 2) {
+        cryptoResults.innerHTML = '';
         return;
     }
-
+    
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${COINGECKO_API}/search?query=${query}`);
+        const data = await response.json();
+        displaySearchResults(data.coins.slice(0, 5));
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+});
+
+function displaySearchResults(coins) {
+    cryptoResults.innerHTML = coins.map(coin => `
+        <li data-id="${coin.id}">
+            <img src="${coin.thumb}" alt="${coin.name}" width="20">
+            ${coin.name} (${coin.symbol.toUpperCase()})
+        </li>
+    `).join('');
+    
+    cryptoResults.querySelectorAll('li').forEach(item => {
+        item.addEventListener('click', () => {
+            selectedCryptoId.value = item.getAttribute('data-id');
+            cryptoSearch.value = item.textContent.trim();
+            cryptoResults.innerHTML = '';
+        });
+    });
+}
+
+addToWalletBtn.addEventListener('click', async () => {
+    const cryptoId = selectedCryptoId.value;
+    const cryptoName = cryptoSearch.value;
+    const purchasePrice = parseFloat(document.getElementById('purchase-price').value);
+    const quantity = parseFloat(document.getElementById('crypto-quantity').value);
+    
+    if (!cryptoId || !purchasePrice || !quantity) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+    
+    try {
+        const response = await fetch(SERVER_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'add',
                 user_id: userId,
-                crypto_id,
-                crypto_name,
-                purchase_price,
-                quantity
+                crypto_id: cryptoId,
+                crypto_name: cryptoName,
+                purchase_price: purchasePrice,
+                quantity: quantity
             })
         });
-
-        if (!response.ok) throw new Error("Erreur d'ajout");
         
-        // Réinitialiser le formulaire
-        searchInput.value = '';
-        cryptoIdInput.value = '';
-        cryptoNameInput.value = '';
-        document.getElementById("purchase-price").value = '';
-        document.getElementById("quantity").value = '';
+        if (!response.ok) throw new Error('Erreur lors de l\'ajout');
         
-        // Recharger le portefeuille
+        // Réinitialisation du formulaire
+        cryptoSearch.value = '';
+        selectedCryptoId.value = '';
+        document.getElementById('purchase-price').value = '';
+        document.getElementById('crypto-quantity').value = '';
+        
+        // Rechargement du wallet
         loadWallet();
+        
     } catch (error) {
-        console.error("Erreur:", error);
-        alert("Erreur lors de l'ajout de la crypto");
+        console.error('Erreur:', error);
+        alert('Erreur lors de l\'ajout au portefeuille');
     }
 });
 
-// Supprimer une crypto
-async function deleteCrypto(id) {
-    if (!confirm("Supprimer cette crypto de votre portefeuille ?")) return;
+// 4. Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+    initComparisonChart();
+    loadWallet();
     
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                action: 'delete', 
-                user_id: userId, 
-                crypto_id: id 
-            })
-        });
-        
-        if (!response.ok) throw new Error("Erreur de suppression");
-        loadWallet();
-    } catch (error) {
-        console.error("Erreur:", error);
-        alert("Erreur lors de la suppression");
-    }
-}
-
-// Graphique
-function drawChart(holdings, prices) {
-    am5.ready(() => {
-        const root = am5.Root.new("chartdiv");
-        root.setThemes([am5themes_Animated.new(root)]);
-        
-        const chart = root.container.children.push(
-            am5xy.XYChart.new(root, {
-                panX: true,
-                panY: true,
-                wheelX: "panX",
-                wheelY: "zoomX"
-            })
-        );
-
-        const xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-            categoryField: "crypto",
-            renderer: am5xy.AxisRendererX.new(root, {})
-        }));
-
-        const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-            renderer: am5xy.AxisRendererY.new(root, {})
-        }));
-
-        const series = chart.series.push(am5xy.ColumnSeries.new(root, {
-            name: "Valeur",
-            xAxis: xAxis,
-            yAxis: yAxis,
-            valueYField: "value",
-            categoryXField: "crypto"
-        }));
-
-        const chartData = holdings.map(item => ({
-            crypto: item.crypto_name,
-            value: (prices[item.crypto_id]?.usd || 0) * item.quantity
-        }));
-
-        xAxis.data.setAll(chartData);
-        series.data.setAll(chartData);
+    // Gestion de la suppression
+    walletHoldings.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('delete-btn')) {
+            if (!confirm('Supprimer cette crypto de votre portefeuille ?')) return;
+            
+            const cryptoId = e.target.getAttribute('data-id');
+            try {
+                const response = await fetch(SERVER_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        user_id: userId,
+                        crypto_id: cryptoId
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la suppression');
+                loadWallet();
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la suppression');
+            }
+        }
     });
-}
-
-// Initialisation
-loadWallet();
-
-// feed back user
+});

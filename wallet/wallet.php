@@ -132,42 +132,140 @@ require_once '../includes/header.php';
         background: #ff7070;
         color: #0d1117;
     }
+    /* Style de base */
+#personal-wallet {
+    margin-top: 40px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.wallet-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#crypto-results {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#crypto-results li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#crypto-results li:hover {
+    background-color: #f0f0f0;
+}
+
+.wallet-summary {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.holdings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.holding {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+}
+
+.holding-info {
+    flex-grow: 1;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #ff4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wallet-controls {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 
 
 <body>
-    <div class="wallet">
-        <h3>Mon Portefeuille Crypto</h3>
+    <section id="crypto-comparison">
+        <h2>Comparaison des Narratifs Crypto</h2>
+        <p>Visualiser l'évolution des narratifs majeurs</p>
+        <select id="timeRange">
+            <option value="7">7 Jours</option>
+            <option value="30">1 Mois</option>
+            <option value="365">1 An</option>
+        </select>
+        <div class="chart-container">
+            <canvas id="cryptoChart"></canvas>
+        </div>
+    </section>
+
+    <section id="personal-wallet">
+        <h2>Mon Portefeuille Personnel</h2>
+        <div class="wallet-controls">
+            <div class="form-group">
+                <label>Crypto :</label>
+                <input type="text" id="crypto-search" placeholder="Rechercher...">
+                <ul id="crypto-results"></ul>
+                <input type="hidden" id="selected-crypto-id">
+            </div>
+            <div class="form-group">
+                <label>Prix d'achat ($) :</label>
+                <input type="number" id="purchase-price" step="0.000001">
+            </div>
+            <div class="form-group">
+                <label>Quantité :</label>
+                <input type="number" id="crypto-quantity" step="0.000001">
+            </div>
+            <button id="add-to-wallet" class="btn-primary">Ajouter au portefeuille</button>
+        </div>
+
         <div class="wallet-summary">
+            <h3>Résumé</h3>
             <p>Total investi : <span id="total-invested">$0.00</span></p>
             <p>Valeur actuelle : <span id="current-value">$0.00</span></p>
-            <p>Variation 24h : <span id="performance-24h">0.00%</span></p>
+            <p>Performance : <span id="performance">0.00%</span></p>
         </div>
 
-        <div id="growthchart" style="width: 100%; height: 400px;"></div>
+        <div id="wallet-holdings" class="holdings-container"></div>
+    </section>
 
-
-        <div class="form-wallet">
-            <label>Ajouter une crypto :</label>
-            <input type="text" id="search-crypto" placeholder="ex: bitcoin">
-            <ul id="autocomplete-list"></ul>
-            <input type="hidden" id="crypto-id">
-            <input type="text" id="crypto-name" placeholder="Nom complet">
-            <input type="number" id="purchase-price" placeholder="Prix d'achat ($)">
-            <input type="number" id="quantity" placeholder="Quantité">
-            <button class="btn-wallet" id="add-btn">Ajouter</button>
-        </div>
-
-        <div id="wallet-list"></div>
-        <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-    </div>
-
-    <script>const userId = <?= $userId ?>;</script>
-<script src="../assets/js/wallet.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
+    <!-- Chart -->
+     <script src="<?= BASE_URL ?>/assets/js/wallet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
 </body>
 
 </html>
