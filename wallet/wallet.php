@@ -280,7 +280,7 @@ require_once '../includes/header.php';
     <script>
         // Configuration
         const COINGECKO_API = 'https://api.coingecko.com/api/v3';
-        const SERVER_API = '/wallet/wallet.php'; 
+        const SERVER_API = 'api_wallet.php'; 
 
         // Éléments DOM
         const timeRange = document.getElementById('timeRange');
@@ -526,5 +526,5 @@ require_once '../includes/header.php';
         });
     </script>
 </body>
-
+<? require_once '../includes/footer.php'; ?>
 </html>
