@@ -18,10 +18,9 @@ require_once '../includes/header.php';
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap');
 
-
     .wallet {
-        max-width: 1000px;
-        margin: 40px auto;
+        max-width: 300px;
+        margin: 0 auto;
         padding: 20px;
         background: rgba(255, 255, 255, 0.02);
         border-radius: 16px;
@@ -59,7 +58,7 @@ require_once '../includes/header.php';
         box-shadow: 0 0 0 2px #00ffe7;
     }
 
-    btn-wallet {
+    .btn-wallet {
         padding: 12px;
         border: none;
         border-radius: 8px;
@@ -70,13 +69,13 @@ require_once '../includes/header.php';
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    btn-wallet:hover {
+    .btn-wallet:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(0, 255, 231, 0.3);
     }
 
     #autocomplete-list {
-        background: #1e2228;
+        background: grey;
         border-radius: 8px;
         margin-top: -8px;
         overflow: hidden;
@@ -89,7 +88,7 @@ require_once '../includes/header.php';
     }
 
     #autocomplete-list li:hover {
-        background: #2a2f37;
+        background: #2a2f376d;
     }
 
     #wallet-list {
@@ -99,7 +98,7 @@ require_once '../includes/header.php';
     .crypto-item {
         display: flex;
         justify-content: space-between;
-        background: #161b22;
+        background: #5995e9ff;
         padding: 15px;
         margin-bottom: 10px;
         border-radius: 12px;
@@ -113,7 +112,7 @@ require_once '../includes/header.php';
 
     .crypto-name {
         font-weight: 600;
-        color: #00ffe7;
+        color: #555;
     }
 
     .crypto-meta {
@@ -164,123 +163,11 @@ require_once '../includes/header.php';
     </div>
 
     <script>const userId = <?= $userId ?>;</script>
-    <script src="../assets/js/wallet.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-    <script>
-        const apiUrl = "/wallet/api_wallet.php";
+<script src="../assets/js/wallet.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
-        async function fetchWallet() {
-            const res = await fetch(`${apiUrl}?action=get&user_id=${userId}`);
-            const data = await res.json();
-            renderWallet(data);
-            renderChart(data);
-        }
-
-        async function addCrypto() {
-            const payload = {
-                action: 'add',
-                user_id: userId,
-                crypto_id: document.getElementById('crypto-id').value,
-                crypto_name: document.getElementById('crypto-name').value,
-                purchase_price: document.getElementById('purchase-price').value,
-                quantity: document.getElementById('quantity').value
-            };
-
-            await fetch(apiUrl, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
-            fetchWallet();
-        }
-
-        async function deleteCrypto(id) {
-            await fetch(apiUrl, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'delete', user_id: userId, crypto_id: id })
-            });
-            fetchWallet();
-        }
-
-        function renderWallet(data) {
-            const container = document.getElementById('wallet-list');
-            if (!data.length) return container.innerHTML = '<p>Portefeuille vide.</p>';
-
-            container.innerHTML = '<table><tr><th>Nom</th><th>Prix d\'achat</th><th>Quantité</th><th>Total Investi</th><th></th></tr>' +
-                data.map(item => `
-        <tr>
-          <td>${item.crypto_name}</td>
-          <td>${item.purchase_price} $</td>
-          <td>${item.quantity}</td>
-          <td>${(item.purchase_price * item.quantity).toFixed(2)} $</td>
-          <td><button onclick="deleteCrypto('${item.crypto_id}')">🗑️</button></td>
-        </tr>`).join('') + '</table>';
-        }
-
-        async function searchCrypto(query) {
-            const res = await fetch(`https://api.coingecko.com/api/v3/search?query=${query}`);
-            const data = await res.json();
-            const list = document.getElementById('autocomplete-list');
-            list.innerHTML = '';
-            data.coins.slice(0, 5).forEach(coin => {
-                const li = document.createElement('li');
-                li.textContent = coin.name;
-                li.onclick = () => {
-                    document.getElementById('crypto-id').value = coin.id;
-                    document.getElementById('crypto-name').value = coin.name;
-                    list.innerHTML = '';
-                };
-                list.appendChild(li);
-            });
-        }
-
-        function renderChart(data) {
-            am5.ready(function () {
-                const root = am5.Root.new("chartdiv");
-                root.container.children.clear();
-
-                root.setThemes([am5themes_Animated.new(root)]);
-
-                const chart = root.container.children.push(
-                    am5xy.XYChart.new(root, { panX: true, panY: true, wheelX: "panX", wheelY: "zoomX" })
-                );
-
-                const xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-                    categoryField: "crypto",
-                    renderer: am5xy.AxisRendererX.new(root, {})
-                }));
-
-                const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-                    renderer: am5xy.AxisRendererY.new(root, {})
-                }));
-
-                const series = chart.series.push(am5xy.ColumnSeries.new(root, {
-                    name: "Investissement",
-                    xAxis: xAxis,
-                    yAxis: yAxis,
-                    valueYField: "total",
-                    categoryXField: "crypto"
-                }));
-
-                const chartData = data.map(item => ({
-                    crypto: item.crypto_name,
-                    total: item.purchase_price * item.quantity
-                }));
-
-                xAxis.data.setAll(chartData);
-                series.data.setAll(chartData);
-            });
-        }
-
-        document.getElementById('add-btn').onclick = addCrypto;
-        document.getElementById('search-crypto').addEventListener('input', e => {
-            const val = e.target.value;
-            if (val.length > 1) searchCrypto(val);
-        });
-
-        fetchWallet();
-    </script>
 </body>
 
 </html>
