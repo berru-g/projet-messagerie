@@ -1,6 +1,6 @@
 // Configuration
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
-const SERVER_API = '/wallet/wallet.php'; // À adapter selon votre structure
+const SERVER_API = '/wallet/wallet.php'; 
 
 // Éléments DOM
 const timeRange = document.getElementById('timeRange');
