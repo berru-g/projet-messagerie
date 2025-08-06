@@ -9,7 +9,7 @@
   border-radius: 16px;
   box-shadow: 0 0 30px rgba(0, 255, 231, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 231, 0.1);
+  border: 1px solid rgba(0, 255, 229, 0.605);
 }
 
 
@@ -17,7 +17,7 @@
   display: grid;
   margin: 0 auto;
   gap: 12px;
-  background: #161b22;
+  background: #F4F4F4;
   padding: 20px;
   border-radius: 12px;
   box-shadow: inset 0 0 10px rgba(0, 255, 231, 0.05);
@@ -30,8 +30,8 @@ input[type="number"] {
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: #21262d;
-  color: #fff;
+  background: #F1F1F1;
+  color: #444;
   font-size: 1em;
   outline: none;
   transition: 0.2s ease;
@@ -46,7 +46,7 @@ button {
   border: none;
   border-radius: 8px;
   background: linear-gradient(145deg, #00ffe7, #9f7bff);
-  color: #0d1117;
+  color: #F1F1F1;
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
