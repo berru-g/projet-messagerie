@@ -17,7 +17,9 @@ require_once '../includes/header.php';
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap');
-
+    * {
+        border: 1px solid #9f7bff;
+    }
     .wallet {
         max-width: 300px;
         margin: 0 auto;
@@ -526,5 +528,6 @@ require_once '../includes/header.php';
         });
     </script>
 </body>
-<? require_once '../includes/footer.php'; ?>
+
+<?php require_once '../includes/footer.php'; ?>
 </html>
