@@ -13,7 +13,7 @@
 }
 
 
-.form-card {
+.form-wallet {
   display: grid;
   margin: 0 auto;
   gap: 12px;
@@ -24,7 +24,7 @@
   margin-bottom: 30px;
   max-width: 300px;
 }
-
+.form-wallet
 input[type="text"],
 input[type="number"] {
   padding: 12px;
@@ -41,7 +41,7 @@ input:focus {
   box-shadow: 0 0 0 2px #00ffe7;
 }
 
-button {
+btn-wallet {
   padding: 12px;
   border: none;
   border-radius: 8px;
@@ -52,7 +52,7 @@ button {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-button:hover {
+btn-wallet:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 255, 231, 0.3);
 }
@@ -104,14 +104,14 @@ button:hover {
   margin-top: 5px;
 }
 
-.crypto-actions button {
+.crypto-actions btn-wallet {
   margin-left: 10px;
   background: none;
   color: #ff7070;
   border: 1px solid #ff7070;
 }
 
-.crypto-actions button:hover {
+.crypto-actions btn-wallet:hover {
   background: #ff7070;
   color: #0d1117;
 }

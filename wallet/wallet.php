@@ -21,7 +21,7 @@ require_once '../includes/header.php';
 <head>
     <meta charset="UTF-8">
     <title>Wallet Crypto</title>
-    <link rel="stylesheet" href="/assets/css/wallet.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/wallet.css">
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
@@ -39,7 +39,7 @@ require_once '../includes/header.php';
         <div id="growthchart" style="width: 100%; height: 400px;"></div>
 
 
-        <div class="form-card">
+        <div class="form-wallet">
             <label>Ajouter une crypto :</label>
             <input type="text" id="search-crypto" placeholder="ex: bitcoin">
             <ul id="autocomplete-list"></ul>
@@ -47,7 +47,7 @@ require_once '../includes/header.php';
             <input type="text" id="crypto-name" placeholder="Nom complet">
             <input type="number" id="purchase-price" placeholder="Prix d'achat ($)">
             <input type="number" id="quantity" placeholder="Quantité">
-            <button id="add-btn">Ajouter</button>
+            <button class="btn-wallet" id="add-btn">Ajouter</button>
         </div>
 
         <div id="wallet-list"></div>
