@@ -472,20 +472,15 @@ h3 {
   height: auto;
   display: block;
   margin: 0 auto;
-  border-radius: 12px;
-  border: 1px solid #ec3333;
+  border-radius: 12px; /* revenue à comment img car conflit à trouver!!!*/
 }
 
 /* Conteneur parent critique */
 .comment {
   position: relative;
-  overflow: hidden;
-  /* Contient les floats NUL C EST FAUX */
+  overflow: hidden; /* Contient les floats NUL C EST FAUX */
 }
-
-/* Correction spécifique pour mobile */
 @media (max-width: 768px) {
-
   .comment {
     padding: 15px !important;
     position: relative;
