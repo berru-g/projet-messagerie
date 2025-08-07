@@ -285,7 +285,6 @@ require_once '../includes/header.php';
         'resizeDuration': 200
     });
 
-    // animation du like...
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
