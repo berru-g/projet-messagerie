@@ -549,7 +549,6 @@ h3 {
 
 /* Effet de cœur qui s'envole */
 .floating-heart {
-  position: absolute;
   font-size: 4rem;
   color: var(--error-color);
   animation: floatHeart 1s ease forwards;
@@ -565,6 +564,11 @@ h3 {
   100% {
     opacity: 0;
     transform: translateY(-40px) scale(6);
+  }
+}
+@media (max-width: 600px) {
+  .floating-heart {
+    font-size: 3rem;
   }
 }
 

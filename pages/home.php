@@ -286,36 +286,6 @@ require_once '../includes/header.php';
         'resizeDuration': 200
     });
 
-    /* anim au like
-    document.addEventListener('DOMContentLoaded', () => {
-        const likeBtn = document.getElementById('likeBtn');
-
-        likeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            // Toggle classe "liked"
-            likeBtn.classList.toggle('liked');
-
-            // Crée le cœur qui s'envole
-            const floatingHeart = document.createElement('i');
-            floatingHeart.classList.add('fas', 'fa-heart', 'floating-heart');
-
-            // Position du cœur (coordonnées relatives à la fenêtre)
-            const rect = likeBtn.getBoundingClientRect();
-            floatingHeart.style.position = 'fixed';
-            floatingHeart.style.left = `${rect.left + rect.width / 2}px`;
-            floatingHeart.style.top = `${rect.top}px`;
-
-            // Ajout au DOM
-            document.body.appendChild(floatingHeart);
-
-            // Supprime après l'animation
-            setTimeout(() => {
-                floatingHeart.remove();
-            }, 1000);
-        });
-    });*/
-
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
