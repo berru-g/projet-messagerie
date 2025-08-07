@@ -133,7 +133,7 @@ require_once '../includes/header.php';
 
                 <div class="comment-actions">
 
-                    <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= $userLiked ? 'liked' : 'not-liked' ?>">
+                    <a href="?like=<?= $comment['id'] ?>" class="like-btn <?= $userLiked ? 'liked' : 'not-liked' ?>" id="likeBtn">
                         <i class="fas fa-heart"></i> <?= $comment['like_count'] ?>
                     </a>
 
@@ -284,6 +284,8 @@ require_once '../includes/header.php';
         'imageFadeDuration': 200,
         'resizeDuration': 200
     });
+
+    // animation du like...
 </script>
 
 <?php require_once '../includes/footer.php'; ?>

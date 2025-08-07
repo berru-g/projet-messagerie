@@ -9,34 +9,16 @@ if (!isLoggedIn()) {
 
 $userId = intval($_SESSION['user_id']);
 $user = getUserById($userId);
-if (!$user) {
+if (!$user)
     die("Utilisateur non trouvé");
-}
-
-// Récupère les cryptos de l'utilisateur pour préremplir le wallet
-$userCryptos = [];
-try {
-    $stmt = getDB()->prepare("SELECT * FROM user_crypto_holdings WHERE user_id = ?");
-    $stmt->execute([$userId]);
-    $userCryptos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Vous pouvez logger l'erreur sans l'afficher à l'utilisateur
-    error_log("Erreur DB: " . $e->getMessage());
-}
 
 require_once '../includes/header.php';
 ?>
 
-<script>
-// Déclaration ESSENTIELLE
-const userId = <?= $userId ?>; 
-const userCryptos = <?= json_encode($userCryptos) ?>;
-</script>
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap');
     * {
-        border: 1px solid #9f7bff;
+        border: 1px dashed #9f7bff;
     }
     .wallet {
         max-width: 300px;
@@ -279,6 +261,15 @@ const userCryptos = <?= json_encode($userCryptos) ?>;
         <div id="wallet-holdings" class="holdings-container"></div>
     </section>
 
+    <script>
+        // Déclaration debug de userId
+        const userId = <?= json_encode($_SESSION['user_id'] ?? 0) ?>;
+
+        // Vérification de la connexion
+        if (!userId || userId <= 0) {
+            window.location.href = '/login.php';
+        }
+    </script>
 
     <!-- Chart 
      <script src="<?= BASE_URL ?>/assets/js/wallet.js"></script>-->
