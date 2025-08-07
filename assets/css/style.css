@@ -18,12 +18,12 @@
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
+/* refonte du 7/8 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  border: 1px solid blue;
+  border: 1px solid #2575fc;
 }
 
 body {
@@ -629,7 +629,7 @@ h3 {
 }
 
 .reply-form .btn-reply:hover {
-  background-color: #0056b3;
+  background-color: var(--accent-color);
 }
 @media (max-width: 768px) {
   body {
@@ -641,7 +641,7 @@ h3 {
     padding: 0 15px;
   }
 }
-  /* tentative de rs*/
+  /* fin de la refonte du 7/8 */
 
 
 
