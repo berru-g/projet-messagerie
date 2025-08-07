@@ -1069,6 +1069,12 @@ input {
   padding: 10px 10px;
 }
 
+.img-thumbnail {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
 .upload-label i {
   font-size: 40px;
   margin-bottom: 10px;
