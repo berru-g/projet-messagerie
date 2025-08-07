@@ -77,7 +77,7 @@ require_once __DIR__ . '/functions.php';
   "step": [
     {
       "@type": "HowToStep",
-      "text": "Connectez-vous à votre compte Agora Social Feed."
+      "text": "Connectez-vous gratuitement à Agora Social Feed."
     },
     {
       "@type": "HowToStep",
@@ -95,7 +95,7 @@ require_once __DIR__ . '/functions.php';
   "tool": [
     {
       "@type": "HowToTool",
-      "name": "Module Data Visualizer"
+      "name": "Data Visualizer"
     }
   ],
   "totalTime": "PT1M",
