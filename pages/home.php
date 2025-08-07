@@ -286,7 +286,7 @@ require_once '../includes/header.php';
         'resizeDuration': 200
     });
 
-    // anim au like
+    /* anim au like
     document.addEventListener('DOMContentLoaded', () => {
         const likeBtn = document.getElementById('likeBtn');
 
@@ -314,7 +314,7 @@ require_once '../includes/header.php';
                 floatingHeart.remove();
             }, 1000);
         });
-    });
+    });*/
 
 </script>
 

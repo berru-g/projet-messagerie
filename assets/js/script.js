@@ -9,13 +9,29 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             const url = this.getAttribute('href');
 
+            // ❤️ Animation ici (copié depuis le script précédent)
+            const rect = this.getBoundingClientRect();
+            const floatingHeart = document.createElement('i');
+            floatingHeart.classList.add('fas', 'fa-heart', 'floating-heart');
+            floatingHeart.style.position = 'fixed';
+            floatingHeart.style.left = `${rect.left + rect.width / 2}px`;
+            floatingHeart.style.top = `${rect.top}px`;
+            document.body.appendChild(floatingHeart);
+            setTimeout(() => {
+                floatingHeart.remove();
+            }, 1000);
+
+            // Puis le fetch + reload après un petit délai
             fetch(url)
                 .then(response => response.text())
                 .then(() => {
-                    window.location.reload();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800); // assez pour laisser le cœur voler
                 });
         });
     });
+
 });
 
 // Gestion du partage

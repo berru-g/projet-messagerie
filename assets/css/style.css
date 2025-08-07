@@ -166,11 +166,10 @@ h3 {
 
 .logout {
   border: 1px solid var(--error-color);
-  border-radius: 8px;
-  color: white;
+  color: var(--error-color);
 }
 .logout i {
-  color: var(--error-color);
+  fill: var(--error-color);
 }
 .dropdown-content i {
   margin-right: 12px;
