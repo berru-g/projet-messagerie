@@ -1,4 +1,3 @@
-/* Modern CSS with your color scheme */
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700|Poppins:400,500,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
@@ -20,22 +19,25 @@
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Base Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  border: 1px solid grey;
+  border: 1px solid blue;
 }
 
 body {
   padding-top: 80px;
-  background-color: var(--shadow-color);
+  background-color:#f1f1f1 ;
   color: var(--text-color);
   font-family: 'Poppins', sans-serif;
   line-height: 1.6;
 }
-
+.comments {
+  display: block;
+  margin: 0 auto;
+  max-width: 600px;
+}
 h1 {
   font-size: 0.3rem;
 }
@@ -162,6 +164,14 @@ h3 {
   color: white;
 }
 
+.logout {
+  border: 1px solid var(--error-color);
+  border-radius: 8px;
+  color: white;
+}
+.logout i {
+  color: var(--error-color);
+}
 .dropdown-content i {
   margin-right: 12px;
   width: 20px;
@@ -492,8 +502,8 @@ h3 {
 /* Reset des styles conflictuels */
 .comment img,
 .comment video {
-  margin: 0 auto;
-  max-width: 200px !important;
+  margin: 0 auto !important;
+  max-width: 100% !important;
   height: auto !important;
   border-radius: 12px;
 }
@@ -503,6 +513,62 @@ h3 {
   text-decoration: none;
   color: var(--primary-color);
 }
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.like-btn,
+.like-btn i {
+  background: none;
+  border: none;
+  color: var(--titre-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  text-decoration: none;
+}
+
+.like-btn:hover {
+  opacity: 0.8;
+}
+
+.like-btn.liked {
+  color: var(--error-color);
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+
+/* Effet de cœur qui s'envole */
+.floating-heart {
+  position: absolute;
+  font-size: 4rem;
+  color: var(--error-color);
+  animation: floatHeart 1s ease forwards;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes floatHeart {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(6);
+  }
+}
+
 
 /* Styles pour les réponses aux commentaires */
 .reply-form {
@@ -565,144 +631,17 @@ h3 {
 .reply-form .btn-reply:hover {
   background-color: #0056b3;
 }
-
-/* PAGES - UPLOAD de fichiers */
-.file-upload {
-  margin-bottom: 15px;
-}
-
-.file-upload label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--titre-color);
-}
-
-.file-upload input[type="file"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
-  background: var(--input-background);
-}
-
-.file-preview {
-  margin-top: 10px;
-  display: none;
-}
-
-.file-preview img {
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 8px;
-  margin-right: 10px;
-  object-fit: contain;
-}
-
-/* Bouton de réponse */
-.reply-btn {
-  background: none;
-  border: 1px solid var(--border-color);
-  color: var(--titre-color);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.reply-btn:hover {
-  transform: translateY(-2px);
-
-}
-
-.reply {
-  padding: 10px;
-}
-
-.reply-form {
-  padding: 10px;
-}
-
-/* Animation pour les nouveaux commentaires */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (max-width: 768px) {
+  body {
+    padding: 0 20px;
   }
 }
-
-.new-comment {
-  animation: fadeInUp 0.5s ease-out;
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 15px;
+  }
 }
-
-/* Style pour les commentaires épinglés */
-.comment.pinned {
-  border-left: 4px solid var(--accent-color);
-  background: rgba(var(--accent-color), 0.05);
-}
-
-.pin-indicator {
-  color: var(--accent-color);
-  margin-left: 8px;
-  font-size: 0.8em;
-}
-
-
-.username {
-  font-weight: 600;
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-}
-
-.username::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--primary-color);
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.date {
-  font-size: 0.8rem;
-  color: var(--titre-color);
-}
-
-.comment-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.like-btn,
-.like-btn i {
-  background: none;
-  border: none;
-  color: var(--titre-color);
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: color 0.3s ease;
-  display: flex;
-  align-items: center;
-  padding: 6px 12px;
-  text-decoration: none;
-}
-
-.like-btn:hover {
-  opacity: 0.8;
-}
-
-.like-btn.liked {
-  color: var(--error-color);
-}
+  /* tentative de rs*/
 
 
 

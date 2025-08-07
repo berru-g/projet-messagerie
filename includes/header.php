@@ -130,7 +130,7 @@ require_once __DIR__ . '/functions.php';
               <?= htmlspecialchars($user['username']) ?>
             </a>
             <a href="<?= BASE_URL ?>/pages/change-password.php"><i class="fas fa-key"></i> Changer mot de passe</a>
-            <a href="<?= BASE_URL ?>/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            <a href="<?= BASE_URL ?>/pages/logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
           <?php endif; ?>
         </div>
       </div>
