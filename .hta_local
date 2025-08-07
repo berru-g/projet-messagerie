@@ -1,6 +1,9 @@
 RewriteEngine On
-
-RewriteBase /projet-messagerie/
+# pour le switch host/local, 
+# 1 changer les log de la bdd dans db et db_config, 
+# 2 changer le chemin dans config
+# 3 changer de htacces
+RewriteBase /reseau-social/
 
 # Rediriger vers le dossier pages
 
