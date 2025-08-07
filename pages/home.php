@@ -273,7 +273,7 @@ require_once '../includes/header.php';
     </div>
 
 </div>
-
+<script src="<?= BASE_URL ?>/assets/js/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <script>
 
