@@ -2,7 +2,8 @@
   "fr": [
     "fdp", "enculé", "suicide", "meurs", "haine", "nazisme", "nazi",
     "putain", "salope", "merde", "insulte", "violence", "raciste",
-    " con ", "meurtre", "pedo", "sex", "porn", "viol", "hack"
+    " con ", "meurtre", "pedo", "sex", "porn", "viol", "hack", "spam", 
+    "injection SQL", "xss", "honeypot", "shadow", "darknet", "market"
   ],
   "en": [
     "fuck", "bitch", "kill yourself", "die", "hate", "nazi", "nazism",
@@ -33,3 +34,4 @@
     "belediging", "geweld", "racist", "moord"
   ]
 }
+
