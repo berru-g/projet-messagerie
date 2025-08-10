@@ -166,9 +166,10 @@ h3 {
 .logout {
   border: 1px solid var(--error-color);
   color: var(--error-color);
+  border-radius: 8px;
 }
 .logout i {
-  fill: var(--error-color);
+  color: var(--error-color); /*fill marche po*/
 }
 .dropdown-content i {
   margin-right: 12px;
