@@ -224,7 +224,7 @@ require_once '../includes/header.php';
                 <a href="change-password.php" class="btn-primary"><i class="fas fa-key"></i> Changer le mot de passe</a>
                 <?php if (
                     isset($user['username'], $user['email']) &&
-                    $user['username'] === 'berru' &&
+                    $user['username'] === 'admin' &&
                     $user['email'] === 'g.leberruyer@gmail.com'
                 ): ?>
                     <a href="<?= BASE_URL ?>/wallet/wallet.php" class="btn-ghost"><i class="fas fa-chart-pie"></i> Wallet all in
