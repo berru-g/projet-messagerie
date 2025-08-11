@@ -1,8 +1,8 @@
 <?php
 // Configuration de base
 session_start();
-define('BASE_URL', 'https://bisque-mallard-923914.hostingersite.com');
-define('SITE_NAME', 'Agora');
+define('BASE_URL', 'https://agora-dataviz.com');
+define('SITE_NAME', 'AgoraDataViz');
 
 // Détecte les tentatives d'injection dans les URLs
 if (preg_match('/[\'"]|(--)|(\/\*)|(\\\\)/i', $_SERVER['QUERY_STRING'])) {

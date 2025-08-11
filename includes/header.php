@@ -12,28 +12,28 @@ require_once __DIR__ . '/functions.php';
 
   <link rel="icon" href="<?= BASE_URL ?>/assets/img/agora-logo.png" type="image/x-icon">
   <meta name="description"
-    content="Agora Social Feed est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
+    content="agora data viz est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
   <meta name="keywords"
     content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="Agora Social Feed">
+  <meta name="author" content="agora data viz">
 
   <!-- Open Graph pour Facebook / LinkedIn -->
-  <meta property="og:title" content="Agora Social Feed – Partage intelligent de fichiers et données">
+  <meta property="og:title" content="agora data viz – Partage intelligent de fichiers et données">
   <meta property="og:description"
     content="Réseau social minimaliste. Partagez, visualisez et exportez vos fichiers CSV, Excel, JSON et PDF. Outil collaboratif tout-en-un.">
   <meta property="og:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
-  <meta property="og:url" content="https://example.com">
+  <meta property="og:url" content="https://agora-dataviz.com">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Agora Social Feed – Partage et visualisation de fichiers CSV/Excel">
+  <meta name="twitter:title" content="agora data viz – Partage et visualisation de fichiers CSV/Excel">
   <meta name="twitter:description"
-    content="Transformez vos données avec Agora Social Feed. Partagez, visualisez et exportez tous types de fichiers.">
+    content="Transformez vos données avec agora data viz. Partagez, visualisez et exportez tous types de fichiers.">
   <meta name="twitter:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://example.com">
+  <link rel="canonical" href="https://agora-dataviz.com">
 
   <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> revoir tout le css bootstrap c'est vrt de la grosse merde-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -55,8 +55,8 @@ require_once __DIR__ . '/functions.php';
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Agora Social Feed",
-  "url": "https://example.com",
+  "name": "agora data viz",
+  "url": "https://agora-dataviz.com",
   "description": "Plateforme de partage et de visualisation de fichiers CSV, JSON, Excel, avec export PDF/PNG et messagerie collaborative.",
   "applicationCategory": "BusinessApplication",
   "browserRequirements": "Requires HTML5",
@@ -73,11 +73,11 @@ require_once __DIR__ . '/functions.php';
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Comment utiliser Agora Social Feed pour transformer un fichier CSV en graphique PDF ?",
+  "name": "Comment utiliser agora data viz pour transformer un fichier CSV en graphique PDF ?",
   "step": [
     {
       "@type": "HowToStep",
-      "text": "Connectez-vous gratuitement à Agora Social Feed."
+      "text": "Connectez-vous gratuitement à agora data viz."
     },
     {
       "@type": "HowToStep",
@@ -99,7 +99,7 @@ require_once __DIR__ . '/functions.php';
     }
   ],
   "totalTime": "PT1M",
-  "image": "https://example.com/assets/howto-preview.png"
+  "image": "https://agora-dataviz.com/assets/howto-preview.png"
 }
 </script>
 
