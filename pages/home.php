@@ -228,6 +228,7 @@ require_once '../includes/header.php';
             height: 50px;
             padding: 10px 15px;
             font-size: 14px;
+            font-family: inherit;
             border-radius: 24px;
             border: 1px solid #ccc;
             background: #f9f9f9;

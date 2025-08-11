@@ -33,9 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-require_once '../includes/header.php';
 ?>
-
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 <link
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   rel="stylesheet"
@@ -148,6 +147,7 @@ require_once '../includes/header.php';
   .card {
     background: white;
     border-radius: 18px;
+    border: 1px solid white;
     padding: 30px 25px 35px;
     box-shadow:
       0 2px 8px rgba(156, 141, 234, 0.12),
@@ -194,7 +194,7 @@ require_once '../includes/header.php';
   }
   .card i {
     font-size: 40px;
-    color: #9c8dea;
+    color: #fff;
     margin-bottom: 18px;
     position: relative;
     z-index: 1;
@@ -242,7 +242,7 @@ require_once '../includes/header.php';
       Bienvenue sur <strong>Agora</strong> Social Feed
     </h1>
     <p>
-      Agora Social Feed contient un Réseau social minimaliste et une plateforme
+      Ce lieu contient un Réseau social minimaliste et une plateforme
       de partage et visualisation graphique de fichiers CSV, Excel et Json.
     </p>
     <a href="<?= BASE_URL ?>/pages/register.php"><button class="btn-primary" aria-label="Essayer Agora Social Feed maintenant">
@@ -260,8 +260,7 @@ require_once '../includes/header.php';
       <i class="fas fa-chart-line"></i>
       <h3 data-i18n-card-title>Features</h3>
       <p data-i18n-card-text>
-        Agora Social Feed contient un Réseau social minimaliste et une plateforme
-        de partage et visualisation graphique de fichiers CSV, Excel et Json.
+        Social Feed - Post/comment/like + Excel & Csv to Chart/PDF + Data Visualizer + Public Data
       </p>
     </div>
 
@@ -269,8 +268,7 @@ require_once '../includes/header.php';
       <i class="fas fa-user-secret"></i>
       <h3 data-i18n-card-title>Anonyme</h3>
       <p data-i18n-card-text>
-        Inscription gratuite. Aucun mail vérifié requis. Crée un compte en quelques
-        secondes, sans friction ni identité imposée.
+        Inscription gratuite. Aucun mail vérifié requis, sans friction ni identité imposée. Base de données sécurisé.
       </p>
     </div>
 
@@ -286,8 +284,8 @@ require_once '../includes/header.php';
       <i class="fas fa-flask"></i>
       <h3 data-i18n-card-title>En test, avec toi</h3>
       <p data-i18n-card-text>
-        Agora est un prototype. Tes retours sont les bienvenus pour co-construire cet
-        espace suivant les besoins de chacun.
+        Agora est un MVP ou prototype. Voss retours sont les bienvenus pour co-construire cet
+        espace suivant vos besoins.
       </p>
     </div>
   </div>
