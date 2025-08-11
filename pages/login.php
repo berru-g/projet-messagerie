@@ -239,7 +239,7 @@ require_once '../includes/header.php';
       loading="lazy"
     />-->
     <h1>
-      Bienvenue sur <strong>Agora</strong> Social Feed
+      Bienvenue sur <strong><?= SITE_NAME ?></strong> Social Feed
     </h1>
     <p>
       Ce lieu contient un Réseau social minimaliste et une plateforme

@@ -1,6 +1,6 @@
 # Template PHP/MySQL 
 
-Plateforme de partage de fichiers avec système de messagerie, authentification, posts et likes, partage de fichier ( csv, google sheet, json, png, jpg et pdf ). 
+Plateforme de partage de fichiers avec reseau social, authentification, posts et likes, partage de fichier ( csv, google sheet, json, png, jpg et pdf ). 
 
 **Objectif:** 
 *Partager et visualiser des data inaccessible par manque d'API.*
@@ -71,4 +71,4 @@ MIT License - Libre d'utilisation et modification
 
 Les Améliorations sont les bienvenues ! Ouvrez une issue pour discuter. Merci du soutient. 
 
-- 18/25 : V1.2 Développé avec ❤️ par berru-g et deepseek 2025
+- 11/08/25 : V_1.4.1 Développé avec ❤️ par berru-g et deepseek 2025

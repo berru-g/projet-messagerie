@@ -12,9 +12,9 @@ require_once __DIR__ . '/functions.php';
 
   <link rel="icon" href="<?= BASE_URL ?>/assets/img/agora-logo.png" type="image/x-icon">
   <meta name="description"
-    content="agora data viz est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et messagerie communautaire.">
+    content="agora data viz est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et un réseau social.">
   <meta name="keywords"
-    content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, messagerie collaborative">
+    content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, réseau social collaborative">
   <meta name="robots" content="index, follow">
   <meta name="author" content="agora data viz">
 
@@ -99,7 +99,7 @@ require_once __DIR__ . '/functions.php';
     }
   ],
   "totalTime": "PT1M",
-  "image": "https://agora-dataviz.com/assets/howto-preview.png"
+  "image": "https://agora-dataviz.com/assets/img/agora-logo.png"
 }
 </script>
 

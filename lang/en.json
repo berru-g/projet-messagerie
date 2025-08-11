@@ -1,53 +1,13 @@
 {
-  "title": "Welcome to Agora Social Feed",
-  "cards": [
-    {
-      "icon": "user-secret",
-      "color": "purple",
-      "title": "Anonymous registration",
-      "text": "No verified email required. Create an account in seconds, with no friction and no forced identity."
-    },
-    {
-      "icon": "clock",
-      "color": "blue",
-      "title": "Chronological feed",
-      "text": "Posts are shown in real-time order, with no algorithm or hidden sorting. What you see is what was posted."
-    },
-    {
-      "icon": "bolt",
-      "color": "orange",
-      "title": "No infinite scroll",
-      "text": "Browse posts at your own pace, with no addictive loop. A healthy, mindful experience."
-    },
-    {
-      "icon": "eye-slash",
-      "color": "red",
-      "title": "No tracking, no ads",
-      "text": "Agora doesn’t collect your data and never pushes consumption. No advertising, ever."
-    },
-    {
-      "icon": "user-circle",
-      "color": "green",
-      "title": "Optional mini profile",
-      "text": "You can add a photo, a link to your website, and view your own stats (likes, comments, shared images)."
-    },
-    {
-      "icon": "heart",
-      "color": "yellow",
-      "title": "Respect is mandatory",
-      "text": "Agora is a kind space. Any harmful or toxic behavior will result in an immediate ban."
-    },
-    {
-      "icon": "flask",
-      "color": "purple",
-      "title": "In testing, with you",
-      "text": "Agora is a prototype in evolution. Your feedback is welcome to co-create a more human space."
-    },
-    {
-      "icon": "lightbulb",
-      "color": "green",
-      "title": "Why Agora?",
-      "text": "Because you deserve a space for expression, free of filters and influence. Simple. Human. Authentic."
-    }
-  ]
+  "heroTitle": "Welcome to <strong>Agora</strong> Social Feed",
+  "heroText": "This space contains a minimalist Social Network and a platform for sharing and graphical visualization of CSV, Excel and Json files.",
+  "heroButton": "Try now",
+  "card1Title": "Features",
+  "card1Text": "Social Feed - Post/comment/like + Excel & Csv to Chart/PDF + Data Visualizer + Public Data",
+  "card2Title": "Anonymous",
+  "card2Text": "Free registration. No email verification required, frictionless with no imposed identity. Secure database.",
+  "card3Title": "No tracking, no ads",
+  "card3Text": "No data collection or exploitation. No ads or notifications.",
+  "card4Title": "Testing with you",
+  "card4Text": "Agora is an MVP or prototype. Your feedback is welcome to co-build this space according to your needs."
 }

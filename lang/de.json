@@ -1,53 +1,13 @@
 {
-  "title": "Willkommen bei Agora",
-  "cards": [
-    {
-      "icon": "user-secret",
-      "color": "purple",
-      "title": "Anonyme Anmeldung",
-      "text": "Keine verifizierte E‑Mail erforderlich. Erstelle in Sekunden ein Konto – ohne Zwang zur Identität."
-    },
-    {
-      "icon": "clock",
-      "color": "blue",
-      "title": "Chronologischer Feed",
-      "text": "Beiträge werden in Echtzeit angezeigt, ohne Algorithmus oder versteckte Sortierung. Was du siehst, ist was gepostet wurde."
-    },
-    {
-      "icon": "bolt",
-      "color": "orange",
-      "title": "Kein Endlos‑Scroll",
-      "text": "Durchsuche Beiträge in deinem Tempo, ohne süchtig machende Schleifen. Eine gesunde, bewusste Erfahrung."
-    },
-    {
-      "icon": "eye-slash",
-      "color": "red",
-      "title": "Kein Tracking, keine Werbung",
-      "text": "Agora sammelt keine Daten und fördert keinen Konsum. Du wirst hier niemals Werbung sehen."
-    },
-    {
-      "icon": "user-circle",
-      "color": "green",
-      "title": "Optionales Mini‑Profil",
-      "text": "Du kannst Foto hinzufügen, Link zu deiner Webseite und deine Statistiken ansehen (Likes, Kommentare, geteilte Bilder)."
-    },
-    {
-      "icon": "heart",
-      "color": "yellow",
-      "title": "Respekt ist Pflicht",
-      "text": "Agora ist ein freundlicher Raum. Jede schädliche oder toxische Handlung führt zur sofortigen Sperre."
-    },
-    {
-      "icon": "flask",
-      "color": "purple",
-      "title": "Im Test – mit dir",
-      "text": "Agora ist ein sich entwickelnder Prototyp. Dein Feedback ist willkommen, um einen menschlicheren Raum mitzugestalten."
-    },
-    {
-      "icon": "lightbulb",
-      "color": "green",
-      "title": "Warum Agora?",
-      "text": "Weil du einen Ort zur freien Meinungsäußerung ohne Filter und Einfluss verdienst. Einfach. Menschlich. Authentisch."
-    }
-  ]
+  "heroTitle": "Willkommen bei <strong>Agora</strong> Social Feed",
+  "heroText": "Dieser Bereich enthält ein minimalistisches soziales Netzwerk und eine Plattform zum Teilen und grafischen Visualisieren von CSV-, Excel- und Json-Dateien.",
+  "heroButton": "Jetzt testen",
+  "card1Title": "Funktionen",
+  "card1Text": "Social Feed - Posten/Kommentieren/Liken + Excel & CSV zu Diagrammen/PDF + Datenvisualisierer + Öffentliche Daten",
+  "card2Title": "Anonym",
+  "card2Text": "Kostenlose Registrierung. Keine E-Mail-Verifizierung erforderlich, reibungslos ohne aufgezwungene Identität. Sichere Datenbank.",
+  "card3Title": "Kein Tracking, keine Werbung",
+  "card3Text": "Keine Datensammlung oder -ausbeutung. Keine Werbung oder Benachrichtigungen.",
+  "card4Title": "Testen mit Ihnen",
+  "card4Text": "Agora ist ein MVP oder Prototyp. Ihr Feedback ist willkommen, um diesen Raum nach Ihren Bedürfnissen mitzugestalten."
 }

@@ -2,7 +2,7 @@
 // Configuration de base
 session_start();
 define('BASE_URL', 'https://agora-dataviz.com');
-define('SITE_NAME', 'AgoraDataViz');
+define('SITE_NAME', 'Agora DataViz');
 
 // Détecte les tentatives d'injection dans les URLs
 if (preg_match('/[\'"]|(--)|(\/\*)|(\\\\)/i', $_SERVER['QUERY_STRING'])) {
