@@ -539,6 +539,9 @@ h3 {
   color: var(--error-color);
   animation: pop 0.3s ease;
 }
+.like-btn.liked i {
+  color: var(--error-color);
+}
 
 @keyframes pop {
   0% { transform: scale(1); }
