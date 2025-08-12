@@ -12,9 +12,9 @@ require_once __DIR__ . '/functions.php';
 
   <link rel="icon" href="<?= BASE_URL ?>/assets/img/agora-logo.png" type="image/x-icon">
   <meta name="description"
-    content="agora data viz est une plateforme tout-en-un de partage de fichiers privés ou publics, avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et un réseau social.">
+    content="agora data viz est une plateforme de partage de fichiers, convertisseur de format,  avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et un réseau social.">
   <meta name="keywords"
-    content="partage fichier, csv to pdf, data visualizer, excel, json, export, plateforme collaboratif, outil data, mur de partage, réseau social collaborative">
+    content="convert csv json, csv to pdf, json to mindmap, json to csv, csv to json, csv to pdf, csv to png, xlxs to chart, JSON Mind Mapper, json to map, data visualizer, excel to chart,  Data Enthusiasts, plateforme collaboratif, outil data, réseau social">
   <meta name="robots" content="index, follow">
   <meta name="author" content="agora data viz">
 
@@ -28,7 +28,7 @@ require_once __DIR__ . '/functions.php';
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="agora data viz – Partage et visualisation de fichiers CSV/Excel">
+  <meta name="twitter:title" content="agora dataviz – Partage et visualisation de fichiers JSON/CSV/Excel">
   <meta name="twitter:description"
     content="Transformez vos données avec agora data viz. Partagez, visualisez et exportez tous types de fichiers.">
   <meta name="twitter:image" content="<?= BASE_URL ?>/assets/img/agora-logo.png">
@@ -57,7 +57,7 @@ require_once __DIR__ . '/functions.php';
   "@type": "WebApplication",
   "name": "agora data viz",
   "url": "https://agora-dataviz.com",
-  "description": "Plateforme de partage et de visualisation de fichiers CSV, JSON, Excel, avec export PDF/PNG et messagerie collaborative.",
+  "description": "Plateforme de partage et de visualisation de fichiers CSV, JSON, Excel, avec export PDF/PNG et réseau social intégré.",
   "applicationCategory": "BusinessApplication",
   "browserRequirements": "Requires HTML5",
   "operatingSystem": "All",
@@ -73,7 +73,7 @@ require_once __DIR__ . '/functions.php';
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Comment utiliser agora data viz pour transformer un fichier CSV en graphique PDF ?",
+  "name": "Comment utiliser agora data viz pour transformer un fichier CSV en graphique et PDF ?",
   "step": [
     {
       "@type": "HowToStep",
