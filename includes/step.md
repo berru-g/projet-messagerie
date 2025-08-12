@@ -76,10 +76,15 @@
 
 ### 🌍 Nom de domaine & hébergement
 - 🔜 Acheter ton nom de domaine (ex. AgoraSocial.com ou variante)
-- 🔜 Configurer DNS → A record pour ton serveur
-- 🔜 Installer SSL (via Let’s Encrypt ou Certbot)
-- 🔜 Forcer HTTPS sur tout le site
+- 🔜 Configurer DNS → A record pour ton serveur *FAIT AUTO PAR HOSTINGER*
+- 🔜 Installer SSL (via Let’s Encrypt ou Certbot) *Verif  où pointe ton vscode "git remote -v" puis ajouter ta clef ssh, generer "ssh-keygen -t ed25519"puis ajouter ()*
+- 🔜 Forcer HTTPS sur tout le site *FAIT AUTO PAR HOSTINGER*
 
+#### Gérer les permissions aux fichiers :
+ - .htaccess → 644
+ - Fichiers de config → 600
+ - Dossiers → 755
+ 
 ---
 
 ### 📈 Structure & SEO de base
