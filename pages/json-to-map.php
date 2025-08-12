@@ -12,16 +12,10 @@ $user = getUserById($_SESSION['user_id']);
 require_once '../includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Mind Mapper</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
     <style>
-        /* Variables CSS */
         :root {
             --primary: #ab9ff2;
             --primary-dark: #8a7de0;
@@ -34,77 +28,96 @@ require_once '../includes/header.php';
             --card-bg: #ffffff;
             --border: #e0e0e0;
             --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --sidebar-width: 280px;
         }
 
-    
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* Typographie */
-        h2, h3 {
-            color: var(--primary);
-            margin-top: 0;
-        }
-
-        h2 {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        /* Layout */
-        .flex-row {
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .flex-col {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        /* Cartes */
-        .card {
+        /* Header */
+        .top {
             background: var(--card-bg);
-            border-radius: 8px;
             box-shadow: var(--shadow);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top h1 {
+            color: var(--primary);
+            text-align: center;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        /* Layout Principal */
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
             padding: 20px;
-            margin-bottom: 20px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            position: fixed;
+            height: calc(100vh - 60px);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            left: 10px;
+            top: 70px;
+            z-index: 101;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        /* Contenu Principal */
+        .content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            transition: margin 0.3s ease;
         }
 
         /* Upload Zone */
         .upload-zone {
             border: 2px dashed var(--primary);
             border-radius: 8px;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
             background: var(--card-bg);
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 20px auto;
+            transition: all 0.3s;
             max-width: 500px;
-        }
-
-        .upload-zone:hover {
-            background: rgba(171, 159, 242, 0.05);
-            border-color: var(--primary-dark);
-        }
-
-        .upload-zone i {
-            color: var(--primary);
-            font-size: 3rem;
-            margin-bottom: 15px;
+            margin: 20px auto;
         }
 
         /* Mind Map Container */
         #mindMap {
             width: 100%;
-            height: 600px;
+            height: calc(100vh - 180px);
+            min-height: 500px;
             background: var(--card-bg);
             border-radius: 8px;
             box-shadow: var(--shadow);
@@ -112,41 +125,42 @@ require_once '../includes/header.php';
 
         /* Outils */
         .tool-section {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         .tool-section h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
+            font-size: 0.95rem;
             color: var(--text);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .color-palette {
-            display: flex;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
         }
 
         .color-option {
-            width: 30px;
+            width: 100%;
             height: 30px;
-            border-radius: 50%;
+            border-radius: 4px;
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.2s;
         }
 
-        .color-option:hover, .color-option.active {
+        .color-option.active {
             border-color: var(--text);
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         select, button {
             width: 100%;
-            padding: 10px;
+            padding: 10px 12px;
             border-radius: 6px;
             border: 1px solid var(--border);
             background: var(--card-bg);
@@ -176,92 +190,117 @@ require_once '../includes/header.php';
             background: var(--accent);
         }
 
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 100;
+                height: calc(100vh - 60px);
+                top: 60px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+
         /* Utilitaires */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-3 { margin-top: 1rem; }
-        .mb-3 { margin-bottom: 1rem; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
+        .hidden { display: none; }
+        .text-center { text-align: center; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2><i class="fas fa-project-diagram"></i> JSON Mind Mapper</h2>
-        
-        <div class="upload-zone" id="dropZone">
-            <i class="fas fa-file-upload"></i>
-            <p><strong>Déposez un fichier JSON ici</strong></p>
-            <p class="text-light">Ou cliquez pour sélectionner</p>
-            <input type="file" id="jsonUpload" accept=".json" class="hidden">
-        </div>
+    <div class="top">
+        <h1><i class="fas fa-project-diagram"></i> JSON Mind Mapper</h1>
+    </div>
 
-        <div id="mindMapContainer" class="hidden">
-            <div class="card">
-                <div class="flex-row">
-                    <div class="flex-col">
-                        <div class="tool-section">
-                            <h3><i class="fas fa-palette"></i> Couleur</h3>
-                            <div class="color-palette">
-                                <div class="color-option active" style="background: var(--primary);" data-color="var(--primary)"></div>
-                                <div class="color-option" style="background: var(--accent);" data-color="var(--accent)"></div>
-                                <div class="color-option" style="background: var(--success);" data-color="var(--success)"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-col">
-                        <div class="tool-section">
-                            <h3><i class="fas fa-shapes"></i> Forme</h3>
-                            <select id="nodeShape">
-                                <option value="box">Boîte</option>
-                                <option value="ellipse">Ellipse</option>
-                                <option value="diamond">Losange</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-col">
-                        <div class="tool-section">
-                            <h3><i class="fas fa-project-diagram"></i> Layout</h3>
-                            <select id="layoutType">
-                                <option value="hierarchical">Hiérarchique</option>
-                                <option value="standard">Standard</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-col">
-                        <div class="tool-section">
-                            <h3><i class="fas fa-arrows-alt"></i> Direction</h3>
-                            <select id="layoutDirection">
-                                <option value="UD">Haut-Bas</option>
-                                <option value="LR">Gauche-Droite</option>
-                            </select>
-                        </div>
-                    </div>
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="tool-section">
+                <h3><i class="fas fa-palette"></i> Couleur Principale</h3>
+                <div class="color-palette">
+                    <div class="color-option active" style="background: var(--primary);" data-color="var(--primary)"></div>
+                    <div class="color-option" style="background: var(--accent);" data-color="var(--accent)"></div>
+                    <div class="color-option" style="background: var(--success);" data-color="var(--success)"></div>
+                    <div class="color-option" style="background: #ffd97d;" data-color="#ffd97d"></div>
+                    <div class="color-option" style="background: #faaf72;" data-color="#faaf72"></div>
+                    <div class="color-option" style="background: #ee6055;" data-color="#ee6055"></div>
                 </div>
             </div>
 
-            <div id="mindMap"></div>
-            
-            <div class="text-center mt-3">
+            <div class="tool-section">
+                <h3><i class="fas fa-shapes"></i> Forme des Nodes</h3>
+                <select id="nodeShape">
+                    <option value="box">Boîte</option>
+                    <option value="ellipse">Ellipse</option>
+                    <option value="diamond">Losange</option>
+                    <option value="circle">Cercle</option>
+                </select>
+            </div>
+
+            <div class="tool-section">
+                <h3><i class="fas fa-project-diagram"></i> Type de Layout</h3>
+                <select id="layoutType">
+                    <option value="hierarchical">Hiérarchique</option>
+                    <option value="standard">Standard</option>
+                </select>
+            </div>
+
+            <div class="tool-section">
+                <h3><i class="fas fa-arrows-alt"></i> Direction</h3>
+                <select id="layoutDirection">
+                    <option value="UD">Haut-Bas</option>
+                    <option value="LR">Gauche-Droite</option>
+                    <option value="DU">Bas-Haut</option>
+                    <option value="RL">Droite-Gauche</option>
+                </select>
+            </div>
+
+            <div class="tool-section">
+                <h3><i class="fas fa-cog"></i> Options</h3>
                 <button id="resetBtn">
                     <i class="fas fa-redo"></i> Réinitialiser
                 </button>
-                <button id="exportBtn" class="secondary">
+                <button id="exportBtn" class="secondary mt-2">
                     <i class="fas fa-download"></i> Exporter
                 </button>
+            </div>
+        </div>
+
+        <!-- Contenu Principal -->
+        <div class="content" id="mainContent">
+            <div class="upload-zone" id="dropZone">
+                <i class="fas fa-file-upload fa-3x"></i>
+                <p><strong>Déposez un fichier JSON ici</strong></p>
+                <p class="text-light">Ou cliquez pour sélectionner</p>
+                <input type="file" id="jsonUpload" accept=".json" class="hidden">
+            </div>
+
+            <div id="mindMapContainer" class="hidden">
+                <div id="mindMap"></div>
             </div>
         </div>
     </div>
 
     <script>
+      // Script pour le toggle de la sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
         // [Le même JavaScript que dans la version précédente]
         // (Conserve toutes les fonctionnalités existantes)
         let network;
