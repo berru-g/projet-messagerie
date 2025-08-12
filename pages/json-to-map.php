@@ -43,20 +43,18 @@ require_once '../includes/header.php';
         }
 
         /* Header */
-        .top {
-            background: var(--card-bg);
-            box-shadow: var(--shadow);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        .data-visualizer-header {
+            text-align: center;
+            padding: 20px 0;
+            background: white;
+            margin-top: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+             z-index: 10;
         }
 
-        .top h2 {
-            color: var(--primary);
-            text-align: center;
-            margin: 0;
-            font-size: 1.5rem;
+        .data-visualizer-header h2 {
+            font-weight: 700;
+            color: #fff;
         }
 
         /* Layout Principal */
@@ -110,7 +108,7 @@ require_once '../includes/header.php';
             cursor: pointer;
             transition: all 0.3s;
             background: white;
-            max-width: 250px;
+            max-width: 350px;
             margin: 0 auto;
             box-shadow: var(--card-shadow);
         }
@@ -239,7 +237,7 @@ require_once '../includes/header.php';
 </head>
 
 <body>
-    <div class="top">
+    <div class="data-visualizer-header">
         <h2><i class="fas fa-project-diagram"></i> JSON Mind Mapper</h2>
     </div>
 
@@ -568,4 +566,4 @@ require_once '../includes/header.php';
         }
     </script>
 
-    <?php require_once '../includes/footer.php'; ?>
+    
