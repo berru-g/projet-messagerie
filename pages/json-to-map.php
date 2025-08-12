@@ -3,8 +3,8 @@ require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
 if (!isLoggedIn()) {
-  header("Location: " . BASE_URL . "/pages/login.php");
-  exit;
+    header("Location: " . BASE_URL . "/pages/login.php");
+    exit;
 }
 
 $user = getUserById($_SESSION['user_id']);
@@ -13,6 +13,7 @@ require_once '../includes/header.php';
 ?>
 
 <head>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
     <style>
@@ -27,7 +28,7 @@ require_once '../includes/header.php';
             --bg: #f8f9fa;
             --card-bg: #ffffff;
             --border: #e0e0e0;
-            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             --sidebar-width: 280px;
         }
 
@@ -51,7 +52,7 @@ require_once '../includes/header.php';
             z-index: 100;
         }
 
-        .top h1 {
+        .top h2 {
             color: var(--primary);
             text-align: center;
             margin: 0;
@@ -69,7 +70,7 @@ require_once '../includes/header.php';
         .sidebar {
             width: var(--sidebar-width);
             background: var(--card-bg);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
             padding: 20px;
             overflow-y: auto;
             transition: transform 0.3s ease;
@@ -81,7 +82,7 @@ require_once '../includes/header.php';
             display: none;
             position: fixed;
             left: 10px;
-            top: 70px;
+            top: 100px;
             z-index: 101;
             background: var(--primary);
             color: white;
@@ -101,16 +102,28 @@ require_once '../includes/header.php';
         }
 
         /* Upload Zone */
-        .upload-zone {
-            border: 2px dashed var(--primary);
-            border-radius: 8px;
-            padding: 30px;
+        .upload-dropzone {
+            border: 2px dashed #6c757d;
+            border-radius: 10px;
+            padding: 40px 30px;
             text-align: center;
-            background: var(--card-bg);
             cursor: pointer;
             transition: all 0.3s;
-            max-width: 500px;
-            margin: 20px auto;
+            background: white;
+            max-width: 250px;
+            margin: 0 auto;
+            box-shadow: var(--card-shadow);
+        }
+
+        .upload-dropzone i {
+            color: #2575fc;
+        }
+
+        .upload-dropzone:hover,
+        .upload-dropzone.dragover {
+            border-color: #2575fc;
+            background-color: rgba(13, 110, 253, 0.05);
+            transform: translateY(-2px);
         }
 
         /* Mind Map Container */
@@ -158,7 +171,8 @@ require_once '../includes/header.php';
             transform: scale(1.05);
         }
 
-        select, button {
+        select,
+        button {
             width: 100%;
             padding: 10px 12px;
             border-radius: 6px;
@@ -214,17 +228,23 @@ require_once '../includes/header.php';
         }
 
         /* Utilitaires */
-        .hidden { display: none; }
-        .text-center { text-align: center; }
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <div class="top">
-        <h1><i class="fas fa-project-diagram"></i> JSON Mind Mapper</h1>
+        <h2><i class="fas fa-project-diagram"></i> JSON Mind Mapper</h2>
     </div>
 
     <button class="sidebar-toggle" id="sidebarToggle">
-        <i class="fas fa-bars"></i>
+        <i class="fa-solid fa-gear"></i>
     </button>
 
     <div class="main-container">
@@ -233,7 +253,8 @@ require_once '../includes/header.php';
             <div class="tool-section">
                 <h3><i class="fas fa-palette"></i> Couleur Principale</h3>
                 <div class="color-palette">
-                    <div class="color-option active" style="background: var(--primary);" data-color="var(--primary)"></div>
+                    <div class="color-option active" style="background: var(--primary);" data-color="var(--primary)">
+                    </div>
                     <div class="color-option" style="background: var(--accent);" data-color="var(--accent)"></div>
                     <div class="color-option" style="background: var(--success);" data-color="var(--success)"></div>
                     <div class="color-option" style="background: #ffd97d;" data-color="#ffd97d"></div>
@@ -283,7 +304,7 @@ require_once '../includes/header.php';
 
         <!-- Contenu Principal -->
         <div class="content" id="mainContent">
-            <div class="upload-zone" id="dropZone">
+            <div class="upload-dropzone" id="dropZone">
                 <i class="fas fa-file-upload fa-3x"></i>
                 <p><strong>Déposez un fichier JSON ici</strong></p>
                 <p class="text-light">Ou cliquez pour sélectionner</p>
@@ -297,8 +318,8 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-      // Script pour le toggle de la sidebar
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
+        // Script pour le toggle de la sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('active');
         });
         // [Le même JavaScript que dans la version précédente]
@@ -337,7 +358,7 @@ require_once '../includes/header.php';
             // Gestion upload
             document.getElementById('jsonUpload').addEventListener('change', handleFileSelect);
             document.getElementById('dropZone').addEventListener('click', () => document.getElementById('jsonUpload').click());
-            
+
             // Drag & drop
             ['dragover', 'drop'].forEach(event => {
                 document.getElementById('dropZone').addEventListener(event, e => {
@@ -354,7 +375,7 @@ require_once '../includes/header.php';
 
             // Outils
             document.querySelectorAll('.color-option').forEach(option => {
-                option.addEventListener('click', function() {
+                option.addEventListener('click', function () {
                     document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
                     this.classList.add('active');
                     currentColor = this.dataset.color.replace('var(--', '').replace(')', '');
@@ -362,16 +383,16 @@ require_once '../includes/header.php';
                 });
             });
 
-            document.getElementById('nodeShape').addEventListener('change', function() {
+            document.getElementById('nodeShape').addEventListener('change', function () {
                 options.nodes.shape = this.value;
                 updateNetworkStyle();
             });
 
-            document.getElementById('layoutType').addEventListener('change', function() {
+            document.getElementById('layoutType').addEventListener('change', function () {
                 updateLayout();
             });
 
-            document.getElementById('layoutDirection').addEventListener('change', function() {
+            document.getElementById('layoutDirection').addEventListener('change', function () {
                 updateLayout();
             });
 
@@ -404,7 +425,7 @@ require_once '../includes/header.php';
         function generateMindMap(data) {
             allNodes = [];
             allEdges = [];
-            
+
             // Node racine
             allNodes.push({
                 id: 1,
@@ -430,7 +451,7 @@ require_once '../includes/header.php';
                 Object.entries(obj).forEach(([key, value]) => {
                     const nodeId = allNodes.length + 1;
                     const isObject = typeof value === 'object' && value !== null;
-                    
+
                     allNodes.push({
                         id: nodeId,
                         label: isObject ? key : `${key}: ${formatValue(value)}`,
@@ -453,28 +474,28 @@ require_once '../includes/header.php';
 
         function updateNetworkStyle() {
             if (!network) return;
-            
+
             // Mise à jour des couleurs
             options.nodes.color.background = currentColor;
             options.nodes.color.highlight.background = currentColor;
             options.edges.color = currentColor;
-            
+
             // Mise à jour des nodes
             const updateNodes = allNodes.map(node => ({
                 ...node,
-                color: { 
+                color: {
                     background: node.id === 1 ? currentColor : getNodeColor(node.level || 1),
                     border: node.id === 1 ? '#6a0dad' : currentColor
                 },
                 shape: node.id === 1 || node.shape === 'ellipse' ? node.shape : options.nodes.shape
             }));
-            
+
             // Mise à jour des edges
             const updateEdges = allEdges.map(edge => ({
                 ...edge,
                 color: currentColor
             }));
-            
+
             network.setOptions(options);
             network.body.data.nodes.update(updateNodes);
             network.body.data.edges.update(updateEdges);
@@ -482,13 +503,13 @@ require_once '../includes/header.php';
 
         function updateLayout() {
             if (!network) return;
-            
+
             const layoutType = document.getElementById('layoutType').value;
             const direction = document.getElementById('layoutDirection').value;
-            
+
             if (layoutType === 'hierarchical') {
-                options.layout = { 
-                    hierarchical: { 
+                options.layout = {
+                    hierarchical: {
                         direction: direction,
                         nodeSpacing: 120,
                         levelSeparation: 100
@@ -504,7 +525,7 @@ require_once '../includes/header.php';
                     }
                 };
             }
-            
+
             network.setOptions(options);
             network.fit();
         }
@@ -536,10 +557,10 @@ require_once '../includes/header.php';
 
         function exportAsPNG() {
             if (!network) return;
-            
+
             const canvas = document.querySelector('#mindMap canvas');
             const dataURL = canvas.toDataURL('image/png');
-            
+
             const link = document.createElement('a');
             link.download = 'mindmap-' + new Date().toISOString().slice(0, 10) + '.png';
             link.href = dataURL;
@@ -547,4 +568,4 @@ require_once '../includes/header.php';
         }
     </script>
 
-<?php require_once '../includes/footer.php'; ?>
+    <?php require_once '../includes/footer.php'; ?>
