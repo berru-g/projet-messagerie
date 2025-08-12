@@ -13,7 +13,7 @@ require_once '../includes/header.php';
 ?>
 
 <head>
-
+<!--V2 en cour ... -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
     <style>
@@ -49,7 +49,7 @@ require_once '../includes/header.php';
             background: white;
             margin-top: 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-             z-index: 10;
+            z-index: 10;
         }
 
         .data-visualizer-header h2 {
@@ -290,6 +290,16 @@ require_once '../includes/header.php';
             </div>
 
             <div class="tool-section">
+                <h3><i class="fas fa-palette"></i> Format</h3>
+                <select id="visual-format">
+                    <option value="mindmap">Mind Map</option>
+                    <option value="orgchart">Organigramme</option>
+                    <option value="kanban">Tableau Kanban</option>
+                    <option value="timeline">Chronologie</option>
+                </select>
+            </div>
+
+            <div class="tool-section">
                 <h3><i class="fas fa-cog"></i> Options</h3>
                 <button id="resetBtn">
                     <i class="fas fa-redo"></i> Réinitialiser
@@ -309,8 +319,17 @@ require_once '../includes/header.php';
                 <input type="file" id="jsonUpload" accept=".json" class="hidden">
             </div>
 
-            <div id="mindMapContainer" class="hidden">
-                <div id="mindMap"></div>
+            <div id="visualization-container">
+                <!-- Mind Map (actif par défaut) -->
+                <div id="mindmap-view" class="view-container" style="display: none;">
+                    <div id="mindMap"></div>
+                </div>
+                <!-- Organigramme -->
+                <div id="orgchart-view" class="view-container" style="display: none;"></div>
+                <!-- Kanban -->
+                <div id="kanban-view" class="view-container" style="display: none;"></div>
+                <!-- Chronologie -->
+                <div id="timeline-view" class="view-container" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -320,21 +339,14 @@ require_once '../includes/header.php';
         document.getElementById('sidebarToggle').addEventListener('click', function () {
             document.getElementById('sidebar').classList.toggle('active');
         });
-        // [Le même JavaScript que dans la version précédente]
-        // (Conserve toutes les fonctionnalités existantes)
-        let network;
-        let allNodes = [];
-        let allEdges = [];
+        // ============= CONFIG =============
+        let network, allNodes = [], allEdges = [], currentData = null;
         let currentColor = '#ab9ff2';
 
         const options = {
             nodes: {
                 shape: 'box',
-                color: {
-                    background: currentColor,
-                    border: '#6a0dad',
-                    highlight: { background: currentColor }
-                },
+                color: { background: currentColor, border: '#6a0dad', highlight: { background: currentColor } },
                 font: { size: 14 },
                 margin: 10
             },
@@ -343,17 +355,153 @@ require_once '../includes/header.php';
                 smooth: true,
                 arrows: { to: { enabled: true, scaleFactor: 0.5 } }
             },
-            physics: {
-                hierarchicalRepulsion: { nodeDistance: 120 }
-            }
+            physics: { hierarchicalRepulsion: { nodeDistance: 120 } }
         };
 
+        // ============= INIT =============
         document.addEventListener('DOMContentLoaded', () => {
             initEventListeners();
+            resetVisualization(); // Initialise l'état correctement
         });
 
+        // ============= CORE FUNCTIONS =============
+        function generateVisualization(data, format = 'mindmap') {
+            if (!data) return;
+
+            // Cleanup
+            if (network) network.destroy();
+            hideAllViews();
+
+            // Show selected view
+            const container = document.getElementById(`${format}-view`);
+            container.style.display = 'block';
+
+            switch (format) {
+                case 'mindmap':
+                    createMindMap(data, container);
+                    break;
+                case 'orgchart':
+                    createOrgChart(data, container);
+                    break;
+                case 'kanban':
+                    createKanban(data, container);
+                    break;
+                case 'timeline':
+                    createTimeline(data, container);
+                    break;
+            }
+
+            document.getElementById('dropZone').classList.add('hidden');
+        }
+
+        function createMindMap(data, container) {
+            allNodes = [{
+                id: 1,
+                label: 'RACINE',
+                level: 0,
+                color: { background: currentColor, border: '#6a0dad' },
+                font: { color: 'white' },
+                shape: options.nodes.shape
+            }];
+
+            processNode(data, 1, 1);
+
+            container.innerHTML = '<div id="mindMap"></div>';
+            network = new vis.Network(
+                document.getElementById('mindMap'),
+                { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) },
+                options
+            );
+        }
+
+        function createOrgChart(data, container) {
+            const rootKey = Object.keys(data)[0];
+            container.innerHTML = `
+    <div class="orgchart">
+      <div class="level root" style="background:${currentColor}">${rootKey}</div>
+      ${generateOrgLevels(data[rootKey])}
+    </div>
+  `;
+            addStyle('orgchart-styles', `
+    .orgchart { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .level { padding: 10px 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .root { color: white; font-weight: bold; }
+  `);
+        }
+
+        function createKanban(data, container) {
+            container.innerHTML = `
+    <div class="kanban-board">
+      ${['À faire', 'En cours', 'Terminé'].map(col => `
+        <div class="kanban-column" style="border-top: 3px solid ${currentColor}">
+          <h3>${col}</h3>
+          ${Object.keys(data).map(key => `<div class="kanban-card">${key}</div>`).join('')}
+        </div>
+      `).join('')}
+    </div>
+  `;
+            addStyle('kanban-styles', `
+    .kanban-board { display: flex; gap: 15px; padding: 20px; }
+    .kanban-column { flex: 1; background: #f8f9fa; padding: 15px; border-radius: 5px; }
+    .kanban-card { background: white; margin: 10px 0; padding: 10px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  `);
+        }
+
+        function createTimeline(data, container) {
+            container.innerHTML = `
+    <div class="timeline">
+      ${Object.keys(data).map(year => `
+        <div class="timeline-item">
+          <div class="timeline-year" style="background:${currentColor}">${year}</div>
+          <div class="timeline-content">${Object.keys(data[year]).join(', ')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+            addStyle('timeline-styles', `
+    .timeline { display: flex; padding: 20px; overflow-x: auto; }
+    .timeline-item { display: flex; flex-direction: column; align-items: center; min-width: 150px; }
+    .timeline-year { color: white; padding: 5px 10px; border-radius: 20px; margin-bottom: 10px; }
+  `);
+        }
+
+        // ============= UTILITIES =============
+        function hideAllViews() {
+            document.querySelectorAll('.view-container').forEach(view => {
+                view.style.display = 'none';
+                view.innerHTML = '';
+            });
+        }
+
+        function resetVisualization() {
+            hideAllViews();
+            document.getElementById('dropZone').classList.remove('hidden');
+            document.getElementById('jsonUpload').value = '';
+            if (network) network.destroy();
+            currentData = null;
+            removeStyles(['orgchart-styles', 'kanban-styles', 'timeline-styles']);
+        }
+
+        function addStyle(id, css) {
+            removeStyle(id);
+            const style = document.createElement('style');
+            style.id = id;
+            style.textContent = css;
+            document.head.appendChild(style);
+        }
+
+        function removeStyles(ids) {
+            ids.forEach(id => removeStyle(id));
+        }
+
+        function removeStyle(id) {
+            const style = document.getElementById(id);
+            if (style) style.remove();
+        }
+
+        // ============= EVENT HANDLERS =============
         function initEventListeners() {
-            // Gestion upload
+            // File handling
             document.getElementById('jsonUpload').addEventListener('change', handleFileSelect);
             document.getElementById('dropZone').addEventListener('click', () => document.getElementById('jsonUpload').click());
 
@@ -362,57 +510,42 @@ require_once '../includes/header.php';
                 document.getElementById('dropZone').addEventListener(event, e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (event === 'dragover') {
-                        e.currentTarget.style.background = 'rgba(171, 159, 242, 0.1)';
-                    } else {
-                        e.currentTarget.style.background = '';
-                        handleFileSelect({ target: { files: e.dataTransfer.files } });
-                    }
+                    e.currentTarget.style.background = event === 'dragover' ? 'rgba(171, 159, 242, 0.1)' : '';
+                    if (event === 'drop') handleFileSelect({ target: { files: e.dataTransfer.files } });
                 });
             });
 
-            // Outils
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.addEventListener('click', function () {
-                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    currentColor = this.dataset.color.replace('var(--', '').replace(')', '');
+            // Sidebar controls
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    currentColor = opt.dataset.color.replace('var(--', '').replace(')', '');
                     updateNetworkStyle();
                 });
             });
 
-            document.getElementById('nodeShape').addEventListener('change', function () {
+            document.getElementById('nodeShape').addEventListener('change', () => {
                 options.nodes.shape = this.value;
                 updateNetworkStyle();
             });
 
-            document.getElementById('layoutType').addEventListener('change', function () {
-                updateLayout();
-            });
+            document.getElementById('layoutType').addEventListener('change', updateLayout);
+            document.getElementById('layoutDirection').addEventListener('change', updateLayout);
+            document.getElementById('visual-format').addEventListener('change', handleFormatChange);
 
-            document.getElementById('layoutDirection').addEventListener('change', function () {
-                updateLayout();
-            });
-
-            // Boutons
-            document.getElementById('resetBtn').addEventListener('click', resetMindMap);
+            // Buttons
+            document.getElementById('resetBtn').addEventListener('click', resetVisualization);
             document.getElementById('exportBtn').addEventListener('click', exportAsPNG);
         }
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
-            if (!file || !file.name.endsWith('.json')) {
-                alert('Seuls les fichiers JSON sont acceptés !');
-                return;
-            }
+            if (!file?.name.endsWith('.json')) return alert('Seuls les fichiers JSON sont acceptés');
 
             const reader = new FileReader();
             reader.onload = e => {
                 try {
-                    const json = JSON.parse(e.target.result);
-                    generateMindMap(json);
-                    document.getElementById('mindMapContainer').classList.remove('hidden');
-                    document.getElementById('dropZone').classList.add('hidden');
+                    currentData = JSON.parse(e.target.result);
+                    generateVisualization(currentData, document.getElementById('visual-format').value);
                 } catch (err) {
                     alert(`Erreur JSON : ${err.message}`);
                 }
@@ -420,150 +553,84 @@ require_once '../includes/header.php';
             reader.readAsText(file);
         }
 
-        function generateMindMap(data) {
-            allNodes = [];
-            allEdges = [];
-
-            // Node racine
-            allNodes.push({
-                id: 1,
-                label: 'RACINE',
-                level: 0,
-                color: { background: currentColor, border: '#6a0dad' },
-                font: { color: 'white' },
-                shape: options.nodes.shape
-            });
-
-            // Conversion récursive
-            processNode(data, 1, 1);
-
-            // Création du réseau
-            if (network) network.destroy();
-            network = new vis.Network(
-                document.getElementById('mindMap'),
-                { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) },
-                options
-            );
-
-            function processNode(obj, parentId, level) {
-                Object.entries(obj).forEach(([key, value]) => {
-                    const nodeId = allNodes.length + 1;
-                    const isObject = typeof value === 'object' && value !== null;
-
-                    allNodes.push({
-                        id: nodeId,
-                        label: isObject ? key : `${key}: ${formatValue(value)}`,
-                        level: level,
-                        color: { background: getNodeColor(level) },
-                        shape: isObject ? options.nodes.shape : 'ellipse',
-                        font: { size: 12 + (3 / level) }
-                    });
-
-                    allEdges.push({
-                        from: parentId,
-                        to: nodeId,
-                        color: currentColor
-                    });
-
-                    if (isObject) processNode(value, nodeId, level + 1);
-                });
-            }
+        function handleFormatChange() {
+            if (currentData) generateVisualization(currentData, this.value);
         }
 
+        // ============= VIS.JS HELPERS =============
         function updateNetworkStyle() {
             if (!network) return;
 
-            // Mise à jour des couleurs
             options.nodes.color.background = currentColor;
             options.nodes.color.highlight.background = currentColor;
             options.edges.color = currentColor;
 
-            // Mise à jour des nodes
-            const updateNodes = allNodes.map(node => ({
+            network.setOptions(options);
+            network.body.data.nodes.update(allNodes.map(node => ({
                 ...node,
                 color: {
                     background: node.id === 1 ? currentColor : getNodeColor(node.level || 1),
                     border: node.id === 1 ? '#6a0dad' : currentColor
                 },
                 shape: node.id === 1 || node.shape === 'ellipse' ? node.shape : options.nodes.shape
-            }));
-
-            // Mise à jour des edges
-            const updateEdges = allEdges.map(edge => ({
-                ...edge,
-                color: currentColor
-            }));
-
-            network.setOptions(options);
-            network.body.data.nodes.update(updateNodes);
-            network.body.data.edges.update(updateEdges);
+            })));
         }
 
         function updateLayout() {
             if (!network) return;
 
-            const layoutType = document.getElementById('layoutType').value;
-            const direction = document.getElementById('layoutDirection').value;
+            const type = document.getElementById('layoutType').value;
+            const dir = document.getElementById('layoutDirection').value;
 
-            if (layoutType === 'hierarchical') {
-                options.layout = {
-                    hierarchical: {
-                        direction: direction,
-                        nodeSpacing: 120,
-                        levelSeparation: 100
-                    }
-                };
-                options.physics = { hierarchicalRepulsion: { nodeDistance: 140 } };
-            } else {
-                options.layout = { randomSeed: 42 };
-                options.physics = {
-                    barnesHut: {
-                        gravitationalConstant: -2000,
-                        centralGravity: 0.3
-                    }
-                };
-            }
+            options.layout = type === 'hierarchical' ? {
+                hierarchical: { direction: dir, nodeSpacing: 120, levelSeparation: 100 }
+            } : { randomSeed: 42 };
+
+            options.physics = type === 'hierarchical'
+                ? { hierarchicalRepulsion: { nodeDistance: 140 } }
+                : { barnesHut: { gravitationalConstant: -2000, centralGravity: 0.3 } };
 
             network.setOptions(options);
             network.fit();
         }
 
+        function exportAsPNG() {
+            if (!network) return;
+            const link = document.createElement('a');
+            link.download = `visualization-${new Date().toISOString().slice(0, 10)}.png`;
+            link.href = document.querySelector('#mindMap canvas').toDataURL('image/png');
+            link.click();
+        }
+
+        // ============= DATA PROCESSING =============
+        function processNode(obj, parentId, level) {
+            Object.entries(obj).forEach(([key, value]) => {
+                const nodeId = allNodes.length + 1;
+                const isObject = typeof value === 'object' && value !== null;
+
+                allNodes.push({
+                    id: nodeId,
+                    label: isObject ? key : `${key}: ${formatValue(value)}`,
+                    level: level,
+                    color: { background: getNodeColor(level) },
+                    shape: isObject ? options.nodes.shape : 'ellipse',
+                    font: { size: 12 + (3 / level) }
+                });
+
+                allEdges.push({ from: parentId, to: nodeId, color: currentColor });
+                if (isObject) processNode(value, nodeId, level + 1);
+            });
+        }
+
         function getNodeColor(level) {
-            const colors = [
-                currentColor,
-                '#2575fc',
-                '#60d394',
-                '#ffd97d',
-                '#faaf72'
-            ];
-            return colors[level % colors.length];
+            return ['#2575fc', '#60d394', '#ffd97d', '#faaf72'][level % 4] || currentColor;
         }
 
         function formatValue(value) {
             if (value === null) return 'null';
             if (Array.isArray(value)) return `[${value.length} éléments]`;
-            if (typeof value === 'string') return value.length > 15 ? value.substring(0, 15) + '...' : value;
-            return value;
-        }
-
-        function resetMindMap() {
-            document.getElementById('mindMapContainer').classList.add('hidden');
-            document.getElementById('dropZone').classList.remove('hidden');
-            document.getElementById('jsonUpload').value = '';
-            if (network) network.destroy();
-        }
-
-        function exportAsPNG() {
-            if (!network) return;
-
-            const canvas = document.querySelector('#mindMap canvas');
-            const dataURL = canvas.toDataURL('image/png');
-
-            const link = document.createElement('a');
-            link.download = 'mindmap-' + new Date().toISOString().slice(0, 10) + '.png';
-            link.href = dataURL;
-            link.click();
+            return typeof value === 'string'
+                ? value.length > 15 ? `${value.substring(0, 15)}...` : value
+                : value;
         }
     </script>
-
-    

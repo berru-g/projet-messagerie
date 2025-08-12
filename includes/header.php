@@ -173,6 +173,18 @@ require_once __DIR__ . '/functions.php';
       });
     </script>
 
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GDYE1C3T45"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-GDYE1C3T45');
+    </script>
+
+
   </header>
 
   <main>
