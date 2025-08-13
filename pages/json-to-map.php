@@ -44,7 +44,7 @@ require_once '../includes/header.php';
         <div class="sidebar" id="sidebar">
             <div class="tool-section">
                 <h3><i class="fas fa-upload"></i> Importation</h3>
-                <input type="text" id="jsonUrl" placeholder="URL du JSON (optionnel)" class="mb-4">
+                <input type="text" id="jsonUrl" placeholder="URL de l'api" class="mb-4">
                 <button id="loadFromUrlBtn" class="secondary">
                     <i class="fas fa-cloud-download-alt"></i> Charger depuis URL
                 </button>
@@ -53,15 +53,15 @@ require_once '../includes/header.php';
             <div class="tool-section">
                 <h3><i class="fas fa-palette"></i> Personnalisation</h3>
                 <div class="color-palette">
-                    <div class="color-option active" style="background: #6366f1;" data-color="#6366f1"></div>
+                    <div class="color-option active" style="background: #a395f2ff;" data-color="#9685f6ff"></div>
                     <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                    <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
-                    <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
+                    <div class="color-option" style="background: #60d394;;" data-color="#60d394;"></div>
+                    <div class="color-option" style="background: #ffd97d;" data-color="#ffd97d"></div>
                     <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
-                    <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                    <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                    <div class="color-option" style="background: #14b8a6;" data-color="#14b8a6"></div>
-                    <div class="color-option" style="background: #f97316;" data-color="#f97316"></div>
+                    <div class="color-option" style="background: #ab9ff2;" data-color="#ab9ff2"></div>
+                    <div class="color-option" style="background: #fcd5dc;" data-color="#fcd5dc"></div>
+                    <div class="color-option" style="background: #3ad38b;" data-color="#3ad38b"></div>
+                    <div class="color-option" style="background: #ff7243;" data-color="#ff7243"></div>
                     <div class="color-option" style="background: #64748b;" data-color="#64748b"></div>
                 </div>
             </div>
@@ -173,7 +173,7 @@ require_once '../includes/header.php';
         let network, editor, chart;
         let allNodes = [], allEdges = [];
         let currentData = null;
-        let currentColor = '#6366f1';
+        let currentColor = '#ab9ff2';
         let currentView = 'mindmap';
 
         // Options par défaut pour vis-network
@@ -182,10 +182,10 @@ require_once '../includes/header.php';
                 shape: 'box',
                 color: {
                     background: currentColor,
-                    border: '#4f46e5',
+                    border: '#2575fc',
                     highlight: {
                         background: currentColor,
-                        border: '#4338ca'
+                        border: '#2575fc'
                     }
                 },
                 font: {
@@ -681,13 +681,13 @@ require_once '../includes/header.php';
             // Appliquer le style en fonction du type
             switch (type) {
                 case 'success':
-                    notification.style.background = '#10b981';
+                    notification.style.background = '#60d394;';
                     break;
                 case 'error':
-                    notification.style.background = '#ef4444';
+                    notification.style.background = '#ee6055';
                     break;
                 case 'warning':
-                    notification.style.background = '#f59e0b';
+                    notification.style.background = '#ffd97d';
                     break;
                 default:
                     notification.style.background = '#3b82f6';
@@ -705,12 +705,12 @@ require_once '../includes/header.php';
         function getNodeColor(level) {
             const colors = [
                 '#3b82f6', // blue
-                '#10b981', // green
-                '#f59e0b', // yellow
-                '#ec4899', // pink
-                '#8b5cf6', // purple
-                '#14b8a6', // teal
-                '#f97316', // orange
+                '#60d394;', // green
+                '#ffd97d', // yellow
+                '#fcd5dc', // pink
+                '#ab9ff2', // purple
+                '#3ad38b', // teal
+                '#f99b58ff', // orange
                 '#64748b'  // gray
             ];
             return colors[level % colors.length] || currentColor;
