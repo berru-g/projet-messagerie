@@ -167,7 +167,7 @@ require_once '../includes/header.php';
         <?php if (
             isset($user['username'], $user['email']) &&
             $user['username'] === 'admin' &&
-            $user['email'] === 'g.leberruyer@gmail.com'
+            $user['email'] === 'contact@gael-berru.com'
         ): ?>
             <div class="stat-card clickable" onclick="location.href='<?= BASE_URL ?>/pages/mon-dashboard.php'">
                 <div class="stat-icon bg-gradient"><i class="fas fa-chart-line"></i></div>
@@ -225,7 +225,7 @@ require_once '../includes/header.php';
                 <?php if (
                     isset($user['username'], $user['email']) &&
                     $user['username'] === 'admin' &&
-                    $user['email'] === 'g.leberruyer@gmail.com'
+                    $user['email'] === 'contact@gael-berru.com'
                 ): ?>
                     <a href="<?= BASE_URL ?>/wallet/wallet.php" class="btn-ghost"><i class="fas fa-chart-pie"></i> Wallet all in
                         one</a>
