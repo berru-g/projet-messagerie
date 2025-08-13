@@ -12,21 +12,19 @@ $user = getUserById($_SESSION['user_id']);
 require_once '../includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/jsonto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsoneditor@9.9.0/dist/jsoneditor.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/jsoneditor@9.9.0/dist/jsoneditor.min.css" rel="stylesheet">
-    <style>
-        .main-container,.tool-header-container{display:flex;max-width:1400px;margin:0 auto}.tab,button{cursor:pointer;font-weight:500}.text-center,.upload-dropzone{text-align:center}:root{--primary:#6366f1;--primary-dark:#4f46e5;--accent:#3b82f6;--success:#10b981;--error:#ef4444;--warning:#f59e0b;--text:#1f2937;--text-light:#6b7280;--bg:#f9fafb;--card-bg:#ffffff;--border:#e5e7eb;--shadow:0 1px 3px rgba(0, 0, 0, 0.1),0 1px 2px rgba(0, 0, 0, 0.06);--shadow-md:0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06);--sidebar-width:300px}body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);margin:0;padding:0;color:var(--text);min-height:100vh;display:flex;flex-direction:column}.tool-header{background:#fff;padding:12px 0;box-shadow:var(--shadow-md);z-index:50;position:sticky;top:0}.tool-header-container{justify-content:space-between;align-items:center;padding:0 20px}.tool-header h2,.tool-section h3{font-weight:600;align-items:center}.tool-header h2{margin:0;font-size:1.25rem;color:var(--primary-dark);display:flex;gap:8px}.header-actions{display:flex;gap:12px}.main-container{flex:1;width:100%}.tool-section,.upload-dropzone{margin-bottom:24px}.sidebar{width:var(--sidebar-width);background:var(--card-bg);border-right:1px solid var(--border);padding:20px;overflow-y:auto;transition:transform .3s;position:fixed;height:calc(100vh - 60px)}.sidebar-toggle{display:none;position:fixed;left:20px;top:70px;z-index:101;background:var(--primary);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;box-shadow:var(--shadow-md)}.content{flex:1;margin-left:var(--sidebar-width);padding:24px;transition:margin .3s;min-height:calc(100vh - 60px)}.upload-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px 20px}.upload-dropzone{border:2px dashed var(--border);border-radius:12px;padding:40px 30px;cursor:pointer;transition:.3s;background:#fff;max-width:500px;width:100%;box-shadow:var(--shadow)}.color-option,.tab,button{transition:.2s}.upload-dropzone i{color:var(--primary);font-size:2.5rem;margin-bottom:16px}.upload-dropzone.dragover,.upload-dropzone:hover{border-color:var(--primary);background-color:rgba(99,102,241,.05);transform:translateY(-2px)}.color-option.active,.color-option:hover{transform:scale(1.05)}.upload-dropzone h3{margin:0 0 8px;font-size:1.125rem;color:var(--text)}.tab,.upload-dropzone p{color:var(--text-light)}.upload-dropzone p{margin:0;font-size:.875rem}.tool-section h3,button,input,select{color:var(--text);margin-bottom:12px;font-size:.875rem}.upload-options{display:flex;gap:12px;margin-top:16px}input[type=file]{display:none}.visualization-container{width:100%;height:calc(100vh - 180px);min-height:600px;background:var(--card-bg);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;position:relative}#jsoneditor,#mindMap{width:100%;height:100%}.tool-section h3{display:flex;gap:8px;text-transform:uppercase;letter-spacing:.5px}.tab.active,.tab:hover,.tool-section h3 i,button.outline{color:var(--primary)}.tool-section h3 i{font-size:1rem}.color-palette{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}.color-option{width:100%;height:30px;border-radius:6px;cursor:pointer;border:2px solid transparent}.color-option.active{border-color:var(--text)}button,input,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);transition:.2s}input:focus,select:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.2)}button{background:var(--primary);color:#fff;border:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}button:hover{background:var(--primary-dark);transform:translateY(-1px)}button:active{transform:translateY(0)}button.secondary{background:var(--accent)}button.outline{background:0 0;border:1px solid var(--primary)}button.outline:hover{background:rgba(99,102,241,.1)}button.danger{background:var(--error)}.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:20px}.editor-toolbar,.mb-4{margin-bottom:16px}.tab{padding:10px 16px;font-size:.875rem;border-bottom:2px solid transparent}.tab.active{border-bottom-color:var(--primary)}@media (max-width:1024px){.sidebar{transform:translateX(-100%);position:fixed;z-index:100;height:calc(100vh - 60px);top:60px;box-shadow:2px 0 10px rgba(0,0,0,.1)}.sidebar.active{transform:translateX(0)}.content{margin-left:0;padding:20px}.sidebar-toggle{display:block}}@media (max-width:768px){.upload-options{flex-direction:column}.visualization-container{height:500px}}.hidden{display:none!important}.mt-2{margin-top:8px}.loading-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;z-index:100;border-radius:12px}.spinner{width:40px;height:40px;border:4px solid rgba(99,102,241,.2);border-radius:50%;border-top-color:var(--primary);animation:1s ease-in-out infinite spin}@keyframes spin{to{transform:rotate(360deg)}}.editor-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 0}.editor-toolbar-actions{display:flex;gap:8px}.notification{position:fixed;bottom:20px;right:20px;padding:12px 16px;background:var(--primary);color:#fff;border-radius:8px;box-shadow:var(--shadow-md);transform:translateY(100px);opacity:0;transition:.3s;z-index:1000}.notification.show{transform:translateY(0);opacity:1}
-    </style>
+ 
 </head>
+
 <body>
-    <header class="tool-header">
+    <section class="tool-header">
         <div class="tool-header-container">
             <h2><i class="fas fa-diagram-project"></i> JSON Visualizer Pro</h2>
             <div class="header-actions">
@@ -35,7 +33,7 @@ require_once '../includes/header.php';
                 </button>
             </div>
         </div>
-    </header>
+    </section>
 
     <button class="sidebar-toggle" id="sidebarToggle">
         <i class="fas fa-sliders-h"></i>
@@ -182,15 +180,15 @@ require_once '../includes/header.php';
         const options = {
             nodes: {
                 shape: 'box',
-                color: { 
-                    background: currentColor, 
+                color: {
+                    background: currentColor,
                     border: '#4f46e5',
-                    highlight: { 
+                    highlight: {
                         background: currentColor,
                         border: '#4338ca'
                     }
                 },
-                font: { 
+                font: {
                     size: 14,
                     face: 'Inter',
                     color: '#111827'
@@ -211,12 +209,12 @@ require_once '../includes/header.php';
                     type: 'continuous',
                     roundness: 0.5
                 },
-                arrows: { 
-                    to: { 
-                        enabled: true, 
+                arrows: {
+                    to: {
+                        enabled: true,
                         scaleFactor: 0.6,
-                        type: 'arrow' 
-                    } 
+                        type: 'arrow'
+                    }
                 },
                 width: 2,
                 shadow: {
@@ -274,23 +272,23 @@ require_once '../includes/header.php';
 
         function generateVisualization(data, viewType = currentView) {
             if (!data) return;
-            
+
             showLoading(true);
             currentData = data;
-            
+
             try {
                 // Mettre à jour l'éditeur JSON
                 editor.set(data);
-                
+
                 // Cacher toutes les vues
                 hideAllViews();
-                
+
                 // Afficher la vue sélectionnée
                 document.getElementById(`${viewType}-view`).classList.remove('hidden');
                 document.querySelector(`.tab[data-view="${viewType}"]`).classList.add('active');
-                
+
                 // Générer la visualisation appropriée
-                switch(viewType) {
+                switch (viewType) {
                     case 'mindmap':
                         createMindMap(data);
                         break;
@@ -304,11 +302,11 @@ require_once '../includes/header.php';
                         createGraphView(data);
                         break;
                 }
-                
+
                 // Afficher la zone de visualisation
                 document.getElementById('uploadContainer').classList.add('hidden');
                 document.getElementById('visualizationArea').classList.remove('hidden');
-                
+
                 showNotification('Visualisation générée avec succès', 'success');
             } catch (err) {
                 showNotification('Erreur lors de la génération: ' + err.message, 'error');
@@ -322,18 +320,18 @@ require_once '../includes/header.php';
             // Nettoyer les données précédentes
             allNodes = [];
             allEdges = [];
-            
+
             if (network) {
                 network.destroy();
             }
-            
+
             // Créer le nœud racine
             const rootId = 1;
             allNodes.push({
                 id: rootId,
                 label: 'ROOT',
                 level: 0,
-                color: { 
+                color: {
                     background: currentColor,
                     border: '#4f46e5',
                     highlight: {
@@ -341,7 +339,7 @@ require_once '../includes/header.php';
                         border: '#4338ca'
                     }
                 },
-                font: { 
+                font: {
                     color: 'white',
                     size: 16,
                     face: 'Inter',
@@ -351,10 +349,10 @@ require_once '../includes/header.php';
                 size: 25,
                 borderWidth: 2
             });
-            
+
             // Traiter les données récursivement
             processNode(data, rootId, 1);
-            
+
             // Créer le réseau
             const container = document.getElementById('mindMap');
             network = new vis.Network(
@@ -362,7 +360,7 @@ require_once '../includes/header.php';
                 { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) },
                 options
             );
-            
+
             // Configurer les événements du réseau
             network.on('click', (params) => {
                 if (params.nodes.length) {
@@ -371,7 +369,7 @@ require_once '../includes/header.php';
                     network.selectNodes([nodeId]);
                 }
             });
-            
+
             // Appliquer la disposition
             updateLayout();
         }
@@ -383,11 +381,11 @@ require_once '../includes/header.php';
 
         function createGraphView(data) {
             const ctx = document.getElementById('graphChart').getContext('2d');
-            
+
             if (chart) {
                 chart.destroy();
             }
-            
+
             // Exemple simple - à adapter selon vos besoins
             const labels = Object.keys(data);
             const values = labels.map(key => {
@@ -397,7 +395,7 @@ require_once '../includes/header.php';
                 }
                 return 1;
             });
-            
+
             chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -405,10 +403,10 @@ require_once '../includes/header.php';
                     datasets: [{
                         label: 'Éléments',
                         data: values,
-                        backgroundColor: labels.map((_, i) => 
+                        backgroundColor: labels.map((_, i) =>
                             `hsl(${(i * 360 / labels.length)}, 70%, 60%)`
                         ),
-                        borderColor: labels.map((_, i) => 
+                        borderColor: labels.map((_, i) =>
                             `hsl(${(i * 360 / labels.length)}, 70%, 40%)`
                         ),
                         borderWidth: 1
@@ -440,23 +438,23 @@ require_once '../includes/header.php';
         // Fonctions utilitaires
         function processNode(obj, parentId, level) {
             if (!obj || typeof obj !== 'object') return;
-            
+
             Object.entries(obj).forEach(([key, value], index) => {
                 const nodeId = allNodes.length + 1;
                 const isObject = typeof value === 'object' && value !== null;
                 const isArray = Array.isArray(value);
-                
+
                 // Déterminer la forme en fonction du type
                 let shape = document.getElementById('nodeShape').value;
                 if (isArray) shape = 'box';
                 if (!isObject && !isArray) shape = 'ellipse';
-                
+
                 // Créer le nœud
                 allNodes.push({
                     id: nodeId,
                     label: isObject ? key : `${key}: ${formatValue(value)}`,
                     level: level,
-                    color: { 
+                    color: {
                         background: getNodeColor(level),
                         border: darkenColor(getNodeColor(level), 20),
                         highlight: {
@@ -465,17 +463,17 @@ require_once '../includes/header.php';
                         }
                     },
                     shape: shape,
-                    font: { 
+                    font: {
                         size: 14 - (level * 0.5),
                         face: 'Inter'
                     },
                     margin: 8,
                     borderWidth: 1
                 });
-                
+
                 // Créer le lien
-                allEdges.push({ 
-                    from: parentId, 
+                allEdges.push({
+                    from: parentId,
                     to: nodeId,
                     color: {
                         color: currentColor,
@@ -488,7 +486,7 @@ require_once '../includes/header.php';
                         roundness: 0.3
                     }
                 });
-                
+
                 // Traiter récursivement les objets/tableaux
                 if (isObject) {
                     processNode(value, nodeId, level + 1);
@@ -498,28 +496,28 @@ require_once '../includes/header.php';
 
         function generateTreeHTML(data, level = 0) {
             if (!data || typeof data !== 'object') return '';
-            
+
             const isArray = Array.isArray(data);
             const keys = Object.keys(data);
-            
+
             let html = `<ul class="tree-level-${level}">`;
-            
+
             keys.forEach(key => {
                 const value = data[key];
                 const isObject = typeof value === 'object' && value !== null;
-                
+
                 html += `<li>
                     <span class="tree-node ${isObject ? 'has-children' : ''}">
                         ${key}${!isObject ? `: ${formatValue(value)}` : ''}
                     </span>`;
-                
+
                 if (isObject) {
                     html += generateTreeHTML(value, level + 1);
                 }
-                
+
                 html += `</li>`;
             });
-            
+
             html += `</ul>`;
             return html;
         }
@@ -539,35 +537,35 @@ require_once '../includes/header.php';
             document.getElementById('visualizationArea').classList.add('hidden');
             document.getElementById('jsonUpload').value = '';
             document.getElementById('jsonUrl').value = '';
-            
+
             if (network) {
                 network.destroy();
                 network = null;
             }
-            
+
             if (chart) {
                 chart.destroy();
                 chart = null;
             }
-            
+
             currentData = null;
             allNodes = [];
             allEdges = [];
-            
+
             showNotification('Visualisation réinitialisée', 'info');
         }
 
         function updateNetworkStyle() {
             if (!network) return;
-            
+
             // Mettre à jour les options globales
             options.nodes.color.background = currentColor;
             options.nodes.color.highlight.background = currentColor;
             options.edges.color = currentColor;
-            
+
             // Mettre à jour le réseau
             network.setOptions(options);
-            
+
             // Mettre à jour les nœuds existants
             const updates = allNodes.map(node => {
                 const isRoot = node.id === 1;
@@ -584,9 +582,9 @@ require_once '../includes/header.php';
                     shape: document.getElementById('nodeShape').value
                 };
             });
-            
+
             network.body.data.nodes.update(updates);
-            
+
             // Mettre à jour les liens
             const edgeUpdates = allEdges.map(edge => ({
                 id: edge.id,
@@ -596,77 +594,77 @@ require_once '../includes/header.php';
                     hover: lightenColor(currentColor, 20)
                 }
             }));
-            
+
             network.body.data.edges.update(edgeUpdates);
         }
 
         function updateLayout() {
             if (!network) return;
-            
+
             const type = document.getElementById('layoutType').value;
             const dir = document.getElementById('layoutDirection').value;
-            
+
             options.layout = type === 'hierarchical' ? {
-                hierarchical: { 
-                    direction: dir, 
-                    nodeSpacing: 120, 
+                hierarchical: {
+                    direction: dir,
+                    nodeSpacing: 120,
                     levelSeparation: 100,
                     sortMethod: 'directed'
                 }
             } : type === 'circular' ? {
                 randomSeed: 42,
                 improvedLayout: true
-            } : { 
-                randomSeed: 42 
+            } : {
+                randomSeed: 42
             };
-            
+
             options.physics = type === 'hierarchical' ? {
-                hierarchicalRepulsion: { 
+                hierarchicalRepulsion: {
                     nodeDistance: 140,
                     springLength: 100,
                     springConstant: 0.01,
                     damping: 0.09
                 }
             } : {
-                barnesHut: { 
-                    gravitationalConstant: -2000, 
+                barnesHut: {
+                    gravitationalConstant: -2000,
                     centralGravity: 0.3,
                     springLength: 200,
                     springConstant: 0.04,
                     damping: 0.09
                 }
             };
-            
+
             network.setOptions(options);
             network.fit();
         }
 
         function exportAsPNG() {
             if (!network) return;
-            
+
             const canvas = document.querySelector('#mindMap canvas');
             if (!canvas) return;
-            
+
             const link = document.createElement('a');
             link.download = `json-visualization-${new Date().toISOString().slice(0, 10)}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            
+
             showNotification('Export PNG terminé', 'success');
         }
 
         function exportAsJSON() {
             if (!currentData) return;
-            
+
             const dataStr = JSON.stringify(currentData, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
+
             const link = document.createElement('a');
             link.download = `json-data-${new Date().toISOString().slice(0, 10)}.json`;
             link.href = url;
             link.click();
-            
+
             showNotification('Export JSON terminé', 'success');
         }
 
@@ -679,9 +677,9 @@ require_once '../includes/header.php';
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = 'notification';
-            
+
             // Appliquer le style en fonction du type
-            switch(type) {
+            switch (type) {
                 case 'success':
                     notification.style.background = '#10b981';
                     break;
@@ -694,9 +692,9 @@ require_once '../includes/header.php';
                 default:
                     notification.style.background = '#3b82f6';
             }
-            
+
             notification.classList.add('show');
-            
+
             // Masquer après 3 secondes
             setTimeout(() => {
                 notification.classList.remove('show');
@@ -770,7 +768,7 @@ require_once '../includes/header.php';
                     "planned": 5
                 }
             };
-            
+
             generateVisualization(sampleData);
         }
 
@@ -779,9 +777,9 @@ require_once '../includes/header.php';
                 showNotification('Veuillez entrer une URL valide', 'error');
                 return;
             }
-            
+
             showLoading(true);
-            
+
             fetch(url)
                 .then(response => {
                     if (!response.ok) throw new Error('Erreur réseau');
@@ -803,7 +801,7 @@ require_once '../includes/header.php';
         function showPasteDialog() {
             const jsonText = prompt("Collez votre JSON ici:");
             if (!jsonText) return;
-            
+
             try {
                 const jsonData = JSON.parse(jsonText);
                 generateVisualization(jsonData);
@@ -817,22 +815,22 @@ require_once '../includes/header.php';
             // Gestion des fichiers
             document.getElementById('jsonUpload').addEventListener('change', handleFileSelect);
             document.getElementById('dropZone').addEventListener('click', () => document.getElementById('jsonUpload').click());
-            
+
             // Drag & drop
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 document.getElementById('dropZone').addEventListener(eventName, preventDefaults, false);
             });
-            
+
             ['dragenter', 'dragover'].forEach(eventName => {
                 document.getElementById('dropZone').addEventListener(eventName, highlight, false);
             });
-            
+
             ['dragleave', 'drop'].forEach(eventName => {
                 document.getElementById('dropZone').addEventListener(eventName, unhighlight, false);
             });
-            
+
             document.getElementById('dropZone').addEventListener('drop', handleDrop, false);
-            
+
             // Contrôles de la sidebar
             document.querySelectorAll('.color-option').forEach(opt => {
                 opt.addEventListener('click', () => {
@@ -842,15 +840,15 @@ require_once '../includes/header.php';
                     updateNetworkStyle();
                 });
             });
-            
+
             document.getElementById('nodeShape').addEventListener('change', () => {
                 options.nodes.shape = document.getElementById('nodeShape').value;
                 updateNetworkStyle();
             });
-            
+
             document.getElementById('layoutType').addEventListener('change', updateLayout);
             document.getElementById('layoutDirection').addEventListener('change', updateLayout);
-            
+
             // Boutons
             document.getElementById('resetBtn').addEventListener('click', resetVisualization);
             document.getElementById('exportPngBtn').addEventListener('click', exportAsPNG);
@@ -860,7 +858,7 @@ require_once '../includes/header.php';
             });
             document.getElementById('sampleDataBtn').addEventListener('click', loadSampleData);
             document.getElementById('pasteJsonBtn').addEventListener('click', showPasteDialog);
-            
+
             // Onglets
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -869,12 +867,12 @@ require_once '../includes/header.php';
                     generateVisualization(currentData, viewType);
                 });
             });
-            
+
             // Toggle sidebar
             document.getElementById('sidebarToggle').addEventListener('click', () => {
                 document.getElementById('sidebar').classList.toggle('active');
             });
-            
+
             // Toggle editor
             document.getElementById('toggleEditorBtn').addEventListener('click', () => {
                 if (currentView === 'editor') {
@@ -902,7 +900,7 @@ require_once '../includes/header.php';
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
-            
+
             if (files.length) {
                 document.getElementById('jsonUpload').files = files;
                 handleFileSelect({ target: { files } });
@@ -912,14 +910,14 @@ require_once '../includes/header.php';
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             if (!file.name.endsWith('.json') && !file.type.includes('json')) {
                 showNotification('Seuls les fichiers JSON sont acceptés', 'error');
                 return;
             }
-            
+
             showLoading(true);
-            
+
             const reader = new FileReader();
             reader.onload = e => {
                 try {
@@ -940,4 +938,5 @@ require_once '../includes/header.php';
         }
     </script>
 </body>
+
 </html>
