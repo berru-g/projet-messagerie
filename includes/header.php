@@ -50,7 +50,15 @@ require_once __DIR__ . '/functions.php';
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet">
-
+  <!--pwa-->
+  <link rel="manifest" href="/manifest.json">
+  <!-- Meta pour iOS (optionnel mais utile) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Mon App">
+  <link rel="apple-touch-icon" href="/icon-192x192.png">
+  <!-- Couleur de thème -->
+  <meta name="theme-color" content="#ab9ff2" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -147,28 +155,99 @@ require_once __DIR__ . '/functions.php';
             <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
               Visualizer</a>
             <a href="<?= BASE_URL ?>/pages/json-to-map.php"><i class="fas fa-project-diagram"></i> Json to Map</a>
+            <a href="#" class="pwa-btn" id="installBtn"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
           <?php endif; ?>
         </div>
       </div>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Gestion du clic pour les deux dropdowns
-        document.querySelectorAll(".profile-btn, .menu-btn").forEach(btn => {
-          btn.addEventListener("click", function (e) {
-            e.stopPropagation(); // évite propagation du clic
-            const parent = btn.closest(".profile-dropdown, .menu-dropdown");
-            parent.classList.toggle("open");
-          });
+      // Service Worker pour PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => console.log('SW enregistré avec succès !'))
+            .catch(err => console.error('Échec de l\'enregistrement du SW :', err));
         });
+      }
 
-        // Ferme le menu si clic en dehors
-        document.addEventListener("click", function (e) {
-          document.querySelectorAll(".profile-dropdown, .menu-dropdown").forEach(dropdown => {
-            if (!dropdown.contains(e.target)) {
-              dropdown.classList.remove("open");
-            }
-          });
+      // Gestion de l'installation PWA
+      let deferredPrompt;
+      const installBtn = document.getElementById('installBtn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // Affiche le bouton uniquement si l'app n'est pas déjà installée
+        if (!isPWAInstalled()) {
+          installBtn.style.display = 'block';
+        }
+      });
+
+      // Gestion du clic sur le bouton d'installation
+      if (installBtn) {
+        installBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+
+            deferredPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('L\'utilisateur a accepté l\'installation');
+                installBtn.style.display = 'none';
+              }
+              deferredPrompt = null;
+            });
+          } else {
+            console.log('Le prompt d\'installation n\'est pas disponible');
+            // Fallback pour les navigateurs qui ne supportent pas l'API
+            showManualInstallInstructions();
+          }
+        });
+      }
+
+      // Vérifie si l'app est déjà installée
+      function isPWAInstalled() {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+          navigator.standalone ||
+          document.referrer.includes('android-app://');
+      }
+
+      // Cache le bouton si l'app est déjà installée
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA déjà installée');
+        if (installBtn) installBtn.style.display = 'none';
+      });
+
+      // Vérification au chargement
+      document.addEventListener('DOMContentLoaded', () => {
+        if (isPWAInstalled() && installBtn) {
+          installBtn.style.display = 'none';
+        }
+      });
+
+      // Fallback pour les navigateurs moins supportés
+      function showManualInstallInstructions() {
+        // Tu peux ajouter une modal ou un tooltip ici
+        console.log('Instructions manuelles pour installer la PWA');
+        alert("Pour installer l'application :\n\n- Sur Chrome/Edge : cliquez sur l'icône 'Installer' dans la barre d'adresse\n- Sur iOS : utilisez l'option 'Partager' puis 'Ajouter à l'écran d'accueil'");
+      }
+
+      // Gestion des menus déroulants (existant - gardé pour référence)
+      document.querySelectorAll(".profile-btn, .menu-btn").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const parent = btn.closest(".profile-dropdown, .menu-dropdown");
+          parent.classList.toggle("open");
+        });
+      });
+      // ferme le menu si click externe
+      document.addEventListener("click", function (e) {
+        document.querySelectorAll(".profile-dropdown, .menu-dropdown").forEach(dropdown => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove("open");
+          }
         });
       });
     </script>

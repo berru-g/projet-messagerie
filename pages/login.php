@@ -239,7 +239,7 @@ require_once '../includes/header.php';
       loading="lazy"
     />-->
     <h1>
-      Bienvenue sur <strong><?= SITE_NAME ?></strong> Social Feed
+      Bienvenue sur <strong><?= SITE_NAME ?></strong>
     </h1>
     <p>
       Ce lieu contient un Réseau social minimaliste et une plateforme
@@ -260,7 +260,7 @@ require_once '../includes/header.php';
       <i class="fas fa-chart-line"></i>
       <h3 data-i18n-card-title>Features</h3>
       <p data-i18n-card-text>
-        Social Feed - Post/comment/like + Excel & Csv to Chart/PDF + Data Visualizer + Public Data
+        Poster vos dernières trouvailles, partagez vos data public, créer une map depuis un json ou une chart depuis un csv. Convertissez vos formats en d'autre et bien plus.
       </p>
     </div>
 

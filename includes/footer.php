@@ -39,8 +39,8 @@
         <li><i class="fas fa-chart-line"></i><a href="../pages/data-to-chart.php"> Data Visualizer</a></li>
         <li><i class="fas fa-file-export"></i><a href="../pages/search.php"> Public Data</a></li>
         <li><i class="fas fa-project-diagram"></i><a href="../pages/json-to-map.php"> Json to Mind Map</a></li>
-        <!--<li><i class="fas fa-code"></i><a href="../pages/codepen.php"> Live code editor</a></li>
-        <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>-->
+        <!--<li><i class="fas fa-code"></i><a href="../pages/codepen.php"> Live code editor</a></li>-->
+        <a href="#" class="social-icon"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
       </ul>
     </div>
 
