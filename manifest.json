@@ -1,20 +1,23 @@
 {
-  "name": "Agora DataViz",
-  "short_name": "DataViz",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ab9ff2",
-  "theme_color": "#ab9ff2",
-  "icons": [
-    {
-      "src": "assets/img/agora-logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+    "name": "Agora DataViz",
+    "short_name": "DataViz",
+    "version": "1.4.3",
+    "description": "L'app complète simplifie la visualisation et la conversion de fichier Json, CSV, Excel et bien plus. Contient un réseau social minimaliste. Convert your Json to map or CSV to chart.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ab9ff2",
+    "theme_color": "#ab9ff2",
+    "icons": [
+      {
+        "src": "assets/img/agora-logo.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/img/agora-logo.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
