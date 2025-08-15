@@ -155,6 +155,8 @@ require_once __DIR__ . '/functions.php';
             <a href="<?= BASE_URL ?>/pages/data-to-chart.php"><i class="fa-solid fa-chart-line"></i> Data
               Visualizer</a>
             <a href="<?= BASE_URL ?>/pages/json-to-map.php"><i class="fas fa-project-diagram"></i> Json to Map</a>
+            <a href="<?= BASE_URL ?>/pages/SQL-editor.php"></a><i class="fas fa-database"></i> SQL Editor</a>
+            <br>
             <a href="#" class="pwa-btn" id="installBtn"><i class="fa-brands fa-google-play"></i> Télécharger l'app</a>
           <?php endif; ?>
         </div>
