@@ -1415,14 +1415,14 @@ require_once '../includes/header.php';
       data: currentData
     });
 
-    downloadFile(csv, 'data_export.csv', 'text/csv;charset=utf-8;');
+    downloadFile(csv, 'agora_dataviz_com.csv', 'text/csv;charset=utf-8;');
   }
 
   function exportJSON() {
     if (!currentData.length) return;
 
     const json = JSON.stringify(currentData, null, 2);
-    downloadFile(json, 'data_export.json', 'application/json');
+    downloadFile(json, 'agora_dataviz_com.json', 'application/json');
   }
 
   function downloadFile(content, filename, mimeType) {

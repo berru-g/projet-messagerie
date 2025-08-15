@@ -254,14 +254,14 @@ Par émotion et image mentale
 "Faites parler vos données comme si vous étiez un designer."
 "Des chiffres qui séduisent l’œil, des graphiques qui captivent l’audience."-->
     <h1>
-      <strong><?= SITE_NAME ?></strong> habille vos données pour convaincre
+       habillez vos données pour convaincre
     </h1>
     <p>
       en moins de 2 minutes.
     </p>
     <a href="<?= BASE_URL ?>/pages/register.php"><button class="btn-primary"
         aria-label="Essayer Agora Social Feed maintenant">
-        Créer mon premier graphique
+        Créer gratuitement
       </button></a>
   </div>
 

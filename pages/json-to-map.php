@@ -646,7 +646,7 @@ require_once '../includes/header.php';
             if (!canvas) return;
 
             const link = document.createElement('a');
-            link.download = `json-visualization-${new Date().toISOString().slice(0, 10)}.png`;
+            link.download = `agora-dataviz.com-${new Date().toISOString().slice(0, 10)}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
 
