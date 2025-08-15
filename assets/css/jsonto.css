@@ -228,7 +228,7 @@
 
  #sqlEditor {
      width: 100%;
-     height: 600px;
+     height: 100%;
      border: 1px solid #e5e7eb;
      border-radius: 4px;
  }

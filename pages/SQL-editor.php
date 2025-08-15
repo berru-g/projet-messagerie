@@ -24,7 +24,7 @@ require_once '../includes/header.php';
 <body>
     <section class="tool-header">
         <div class="tool-header-container">
-            <h2><i class="fas fa-database"></i> SQL Visualizer Pro</h2>
+            <h2><i class="fas fa-database"></i> SQL Editor</h2>
             <div class="header-actions">
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
@@ -32,6 +32,10 @@ require_once '../includes/header.php';
             </div>
         </div>
     </section>
+
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-sliders-h"></i>
+    </button>
 
     <div class="main-container">
         <!-- Sidebar -->
@@ -615,6 +619,21 @@ require_once '../includes/header.php';
                 tab.addEventListener('click', () => {
                     switchToView(tab.dataset.view);
                 });
+            });
+
+            // Toggle sidebar
+            document.getElementById('sidebarToggle').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+
+            // Toggle editor
+            document.getElementById('toggleEditorBtn').addEventListener('click', () => {
+                if (currentView === 'editor') {
+                    currentView = 'mindmap';
+                } else {
+                    currentView = 'editor';
+                }
+                generateVisualization(currentData, currentView);
             });
 
             // Drag & drop
