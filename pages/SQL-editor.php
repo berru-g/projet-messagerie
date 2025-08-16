@@ -173,6 +173,43 @@ require_once '../includes/header.php';
             });
         }
 
+        // Fonction pour sauvegarder le fichier
+        async function saveSQLFile() {
+            if (!currentSql.trim()) {
+                alert("Aucun SQL à enregistrer !");
+                return;
+            }
+
+            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            if (!fileName) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('sql_content', currentSql);
+                formData.append('file_name', fileName + '.sql');
+                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
+
+                const response = await fetch('save_sql_file.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("Fichier enregistré avec succès !");
+                } else {
+                    alert("Erreur: " + result.message);
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
+                alert("Erreur lors de l'enregistrement");
+            }
+        }
+
+        // Ajoute l'événement au bouton
+        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
+
         // Parser SQL amélioré
         function parseSQL(sql) {
             const schema = {
@@ -638,7 +675,7 @@ require_once '../includes/header.php';
             document.getElementById('resetBtn').addEventListener('click', resetVisualization);
             document.getElementById('exportPngBtn').addEventListener('click', exportAsPNG);
             document.getElementById('exportSqlBtn').addEventListener('click', exportAsSQL);
-
+            document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
             // Options de visualisation
             document.getElementById('nodeShape').addEventListener('change', () => {
                 if (network) {
@@ -725,42 +762,6 @@ require_once '../includes/header.php';
                 }
             }
         });
-        // Fonction pour sauvegarder le fichier
-        async function saveSQLFile() {
-            if (!currentSql.trim()) {
-                alert("Aucun SQL à enregistrer !");
-                return;
-            }
-
-            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
-            if (!fileName) return;
-
-            try {
-                const formData = new FormData();
-                formData.append('sql_content', currentSql);
-                formData.append('file_name', fileName + '.sql');
-                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
-
-                const response = await fetch('save_sql_file.php', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alert("Fichier enregistré avec succès !");
-                } else {
-                    alert("Erreur: " + result.message);
-                }
-            } catch (error) {
-                console.error("Erreur:", error);
-                alert("Erreur lors de l'enregistrement");
-            }
-        }
-
-        // Ajoute l'événement au bouton
-        document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
     </script>
 </body>
 
