@@ -15,7 +15,7 @@ $sql_content = $_POST['sql_content'] ?? '';
 $file_name = cleanFileName($_POST['file_name'] ?? '');
 
 // Validation
-if (empty($sql_content) {
+if (empty($sql_content)) {
     echo json_encode(['success' => false, 'message' => 'Contenu SQL vide']);
     exit;
 }

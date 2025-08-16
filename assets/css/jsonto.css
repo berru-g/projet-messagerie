@@ -228,11 +228,11 @@
      min-height: 300px !important;
  }
 
- #updateMindmapBtn {
+ .update_Mindmap {
      position: absolute;
      bottom: 20px;
      z-index: 1000;
-
+    background-color: var(--primary);
  }
 
  .hidden {
