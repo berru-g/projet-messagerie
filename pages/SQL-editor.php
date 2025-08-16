@@ -29,6 +29,7 @@ require_once '../includes/header.php';
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
                 </button>
+                
             </div>
         </div>
     </section>
@@ -83,6 +84,9 @@ require_once '../includes/header.php';
                 <h3><i class="fas fa-tools"></i> Actions</h3>
                 <button id="resetBtn" class="outline">
                     <i class="fas fa-trash-alt"></i> Réinitialiser
+                </button>
+                <button id="saveFileBtn" class="primary">
+                    <i class="fas fa-save"></i> Enregistrer
                 </button>
                 <div class="editor-toolbar-actions mt-2">
                     <button id="exportPngBtn" class="secondary">
@@ -163,7 +167,7 @@ require_once '../includes/header.php';
                 });
 
                 // Détection des changements dans l'éditeur
-                monacoEditor.onDidChangeModelContent(function() {
+                monacoEditor.onDidChangeModelContent(function () {
                     currentSql = monacoEditor.getValue();
                 });
             });
@@ -178,9 +182,9 @@ require_once '../includes/header.php';
 
             // Nettoyer le SQL
             sql = sql.replace(/--.*$/gm, '')  // Supprimer les commentaires --
-                    .replace(/\/\*[\s\S]*?\*\//g, '')  // Supprimer les commentaires /* */
-                    .replace(/\s+/g, ' ')  // Remplacer les espaces multiples
-                    .trim();
+                .replace(/\/\*[\s\S]*?\*\//g, '')  // Supprimer les commentaires /* */
+                .replace(/\s+/g, ' ')  // Remplacer les espaces multiples
+                .trim();
 
             // Extraire les CREATE TABLE (supportant les backticks et guillemets)
             const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\(([\s\S]+?)\)\s*(?:ENGINE\s*=\s*\w+)?\s*;/gi;
@@ -336,10 +340,10 @@ require_once '../includes/header.php';
                         label: `${col.name}\n${col.type}`,
                         level: 2,
                         color: {
-                            background: isPrimary ? '#fcd34d' : 
-                                      isForeignKey ? '#93c5fd' : '#e2e8f0',
-                            border: isPrimary ? '#f59e0b' : 
-                                   isForeignKey ? '#3b82f6' : '#cbd5e1'
+                            background: isPrimary ? '#fcd34d' :
+                                isForeignKey ? '#93c5fd' : '#e2e8f0',
+                            border: isPrimary ? '#f59e0b' :
+                                isForeignKey ? '#3b82f6' : '#cbd5e1'
                         },
                         shape: 'box',
                         font: { size: 12 }
@@ -348,8 +352,8 @@ require_once '../includes/header.php';
                     allEdges.push({
                         from: tableId,
                         to: colId,
-                        color: isPrimary ? '#f59e0b' : 
-                             isForeignKey ? '#3b82f6' : '#94a3b8',
+                        color: isPrimary ? '#f59e0b' :
+                            isForeignKey ? '#3b82f6' : '#94a3b8',
                         width: isPrimary || isForeignKey ? 2 : 1
                     });
                 });
@@ -360,7 +364,7 @@ require_once '../includes/header.php';
 
                     if (targetTableExists) {
                         const relationId = `rel_${table.name}_${fk.column}_to_${fk.refTable}`;
-                        
+
                         allEdges.push({
                             from: `table_${table.name}`,
                             to: `table_${fk.refTable}`,
@@ -378,7 +382,7 @@ require_once '../includes/header.php';
             // Créer le réseau
             const container = document.getElementById('mindMap');
             container.innerHTML = ''; // Nettoyer avant de redessiner
-            
+
             network = new vis.Network(
                 container,
                 { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) },
@@ -425,8 +429,8 @@ require_once '../includes/header.php';
                                         <td>${col.name}</td>
                                         <td>${col.type}</td>
                                         <td>
-                                            ${col.isPrimary ? 'PK' : 
-                                              table.foreignKeys.some(fk => fk.column === col.name) ? 'FK' : ''}
+                                            ${col.isPrimary ? 'PK' :
+                        table.foreignKeys.some(fk => fk.column === col.name) ? 'FK' : ''}
                                         </td>
                                     </tr>
                                 `).join('')}
@@ -721,6 +725,42 @@ require_once '../includes/header.php';
                 }
             }
         });
+        // Fonction pour sauvegarder le fichier
+        async function saveSQLFile() {
+            if (!currentSql.trim()) {
+                alert("Aucun SQL à enregistrer !");
+                return;
+            }
+
+            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            if (!fileName) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('sql_content', currentSql);
+                formData.append('file_name', fileName + '.sql');
+                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
+
+                const response = await fetch('save_sql_file.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("Fichier enregistré avec succès !");
+                } else {
+                    alert("Erreur: " + result.message);
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
+                alert("Erreur lors de l'enregistrement");
+            }
+        }
+
+        // Ajoute l'événement au bouton
+        document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
     </script>
 </body>
 

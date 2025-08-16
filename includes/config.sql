@@ -37,7 +37,7 @@ CREATE TABLE user_files (
     user_id INT NOT NULL,
     file_name VARCHAR(255) NOT NULL,
     file_path VARCHAR(255) NOT NULL,
-    file_type ENUM('csv', 'excel', 'json', 'googlesheet') NOT NULL,
+    file_type ENUM('sql', 'csv', 'excel', 'json', 'googlesheet') NOT NULL,
     upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -79,7 +79,9 @@ ADD COLUMN website_url VARCHAR(255) NULL;
 
 -- Ajout des format img à la gallery upload
 ALTER TABLE user_files MODIFY COLUMN file_type ENUM('csv','excel','json','image','googlesheet') NOT NULL;
-
+--ajout du sql donc requete a jour, ne pas prendre la precedente
+ALTER TABLE user_files 
+MODIFY COLUMN file_type ENUM('sql', 'csv', 'excel', 'json', 'image', 'googlesheet') NOT NULL;
 
 -- Les features de mon https://crypto-free-tools.netlify.app
 
