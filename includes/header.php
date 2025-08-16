@@ -14,7 +14,7 @@ require_once __DIR__ . '/functions.php';
   <meta name="description"
     content="agora data viz est une plateforme de partage de fichiers, convertisseur de format,  avec visualisation et export de données (CSV, JSON, Excel, PDF, PNG) et un réseau social.">
   <meta name="keywords"
-    content="convert csv json, csv to pdf, json to mindmap, json to csv, csv to json, csv to pdf, csv to png, xlxs to chart, JSON Mind Mapper, json to map, data visualizer, excel to chart,  Data Enthusiasts, plateforme collaboratif, outil data, réseau social">
+    content="convert csv json, json editor, sql editor, csv to pdf, json to mindmap, json to csv, csv to json, csv to pdf, csv to png, xlxs to chart, JSON Mind Mapper, json to map, data visualizer, excel to chart,  Data Enthusiasts, plateforme collaboratif, outil data, réseau social">
   <meta name="robots" content="index, follow">
   <meta name="author" content="agora data viz">
 

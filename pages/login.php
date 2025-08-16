@@ -271,7 +271,7 @@ Par émotion et image mentale
       <h3 data-i18n-card-title>Features</h3>
       <p data-i18n-card-text>
         Poster vos dernières trouvailles, partagez vos data public, créer une map depuis un json ou une chart depuis un
-        csv. Convertissez vos formats et bien plus.
+        csv, éditez du json ou SQL. Convertissez vos formats et bien plus.
       </p>
     </div>
 

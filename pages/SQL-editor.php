@@ -122,6 +122,11 @@ require_once '../includes/header.php';
                     <!-- SQL Editor View -->
                     <div id="editor-view" class="view-container hidden">
                         <div id="sqlEditor"></div>
+                        <div class="editor-actions">
+                            <button id="updateMindmapBtn" class="primary">
+                                <i class="fas fa-sync-alt"></i> Mettre à jour le Mindmap
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Tables View -->
@@ -156,18 +161,29 @@ require_once '../includes/header.php';
                     fontSize: 14,
                     lineNumbers: 'on'
                 });
+
+                // Détection des changements dans l'éditeur
+                monacoEditor.onDidChangeModelContent(function() {
+                    currentSql = monacoEditor.getValue();
+                });
             });
         }
 
-        // Parser SQL simplifié
+        // Parser SQL amélioré
         function parseSQL(sql) {
             const schema = {
                 tables: [],
                 relations: []
             };
 
-            // Extraire les CREATE TABLE
-            const createTableRegex = /CREATE TABLE (\w+)\s*\(([\s\S]+?)\)\s*;/g;
+            // Nettoyer le SQL
+            sql = sql.replace(/--.*$/gm, '')  // Supprimer les commentaires --
+                    .replace(/\/\*[\s\S]*?\*\//g, '')  // Supprimer les commentaires /* */
+                    .replace(/\s+/g, ' ')  // Remplacer les espaces multiples
+                    .trim();
+
+            // Extraire les CREATE TABLE (supportant les backticks et guillemets)
+            const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?(\w+)[`"']?\s*\(([\s\S]+?)\)\s*(?:ENGINE\s*=\s*\w+)?\s*;/gi;
             let tableMatch;
 
             while ((tableMatch = createTableRegex.exec(sql)) !== null) {
@@ -177,34 +193,35 @@ require_once '../includes/header.php';
                 const primaryKeys = [];
                 const foreignKeys = [];
 
-                // Extraire les colonnes
-                const columnLines = tableContent.split('\n')
+                // Extraire les colonnes et contraintes
+                const columnLines = tableContent.split(',')
                     .map(line => line.trim())
                     .filter(line => line && !line.startsWith('--') && !line.startsWith('/*'));
 
                 for (const line of columnLines) {
                     if (line.startsWith('PRIMARY KEY')) {
-                        const pkMatch = line.match(/PRIMARY KEY\s*\(([^)]+)\)/);
+                        const pkMatch = line.match(/PRIMARY\s+KEY\s*\(([^)]+)\)/i);
                         if (pkMatch) {
-                            primaryKeys.push(...pkMatch[1].split(',').map(s => s.trim().replace(/`|"/g, '')));
+                            primaryKeys.push(...pkMatch[1].split(',').map(s => s.trim().replace(/[`"']/g, '')));
                         }
                     }
                     else if (line.startsWith('FOREIGN KEY')) {
-                        const fkMatch = line.match(/FOREIGN KEY\s*\(([^)]+)\) REFERENCES (\w+)\s*\(([^)]+)\)/);
+                        const fkMatch = line.match(/FOREIGN\s+KEY\s*\(([^)]+)\)\s+REFERENCES\s+[`"']?(\w+)[`"']?\s*\(([^)]+)\)/i);
                         if (fkMatch) {
                             foreignKeys.push({
-                                column: fkMatch[1].replace(/`|"/g, ''),
+                                column: fkMatch[1].replace(/[`"']/g, ''),
                                 refTable: fkMatch[2],
-                                refColumn: fkMatch[3].replace(/`|"/g, '')
+                                refColumn: fkMatch[3].replace(/[`"']/g, '')
                             });
                         }
                     }
                     else if (line) {
-                        const columnMatch = line.match(/^`?"?(\w+)`?"?\s+(\w+)/);
+                        // Détection améliorée des colonnes
+                        const columnMatch = line.match(/^[`"']?(\w+)[`"']?\s+([\w\(\)\s]+)/);
                         if (columnMatch) {
                             columns.push({
                                 name: columnMatch[1],
-                                type: columnMatch[2],
+                                type: columnMatch[2].trim(),
                                 isPrimary: false
                             });
                         }
@@ -230,26 +247,31 @@ require_once '../includes/header.php';
 
         // Générer la visualisation
         function generateVisualization(sql) {
-            currentSql = sql;
-            parsedSchema = parseSQL(sql);
+            try {
+                currentSql = sql;
+                parsedSchema = parseSQL(sql);
 
-            // Mettre à jour l'éditeur
-            if (monacoEditor) {
-                monacoEditor.setValue(sql);
-            } else {
-                initSQLEditor();
+                // Mettre à jour l'éditeur
+                if (monacoEditor) {
+                    monacoEditor.setValue(sql);
+                } else {
+                    initSQLEditor();
+                }
+
+                // Générer les vues
+                createMindMap();
+                createTablesView();
+
+                // Afficher la zone de visualisation
+                document.getElementById('uploadContainer').classList.add('hidden');
+                document.getElementById('visualizationArea').classList.remove('hidden');
+
+                // Afficher la vue par défaut
+                switchToView(currentView);
+            } catch (error) {
+                console.error("Erreur lors de la génération de la visualisation:", error);
+                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
             }
-
-            // Générer les vues
-            createMindMap();
-            createTablesView();
-
-            // Afficher la zone de visualisation
-            document.getElementById('uploadContainer').classList.add('hidden');
-            document.getElementById('visualizationArea').classList.remove('hidden');
-
-            // Afficher la vue par défaut
-            switchToView(currentView);
         }
 
         function createMindMap() {
@@ -260,10 +282,15 @@ require_once '../includes/header.php';
                 network.destroy();
             }
 
+            if (parsedSchema.tables.length === 0) {
+                document.getElementById('mindMap').innerHTML = '<p class="no-data">Aucune table trouvée dans le schéma SQL</p>';
+                return;
+            }
+
             // Nœud racine
             allNodes.push({
                 id: 'root',
-                label: 'SCHEMA SQL',
+                label: 'BDD SQL',
                 level: 0,
                 color: {
                     background: currentColor,
@@ -302,14 +329,17 @@ require_once '../includes/header.php';
                 table.columns.forEach((col, j) => {
                     const colId = `col_${table.name}_${col.name}`;
                     const isPrimary = col.isPrimary;
+                    const isForeignKey = table.foreignKeys.some(fk => fk.column === col.name);
 
                     allNodes.push({
                         id: colId,
                         label: `${col.name}\n${col.type}`,
                         level: 2,
                         color: {
-                            background: isPrimary ? '#fcd34d' : '#e2e8f0',
-                            border: isPrimary ? '#f59e0b' : '#cbd5e1'
+                            background: isPrimary ? '#fcd34d' : 
+                                      isForeignKey ? '#93c5fd' : '#e2e8f0',
+                            border: isPrimary ? '#f59e0b' : 
+                                   isForeignKey ? '#3b82f6' : '#cbd5e1'
                         },
                         shape: 'box',
                         font: { size: 12 }
@@ -318,41 +348,28 @@ require_once '../includes/header.php';
                     allEdges.push({
                         from: tableId,
                         to: colId,
-                        color: '#94a3b8',
-                        width: 1
+                        color: isPrimary ? '#f59e0b' : 
+                             isForeignKey ? '#3b82f6' : '#94a3b8',
+                        width: isPrimary || isForeignKey ? 2 : 1
                     });
                 });
 
                 // Ajouter les relations
                 table.foreignKeys.forEach(fk => {
-                    const relationId = `rel_${table.name}_${fk.column}`;
                     const targetTableExists = parsedSchema.tables.some(t => t.name === fk.refTable);
 
                     if (targetTableExists) {
-                        allNodes.push({
-                            id: relationId,
-                            label: `→ ${fk.refTable}.${fk.refColumn}`,
-                            level: 2,
-                            color: { background: '#93c5fd', border: '#3b82f6' },
-                            shape: 'diamond',
-                            font: { size: 11 }
-                        });
-
+                        const relationId = `rel_${table.name}_${fk.column}_to_${fk.refTable}`;
+                        
                         allEdges.push({
                             from: `table_${table.name}`,
-                            to: relationId,
-                            color: '#3b82f6',
-                            dashes: [5, 5],
-                            width: 1
-                        });
-
-                        // Lien vers la table référencée
-                        allEdges.push({
-                            from: relationId,
                             to: `table_${fk.refTable}`,
+                            label: `${fk.column} → ${fk.refColumn}`,
                             color: '#3b82f6',
                             arrows: 'to',
-                            width: 1
+                            width: 2,
+                            dashes: [5, 5],
+                            font: { size: 10, align: 'middle' }
                         });
                     }
                 });
@@ -360,6 +377,8 @@ require_once '../includes/header.php';
 
             // Créer le réseau
             const container = document.getElementById('mindMap');
+            container.innerHTML = ''; // Nettoyer avant de redessiner
+            
             network = new vis.Network(
                 container,
                 { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) },
@@ -372,6 +391,16 @@ require_once '../includes/header.php';
                     network.selectNodes([nodeId]);
                 }
             });
+
+            // Ajuster la vue
+            network.once('afterDrawing', () => {
+                network.fit({
+                    animation: {
+                        duration: 1000,
+                        easingFunction: 'easeInOutQuad'
+                    }
+                });
+            });
         }
 
         function createTablesView() {
@@ -380,30 +409,24 @@ require_once '../includes/header.php';
 
             parsedSchema.tables.forEach(table => {
                 html += `
-                    <div class="table-card" style="
-                        background: white;
-                        border-radius: 8px;
-                        padding: 1rem;
-                        margin-bottom: 1rem;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-                    ">
-                        <h4 style="margin-top: 0; color: #4f46e5;">${table.name}</h4>
-                        <table style="width: 100%; border-collapse: collapse;">
+                    <div class="table-card">
+                        <h4>${table.name}</h4>
+                        <table>
                             <thead>
-                                <tr style="background: #f8fafc;">
-                                    <th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0;">Colonne</th>
-                                    <th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0;">Type</th>
-                                    <th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0;">Clé</th>
+                                <tr>
+                                    <th>Colonne</th>
+                                    <th>Type</th>
+                                    <th>Clé</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${table.columns.map(col => `
                                     <tr>
-                                        <td style="padding: 0.5rem; border-bottom: 1px solid #f1f5f9;">${col.name}</td>
-                                        <td style="padding: 0.5rem; border-bottom: 1px solid #f1f5f9;">${col.type}</td>
-                                        <td style="padding: 0.5rem; border-bottom: 1px solid #f1f5f9;">
-                                            ${col.isPrimary ? 'PK' :
-                        table.foreignKeys.some(fk => fk.column === col.name) ? 'FK' : ''}
+                                        <td>${col.name}</td>
+                                        <td>${col.type}</td>
+                                        <td>
+                                            ${col.isPrimary ? 'PK' : 
+                                              table.foreignKeys.some(fk => fk.column === col.name) ? 'FK' : ''}
                                         </td>
                                     </tr>
                                 `).join('')}
@@ -411,11 +434,11 @@ require_once '../includes/header.php';
                         </table>
                         
                         ${table.foreignKeys.length ? `
-                            <div style="margin-top: 1rem;">
-                                <h5 style="margin-bottom: 0.5rem; font-size: 0.9rem;">Relations :</h5>
-                                <ul style="margin: 0; padding-left: 1.2rem;">
+                            <div class="relations-section">
+                                <h5>Relations :</h5>
+                                <ul>
                                     ${table.foreignKeys.map(fk => `
-                                        <li style="margin-bottom: 0.2rem;">
+                                        <li>
                                             ${fk.column} → ${fk.refTable}.${fk.refColumn}
                                         </li>
                                     `).join('')}
@@ -426,7 +449,7 @@ require_once '../includes/header.php';
                 `;
             });
 
-            container.innerHTML = html || '<p>Aucune table trouvée</p>';
+            container.innerHTML = html || '<p class="no-data">Aucune table trouvée</p>';
         }
 
         function getNetworkOptions() {
@@ -443,24 +466,39 @@ require_once '../includes/header.php';
                 },
                 edges: {
                     color: currentColor,
-                    smooth: true,
+                    smooth: {
+                        enabled: true,
+                        type: 'continuous'
+                    },
                     width: 2,
-                    shadow: true
+                    shadow: true,
+                    font: {
+                        size: 12,
+                        strokeWidth: 5,
+                        align: 'middle'
+                    }
                 },
                 physics: {
                     enabled: true,
                     hierarchicalRepulsion: {
                         nodeDistance: 140,
                         springLength: 100
-                    }
+                    },
+                    solver: layoutType === 'hierarchical' ? 'hierarchicalRepulsion' : 'barnesHut'
                 },
                 layout: {
                     hierarchical: {
                         enabled: layoutType === 'hierarchical',
                         direction: 'UD',
                         nodeSpacing: 120,
-                        levelSeparation: 100
+                        levelSeparation: 100,
+                        sortMethod: 'directed'
                     }
+                },
+                interaction: {
+                    hover: true,
+                    tooltipDelay: 200,
+                    hideEdgesOnDrag: true
                 }
             };
         }
@@ -501,7 +539,15 @@ require_once '../includes/header.php';
 
             const reader = new FileReader();
             reader.onload = e => {
-                generateVisualization(e.target.result);
+                try {
+                    generateVisualization(e.target.result);
+                } catch (error) {
+                    console.error("Erreur lors de la lecture du fichier:", error);
+                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+                }
+            };
+            reader.onerror = () => {
+                alert("Erreur lors de la lecture du fichier.");
             };
             reader.readAsText(file);
         }
@@ -556,8 +602,6 @@ require_once '../includes/header.php';
             link.download = `sql-schema-${new Date().toISOString().slice(0, 10)}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-
-            alert('Export PNG terminé');
         }
 
         function exportAsSQL() {
@@ -570,8 +614,6 @@ require_once '../includes/header.php';
             link.download = `schema-${new Date().toISOString().slice(0, 10)}.sql`;
             link.href = url;
             link.click();
-
-            alert('Export SQL terminé');
         }
 
         // Initialisation
@@ -582,6 +624,11 @@ require_once '../includes/header.php';
                 document.getElementById('sqlFileInput').click());
             document.getElementById('sampleDataBtn').addEventListener('click', loadSampleData);
             document.getElementById('pasteSqlBtn').addEventListener('click', showPasteDialog);
+
+            // Bouton de mise à jour du mindmap
+            document.getElementById('updateMindmapBtn').addEventListener('click', () => {
+                generateVisualization(monacoEditor.getValue());
+            });
 
             // Boutons d'actions
             document.getElementById('resetBtn').addEventListener('click', resetVisualization);
@@ -633,7 +680,7 @@ require_once '../includes/header.php';
                 } else {
                     currentView = 'editor';
                 }
-                generateVisualization(currentData, currentView);
+                switchToView(currentView);
             });
 
             // Drag & drop
