@@ -29,7 +29,7 @@ require_once '../includes/header.php';
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
                 </button>
-                
+
             </div>
         </div>
     </section>
@@ -125,10 +125,10 @@ require_once '../includes/header.php';
 
                     <!-- SQL Editor View -->
                     <div id="editor-view" class="view-container hidden">
-                        <div id="sqlEditor"></div>
+                        <div id="sqlEditor" style="height:100%; width:100%;"></div>
                         <div class="editor-actions">
-                            <button id="updateMindmapBtn" class="update_Mindmap">
-                                <i class="fas fa-sync-alt"></i> Mettre à jour le Mindmap
+                            <button id="updateMindmapBtn" class="primary">
+                                <i class="fas fa-sync-alt"></i> Mettre à jour
                             </button>
                         </div>
                     </div>

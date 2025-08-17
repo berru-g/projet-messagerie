@@ -2,7 +2,7 @@
     "name": "Agora DataViz",
     "short_name": "DataViz",
     "version": "1.4.3",
-    "description": "L'app complète simplifie la visualisation et la conversion de fichier Json, CSV, Excel et bien plus. Contient un réseau social minimaliste. Convert your Json to map or CSV to chart.",
+    "description": "L'app complète simplifie la visualisation et la conversion de fichier Json, CSV, Excel, SQL et bien plus. Contient un réseau social minimaliste. SQL editor, Json editor, Convert your Json to map or CSV to chart.",
     "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#ab9ff2",

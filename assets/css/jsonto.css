@@ -459,3 +459,33 @@
      transform: translateY(0);
      opacity: 1
  }
+
+ /* Fix for the fuckiiiiiing conflit d'aff MindMap container */
+#mindMap {
+    width: 100% !important;
+    height: calc(100vh - 180px) !important;
+    min-height: 500px !important;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* Fix editor container */
+#sqlEditor { 
+    width: 100% !important;
+    height: calc(100vh - 180px) !important;
+    min-height: 500px !important;
+}
+
+/* Ensure containers are visible */
+.view-container {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* Network tooltip fixes */
+.vis-tooltip {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: none;
+}
