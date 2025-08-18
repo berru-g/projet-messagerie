@@ -1,0 +1,51 @@
+
+  #canvas-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #f0f0fc, #d8d6f9);
+  }
+
+#mindmap-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: 500px;
+    background: white;
+}
+
+.template-card {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.step {
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    padding: 10px 15px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4CAF50;
+    border-bottom: 3px solid #4CAF50;
+    background: transparent;
+}
+
+#live-sql-editor, #sql-output {
+    height: 450px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+    overflow: auto;
+}

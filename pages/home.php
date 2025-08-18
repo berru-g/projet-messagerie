@@ -298,6 +298,7 @@ require_once '../includes/header.php';
         'imageFadeDuration': 200,
         'resizeDuration': 200
     });
+    console.log('8 Easter egg sur gael-berru.com');
 
 </script>
 

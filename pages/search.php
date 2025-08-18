@@ -205,6 +205,7 @@ require_once '../includes/header.php';
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <script>
+    console.log('maj ok');
     // Configuration du lightbox pour la galerie
     lightbox.option({
         'albumLabel': 'Image %1 sur %2',

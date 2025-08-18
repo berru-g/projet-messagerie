@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Builder No Code</title>
+    <meta name="description" content="Éditeur SQL visuel avec génération de mind map. Transformez vos schémas de base de données en représentations graphiques interactives.">
+    <meta name="keywords" content="SQL editor, éditeur sql, visualisation sql, sqlviz, sql builder nocode, sql no code, mind map">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Style de base */
+        .template-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .template-card:hover {
+            border-color: #a395f2;
+            transform: translateY(-3px);
+        }
+        .template-card.selected {
+            border-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        .field-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        #sql-preview {
+            font-family: monospace;
+            white-space: pre;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+  <canvas id="canvas-bg"></canvas>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="text-center mb-5">
+                    <h1><i class="fas fa-database me-2"></i>SQL Builder No Code</h1>
+                    <p class="lead">Créez des bases de données sécurisées en quelques clics</p>
+                  
+                </div>
+              
+              
+
+                <!-- Étape 1: Choix initial -->
+                <div id="step-1" class="step">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Comment souhaitez-vous commencer ?</h3>
+                            <div class="d-grid gap-3 mt-4">
+                                <button id="new-db-btn" class="btn btn-primary btn-lg py-3">
+                                    <i class="fas fa-plus-circle me-2"></i>Nouvelle base de données
+                                </button>
+                                <button id="upload-sql-btn" class="btn btn-outline-secondary btn-lg py-3">
+                                    <i class="fas fa-upload me-2"></i>Importer un fichier SQL
+                                </button>
+                             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Étape 2: Assistant de création -->
+                <div id="step-2" class="step" style="display: none;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title mb-4">Configurez votre base de données</h3>
+                            
+                            <div class="mb-4">
+                                <label for="db-name" class="form-label">Nom de la base</label>
+                                <input type="text" id="db-name" class="form-control" placeholder="ex: blog_db">
+                            </div>
+                            
+                            <h4 class="mt-4 mb-3">Tables disponibles</h4>
+                            <div id="templates-container">
+                                <!-- Templates seront injectés ici par JS -->
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button id="back-to-start" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Retour
+                                </button>
+                                <button id="generate-sql-btn" class="btn btn-success">
+                                    Générer le SQL <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Étape 3: Prévisualisation -->
+                <div id="step-3" class="step" style="display: none;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title mb-4">Votre schéma SQL est prêt !</h3>
+                            
+                            <div class="mb-4">
+                                <h5>Prévisualisation :</h5>
+                                <pre id="sql-preview"></pre>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button id="edit-schema-btn" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit me-2"></i>Modifier
+                                </button>
+                                <button id="download-sql-btn" class="btn btn-primary">
+                                    <i class="fas fa-download me-2"></i>Télécharger
+                                </button>
+                                <button id="view-mindmap-btn" class="btn btn-info">
+                                    <i class="fas fa-project-diagram me-2"></i>Voir le schéma
+                                </button>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  <div class="text-center mb-5">
+                    <h2><i class="fas fa-database me-2"></i>SQL Editor</h2>
+                    <p class="lead">Créez, modifiez, visualisez, partagez, télechargez</p>
+                  <a href="https://agora-dataviz.com"><button class="btn btn-primary btn-lg py-3">S'inscrire gratuitement
+      </button></a>
+                </div>
+  
+  <div class="modal fade" id="fieldEditorModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Éditer le champ</h5>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Nom du champ</label>
+          <input type="text" class="form-control" id="fieldName">
+        </div>
+        <div class="mb-3">
+          <label>Type</label>
+          <select class="form-select" id="fieldType">
+            <option value="INT">INT</option>
+            <option value="VARCHAR(255)">VARCHAR</option>
+            <option value="TEXT">TEXT</option>
+            <option value="TIMESTAMP">TIMESTAMP</option>
+          </select>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="fieldRequired">
+          <label class="form-check-label">NOT NULL</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveFieldBtn">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#sql-code" data-bs-toggle="tab">Code SQL</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#raw-sql" data-bs-toggle="tab">SQL Brut</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body tab-content">
+        <div class="tab-pane active" id="sql-code">
+          <pre id="live-sql-editor"></pre>
+        </div>
+        <div class="tab-pane" id="raw-sql">
+          <pre id="sql-output"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    
+    <div class="card">
+      <div class="card-header">Schéma relationnel</div>
+      <div class="card-body">
+        <div id="mindmap-container" style="height: 500px;"></div>
+      </div>
+    </div>
+  </div>
+    <a href="#"><button class="btn btn-primary">
+        <i class="fas fa-connect"></i>S'inscrire pour modifier la map
+      </button></a>
+</div>
+
+    <script src="script.js"></script>
+  <script>
+// Charge Monaco Editor si besoin
+if (typeof require === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js';
+    script.onload = initMonacoEditor;
+    document.body.appendChild(script);
+} else {
+    initMonacoEditor();
+}
+</script>
+</body>
+</html>
