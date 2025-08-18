@@ -50,13 +50,13 @@ async function saveSQLFile() {
             if (!value) return 'Vous devez donner un nom !';
         }
     });
-    if (!fileName) return;
+   // if (!fileName) return;
 
     try {
         const formData = new FormData();
         formData.append('sql_content', currentSql);
         formData.append('file_name', fileName + '.sql');
-        formData.append('user_id', <? php echo $_SESSION['user_id']; ?>);
+        formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
         const response = await fetch('save_sql_file.php', {
             method: 'POST',

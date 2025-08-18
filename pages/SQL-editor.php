@@ -149,6 +149,13 @@ require_once '../includes/header.php';
     </div>
 
     <script>
+        Swal.fire({
+                icon: 'success',
+                title: 'Mise à jour',
+                text: 'Réussi succès !',
+                showConfirmButton: false,
+                timer: 2000
+            });
         // Configuration globale
 let network, monacoEditor;
 let allNodes = [], allEdges = [];
@@ -193,7 +200,7 @@ async function saveSQLFile() {
         const formData = new FormData();
         formData.append('sql_content', currentSql);
         formData.append('file_name', fileName + '.sql');
-        formData.append('user_id', <? php echo $_SESSION['user_id']; ?>);
+        formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
         const response = await fetch('save_sql_file.php', {
             method: 'POST',
