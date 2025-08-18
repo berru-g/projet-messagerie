@@ -75,11 +75,11 @@
 ## 1️⃣ Checklist Technique – Prêt pour le lancement
 
 ### 🌍 Nom de domaine & hébergement
-- 🔜 Acheter ton nom de domaine (ex. AgoraSocial.com ou variante)
-- 🔜 Configurer DNS → A record pour ton serveur *FAIT AUTO PAR HOSTINGER*
-- 🔜 Installer SSL (via Let’s Encrypt ou Certbot) **Verif  où pointe ton vscode "git remote -v" puis ajouter ta clef ssh, generer "ssh-keygen -t ed25519"puis ajouter ()**
+- ✅ Acheter ton nom de domaine (ex. AgoraSocial.com ou variante)
+- ✅ Configurer DNS → A record pour ton serveur *FAIT AUTO PAR HOSTINGER*
+- ✅ Installer SSL (via Let’s Encrypt ou Certbot) **Verif  où pointe ton vscode "git remote -v" puis ajouter ta clef ssh, generer "ssh-keygen -t ed25519"puis ajouter ()**
  - ✅ Re-deploy auto apres nomdedomaine, change public_html & redeploy.
-- 🔜 Forcer HTTPS sur tout le site *FAIT AUTO PAR HOSTINGER*
+- ✅ Forcer HTTPS sur tout le site *FAIT AUTO PAR HOSTINGER*
 
 #### Gérer les permissions aux fichiers :
  - .htaccess → 644
@@ -93,8 +93,8 @@
 - 🔜 Ajouter `<title>` unique par page (pas "Accueil" partout)
 - 🔜 Mettre `<meta name="description">` optimisé pour chaque page
 - ✅ Ajouter un **favicon** et Open Graph (prévisualisation pour réseaux sociaux)
-- 🔜 Créer un `sitemap.xml` et le soumettre à Google Search Console
-- 🔜 Créer un `robots.txt` autorisant l’indexation des pages publiques
+- ✅ Créer un `sitemap.xml` et le soumettre à Google Search Console
+- ✅ Créer un `robots.txt` autorisant l’indexation des pages publiques
 - 🔜 Minifier CSS/JS pour accélérer le site
 - 🔜 Tester vitesse avec [PageSpeed Insights](https://pagespeed.web.dev/)
 
@@ -124,7 +124,7 @@
 ---
 
 ### ⏳ Pré-lancement (teasing)
-- 1 post teasing par jour sur 7 jours avant ouverture
+- ✅ 1 post teasing par jour sur 7 jours avant ouverture
 - Captures d’écran floutées + phrases intrigantes ("Et si on parlait enfin sans algorithme ?")
   - Compte à rebours en story Instagram/Twitter
 

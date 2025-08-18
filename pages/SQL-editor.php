@@ -9,6 +9,10 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 
+$page_title = "Éditeur SQL - Outil de visualisation";
+$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
+$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
+
 require_once '../includes/header.php';
 ?>
 
@@ -19,6 +23,9 @@ require_once '../includes/header.php';
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
     <!-- Monaco Editor Loader -->
     <script src="https://unpkg.com/monaco-editor@0.36.1/min/vs/loader.js"></script>
+    <!-- Dans ton header.php ou avant le </head> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -177,11 +184,25 @@ require_once '../includes/header.php';
         // Fonction pour sauvegarder le fichier
         async function saveSQLFile() {
             if (!currentSql.trim()) {
-                alert("Aucun SQL à enregistrer !");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Aucun SQL à enregistrer !',
+                    confirmButtonColor: '#a395f2'
+                });
                 return;
             }
 
-            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            const { value: fileName } = await Swal.fire({
+                title: 'Nom du fichier',
+                input: 'text',
+                inputLabel: 'Sans extension',
+                inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez donner un nom !';
+                }
+            });
             if (!fileName) return;
 
             try {
@@ -198,13 +219,30 @@ require_once '../includes/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    alert("Fichier enregistré avec succès !");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès !',
+                        text: 'Fichier enregistré avec succès !',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
-                    alert("Erreur: " + result.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        html: `<strong>${result.message}</strong>`,
+                        confirmButtonColor: '#ef4444'
+                    });
                 }
             } catch (error) {
                 console.error("Erreur:", error);
-                alert("Erreur lors de l'enregistrement");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de l enregistrement',
+                    confirmButtonColor: '#a395f2'
+                });
+
             }
         }
 
@@ -312,7 +350,13 @@ require_once '../includes/header.php';
                 switchToView(currentView);
             } catch (error) {
                 console.error("Erreur lors de la génération de la visualisation:", error);
-                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
+                    confirmButtonColor: '#a395f2'
+                });
+
             }
         }
         // testnouvelle version
@@ -584,11 +628,23 @@ CREATE TABLE comments (
                     generateVisualization(e.target.result);
                 } catch (error) {
                     console.error("Erreur lors de la lecture du fichier:", error);
-                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Vérifiez qu il s agit d un fichier SQL valide.',
+                        confirmButtonColor: '#a395f2'
+                    });
+
                 }
             };
             reader.onerror = () => {
-                alert("Erreur lors de la lecture du fichier.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de la lecture du fichier.',
+                    confirmButtonColor: '#a395f2'
+                });
+
             };
             reader.readAsText(file);
         }
