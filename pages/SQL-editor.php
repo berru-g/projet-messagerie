@@ -158,7 +158,7 @@ require_once '../includes/header.php';
         import Swal from "https://esm.sh/sweetalert2?no-deps";
         console.log('balise js bien lu dans le php');
         // Configuration globale
-        // Configuration globale
+      
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
@@ -217,7 +217,7 @@ require_once '../includes/header.php';
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
                 //a enlever sur codepen
-                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
+                //formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
 
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
