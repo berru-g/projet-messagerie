@@ -234,11 +234,12 @@
      min-height: 300px !important;
  }
 
- .update_Mindmap {
-     position: absolute;
-     bottom: 20px;
-     z-index: 1000;
-     background-color: var(--primary);
+ .refreshmap {
+     position: relative;
+   max-width: 200px;
+     background-color: var(--bg);
+   color: var(--primary);
+   border: 1px solid var(--primary);
  }
 
  .hidden {

@@ -60,11 +60,11 @@ require_once '../includes/header.php';
             <div class="tool-section">
                 <h3><i class="fas fa-palette"></i> Mind Map</h3>
                 <div class="color-palette">
-                    <div class="color-option active" style="background: #a395f2;" data-color="#a395f2"></div>
-                    <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                    <div class="color-option active" style="background: #ab9ff2;" data-color="#ab9ff2"></div>
+                    <div class="color-option" style="background: #2575fc;" data-color="#2575fc"></div>
                     <div class="color-option" style="background: #60d394;" data-color="#60d394"></div>
                     <div class="color-option" style="background: #ffd97d;" data-color="#ffd97d"></div>
-                    <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
+                    <div class="color-option" style="background: #ee6055;" data-color="#ee6055"></div>
                 </div>
             </div>
 
@@ -87,9 +87,9 @@ require_once '../includes/header.php';
 
             <div class="tool-section">
                 <h3><i class="fas fa-tools"></i> Actions</h3>
-                <button id="updateMindmapBtn" class="secondary">
+                <!--<button id="updateMindmapBtn" class="secondary">
                     <i class="fas fa-sync-alt"></i> Mettre à jour la map
-                </button>
+                </button>-->
                 <button id="resetBtn" class="outline">
                     <i class="fas fa-trash-alt"></i> Réinitialiser
                 </button>
@@ -111,7 +111,7 @@ require_once '../includes/header.php';
         <div class="content" id="mainContent">
             <div class="upload-container" id="uploadContainer">
                 <div class="upload-dropzone" id="dropZone">
-                    <i class="fas fa-file-upload fa-3x" style="color: #a395f2; margin-bottom: 1rem;"></i>
+                    <i class="fas fa-file-upload fa-3x" style="color: #ab9ff2; margin-bottom: 1rem;"></i>
                     <h3>Déposez un fichier SQL ici</h3>
                     <p>Ou cliquez pour sélectionner un fichier</p>
                     <input type="file" id="sqlUpload" accept=".sql" style="display: none;">
@@ -124,6 +124,9 @@ require_once '../includes/header.php';
                     <div class="tab active" data-view="mindmap">Mind Map</div>
                     <div class="tab" data-view="editor">Éditeur SQL</div>
                     <div class="tab" data-view="tables">Tables</div>
+                    <button id="updateMindmapBtn" class="refreshmap">
+                        <i class="fas fa-sync-alt"></i> Mettre à jour la map
+                    </button>
                 </div>
 
                 <div class="visualization-container">
@@ -149,13 +152,13 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-        console.log('maj succes');
+        import Swal from "https://esm.sh/sweetalert2"
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
         let parsedSchema = { tables: [] };
-        let currentColor = '#a395f2';
+        let currentColor = '#ab9ff2';
         let currentView = 'mindmap';
 
         // Initialisation de Monaco Editor
@@ -183,11 +186,29 @@ require_once '../includes/header.php';
         // Fonction pour sauvegarder le fichier
         async function saveSQLFile() {
             if (!currentSql.trim()) {
-                alert("Aucun SQL à enregistrer !");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Aucun SQL à enregistrer !',
+                    confirmButtonColor: '#ab9ff2'
+                });
                 return;
             }
 
-            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            const { value: fileName } = await Swal.fire({
+                html: '<div style="display:flex;flex-direction:column;align-items:center">' +
+                    '<img src="https://agora-dataviz.com/assets/img/agora-logo.png" style="width:100px;height:100px;margin-bottom:15px">' +
+                    '<p>Nommez votre schéma SQL sans extension</p></div>',
+
+                input: 'text',
+                inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
+                showCancelButton: true,
+                confirmButtonColor: '#ab9ff2',
+                cancelButtonColor: '#333',
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez donner un nom !';
+                }
+            });
             if (!fileName) return;
 
             try {
@@ -204,18 +225,33 @@ require_once '../includes/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    alert("Fichier enregistré avec succès !");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès !',
+                        text: 'Fichier enregistré avec succès !',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
-                    alert("Erreur: " + result.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        html: `<strong>${result.message}</strong>`,
+                        confirmButtonColor: '#ee6055'
+                    });
                 }
             } catch (error) {
                 console.error("Erreur:", error);
-                alert("Erreur lors de l'enregistrement");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de l enregistrement',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
 
-        // Ajoute l'événement au bouton
-        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
 
         // Parser SQL amélioré
         function parseSQL(sql) {
@@ -318,7 +354,13 @@ require_once '../includes/header.php';
                 switchToView(currentView);
             } catch (error) {
                 console.error("Erreur lors de la génération de la visualisation:", error);
-                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
         // testnouvelle version
@@ -590,11 +632,23 @@ CREATE TABLE comments (
                     generateVisualization(e.target.result);
                 } catch (error) {
                     console.error("Erreur lors de la lecture du fichier:", error);
-                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Vérifiez qu il s agit d un fichier SQL valide.',
+                        confirmButtonColor: '#ab9ff2'
+                    });
+
                 }
             };
             reader.onerror = () => {
-                alert("Erreur lors de la lecture du fichier.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de la lecture du fichier.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             };
             reader.readAsText(file);
         }
