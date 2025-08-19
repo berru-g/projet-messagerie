@@ -1,3 +1,5 @@
+import Swal from "https://esm.sh/sweetalert2"
+console.log('fonctionne pas en ligne fdp');
 // Configuration globale
 let network, monacoEditor;
 let allNodes = [], allEdges = [];
@@ -56,7 +58,7 @@ async function saveSQLFile() {
         const formData = new FormData();
         formData.append('sql_content', currentSql);
         formData.append('file_name', fileName + '.sql');
-        formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
+        formData.append('user_id', <? php echo $_SESSION['user_id']; ?>);
 
         const response = await fetch('save_sql_file.php', {
             method: 'POST',
