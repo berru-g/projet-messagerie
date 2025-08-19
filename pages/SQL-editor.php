@@ -153,7 +153,7 @@ require_once '../includes/header.php';
     <script>Swal.fire("Debug en cour merci de votre comprehension.");</script>
 
     <script>
-        import Swal from "https://esm.sh/sweetalert2";
+        import Swal from "https://esm.sh/sweetalert2?no-deps";
         console.log('balise js bien lu dans le php');
         // Configuration globale
         // Configuration globale
@@ -824,9 +824,8 @@ CREATE TABLE comments (
                 }
             }
         });
-
-
     </script>
+    <script>Swal.fire("Micro saas open source, viens m'aider à debug et améliorer le tool");</script>
 </body>
 
 </html>
