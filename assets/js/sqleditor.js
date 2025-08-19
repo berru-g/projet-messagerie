@@ -1,5 +1,5 @@
 import Swal from "https://esm.sh/sweetalert2"
-console.log('fonctionne pas en ligne fdp');
+console.log('le js separe');
 // Configuration globale
 let network, monacoEditor;
 let allNodes = [], allEdges = [];
