@@ -9,9 +9,9 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 
-$page_title = "Éditeur SQL - Outil de visualisation";
-$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
-$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
+//$page_title = "Éditeur SQL - Outil de visualisation";
+//$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
+//$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
 
 require_once '../includes/header.php';
 ?>
@@ -153,6 +153,7 @@ require_once '../includes/header.php';
 
     <script>
         Swal.fire("Debug en cour merci de votre comprehension.");
+        console.log('Bug Abyssal fin ?');
         import Swal from "https://esm.sh/sweetalert2"
         // Configuration globale
         let network, monacoEditor;

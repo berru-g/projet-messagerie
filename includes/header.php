@@ -17,13 +17,6 @@ require_once __DIR__ . '/functions.php';
     content="convert csv json, json editor, sql editor, csv to pdf, json to mindmap, json to csv, csv to json, csv to pdf, csv to png, xlxs to chart, JSON Mind Mapper, json to map, data visualizer, excel to chart,  Data Enthusiasts, plateforme collaboratif, outil data, réseau social">
   <meta name="robots" content="index, follow">
   <meta name="author" content="agora data viz">
-  <!--pour le seo de sql editor -->
-  <?php if(!isset($meta_description)): ?>
-        <meta name="description" content="Éditeur SQL visuel avec génération de mind map. Transformez vos schémas de base de données en représentations graphiques interactives.">
-        <meta name="keywords" content="SQL, éditeur, visualisation, mind map">
-    <?php endif; ?>
-    
-    <title><?= $page_title ?? 'SQL-editor' ?></title>
 
   <!-- Open Graph pour Facebook / LinkedIn -->
   <meta property="og:title" content="agora data viz – Partage intelligent de fichiers et données">
