@@ -9,6 +9,10 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 
+//$page_title = "Éditeur SQL - Outil de visualisation";
+//$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
+//$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
+
 require_once '../includes/header.php';
 ?>
 
@@ -29,7 +33,7 @@ require_once '../includes/header.php';
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
                 </button>
-                
+
             </div>
         </div>
     </section>
@@ -44,7 +48,7 @@ require_once '../includes/header.php';
             <div class="tool-section">
                 <h3><i class="fas fa-upload"></i> Importation</h3>
                 <input type="file" id="sqlFileInput" accept=".sql" class="mb-4">
-                <button id="sampleDataBtn" class="secondary">
+                <button id="sampleDataBtn" class="outline">
                     <i class="fas fa-vial"></i> Charger un exemple
                 </button>
                 <button id="pasteSqlBtn">
@@ -53,7 +57,7 @@ require_once '../includes/header.php';
             </div>
 
             <div class="tool-section">
-                <h3><i class="fas fa-palette"></i> Personnalisation</h3>
+                <h3><i class="fas fa-palette"></i> Mind Map</h3>
                 <div class="color-palette">
                     <div class="color-option active" style="background: #a395f2;" data-color="#a395f2"></div>
                     <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
@@ -82,6 +86,7 @@ require_once '../includes/header.php';
 
             <div class="tool-section">
                 <h3><i class="fas fa-tools"></i> Actions</h3>
+                
                 <button id="resetBtn" class="outline">
                     <i class="fas fa-trash-alt"></i> Réinitialiser
                 </button>
@@ -93,7 +98,7 @@ require_once '../includes/header.php';
                         <i class="fas fa-image"></i> Exporter PNG
                     </button>
                     <button id="exportSqlBtn">
-                        <i class="fas fa-file-export"></i> Exporter SQL
+                        <i class="fas fa-database"></i> Exporter SQL
                     </button>
                 </div>
             </div>
@@ -111,10 +116,14 @@ require_once '../includes/header.php';
             </div>
 
             <div id="visualizationArea" class="hidden">
+
                 <div class="tabs">
                     <div class="tab active" data-view="mindmap">Mind Map</div>
                     <div class="tab" data-view="editor">Éditeur SQL</div>
                     <div class="tab" data-view="tables">Tables</div>
+                    <button id="updateMindmapBtn" class="refreshmap">
+                    <i class="fas fa-sync-alt"></i> Mettre à jour la map
+                </button>
                 </div>
 
                 <div class="visualization-container">
@@ -125,11 +134,8 @@ require_once '../includes/header.php';
 
                     <!-- SQL Editor View -->
                     <div id="editor-view" class="view-container hidden">
-                        <div id="sqlEditor"></div>
+                        <div id="sqlEditor" style="height:100%; width:100%;"></div>
                         <div class="editor-actions">
-                            <button id="updateMindmapBtn" class="update_Mindmap">
-                                <i class="fas fa-sync-alt"></i> Mettre à jour le Mindmap
-                            </button>
                         </div>
                     </div>
 
@@ -143,7 +149,6 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-        console.log("V2 en cours...");
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
@@ -188,7 +193,8 @@ require_once '../includes/header.php';
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                //enlever ça en local merci gaeeeeeeel putzaOIBJ 
+                //a enlever en local octopute
+                console.log("octopute de V2");
                 formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
                 const response = await fetch('save_sql_file.php', {
@@ -316,7 +322,7 @@ require_once '../includes/header.php';
                 alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
             }
         }
-
+        // testnouvelle version
         function createMindMap() {
             allNodes = [];
             allEdges = [];
@@ -333,7 +339,7 @@ require_once '../includes/header.php';
             // Nœud racine
             allNodes.push({
                 id: 'root',
-                label: 'BDD SQL',
+                label: 'agora_dataviz_com/SQLeditor',
                 level: 0,
                 color: {
                     background: currentColor,
@@ -548,30 +554,29 @@ require_once '../includes/header.php';
 
         function loadSampleData() {
             const sampleSQL = `
-                CREATE TABLE users (
-                    id INT PRIMARY KEY,
-                    username VARCHAR(50) NOT NULL,
-                    email VARCHAR(100) UNIQUE,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
-                
-                CREATE TABLE posts (
-                    id INT PRIMARY KEY,
-                    user_id INT,
-                    title VARCHAR(255),
-                    content TEXT,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                );
-                
-                CREATE TABLE comments (
-                    id INT PRIMARY KEY,
-                    post_id INT,
-                    user_id INT,
-                    comment TEXT,
-                    FOREIGN KEY (post_id) REFERENCES posts(id),
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                );
-            `;
+-- Pensez à 🔄️ Mettre à jour la map aprés vos modif
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS agora_dataviz_com/SQLeditor;
+USE agora_dataviz_com/SQLeditor;
+
+-- Table des utilisateurs
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des commentaires
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+`;
 
             generateVisualization(sampleSQL);
         }
@@ -642,7 +647,7 @@ require_once '../includes/header.php';
             if (!canvas) return;
 
             const link = document.createElement('a');
-            link.download = `sql-schema-${new Date().toISOString().slice(0, 10)}.png`;
+            link.download = `agora-dataviz.com/${new Date().toISOString().slice(0, 10)}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
@@ -654,7 +659,7 @@ require_once '../includes/header.php';
             const url = URL.createObjectURL(blob);
 
             const link = document.createElement('a');
-            link.download = `schema-${new Date().toISOString().slice(0, 10)}.sql`;
+            link.download = `agora-dataviz.com/${new Date().toISOString().slice(0, 10)}.sql`;
             link.href = url;
             link.click();
         }
