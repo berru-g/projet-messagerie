@@ -152,7 +152,7 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-        import Swal from "https://esm.sh/sweetalert2";
+        import Swal from "https://esm.sh/sweetalert2"
         console.log('fonctionne pas en ligne fdp');
         // Configuration globale
         let network, monacoEditor;
