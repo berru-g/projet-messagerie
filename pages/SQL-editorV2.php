@@ -9,6 +9,10 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 
+//$page_title = "Éditeur SQL - Outil de visualisation";
+//$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
+//$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
+
 require_once '../includes/header.php';
 ?>
 
@@ -17,8 +21,9 @@ require_once '../includes/header.php';
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/jsonto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
-    <!-- Monaco Editor Loader -->
     <script src="https://unpkg.com/monaco-editor@0.36.1/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -29,7 +34,7 @@ require_once '../includes/header.php';
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
                 </button>
-                
+
             </div>
         </div>
     </section>
@@ -44,7 +49,7 @@ require_once '../includes/header.php';
             <div class="tool-section">
                 <h3><i class="fas fa-upload"></i> Importation</h3>
                 <input type="file" id="sqlFileInput" accept=".sql" class="mb-4">
-                <button id="sampleDataBtn" class="secondary">
+                <button id="sampleDataBtn" class="outline">
                     <i class="fas fa-vial"></i> Charger un exemple
                 </button>
                 <button id="pasteSqlBtn">
@@ -53,13 +58,13 @@ require_once '../includes/header.php';
             </div>
 
             <div class="tool-section">
-                <h3><i class="fas fa-palette"></i> Personnalisation</h3>
+                <h3><i class="fas fa-palette"></i> Mind Map</h3>
                 <div class="color-palette">
-                    <div class="color-option active" style="background: #a395f2;" data-color="#a395f2"></div>
-                    <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                    <div class="color-option active" style="background: #ab9ff2;" data-color="#ab9ff2"></div>
+                    <div class="color-option" style="background: #2575fc;" data-color="#2575fc"></div>
                     <div class="color-option" style="background: #60d394;" data-color="#60d394"></div>
                     <div class="color-option" style="background: #ffd97d;" data-color="#ffd97d"></div>
-                    <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
+                    <div class="color-option" style="background: #ee6055;" data-color="#ee6055"></div>
                 </div>
             </div>
 
@@ -82,6 +87,9 @@ require_once '../includes/header.php';
 
             <div class="tool-section">
                 <h3><i class="fas fa-tools"></i> Actions</h3>
+                <!--<button id="updateMindmapBtn" class="secondary">
+                    <i class="fas fa-sync-alt"></i> Mettre à jour la map
+                </button>-->
                 <button id="resetBtn" class="outline">
                     <i class="fas fa-trash-alt"></i> Réinitialiser
                 </button>
@@ -93,7 +101,7 @@ require_once '../includes/header.php';
                         <i class="fas fa-image"></i> Exporter PNG
                     </button>
                     <button id="exportSqlBtn">
-                        <i class="fas fa-file-export"></i> Exporter SQL
+                        <i class="fas fa-database"></i> Exporter SQL
                     </button>
                 </div>
             </div>
@@ -103,7 +111,7 @@ require_once '../includes/header.php';
         <div class="content" id="mainContent">
             <div class="upload-container" id="uploadContainer">
                 <div class="upload-dropzone" id="dropZone">
-                    <i class="fas fa-file-upload fa-3x" style="color: #a395f2; margin-bottom: 1rem;"></i>
+                    <i class="fas fa-file-upload fa-3x" style="color: #ab9ff2; margin-bottom: 1rem;"></i>
                     <h3>Déposez un fichier SQL ici</h3>
                     <p>Ou cliquez pour sélectionner un fichier</p>
                     <input type="file" id="sqlUpload" accept=".sql" style="display: none;">
@@ -111,10 +119,14 @@ require_once '../includes/header.php';
             </div>
 
             <div id="visualizationArea" class="hidden">
+
                 <div class="tabs">
                     <div class="tab active" data-view="mindmap">Mind Map</div>
                     <div class="tab" data-view="editor">Éditeur SQL</div>
                     <div class="tab" data-view="tables">Tables</div>
+                    <button id="updateMindmapBtn" class="refreshmap">
+                        <i class="fas fa-sync-alt"></i> Mettre à jour la map
+                    </button>
                 </div>
 
                 <div class="visualization-container">
@@ -125,11 +137,8 @@ require_once '../includes/header.php';
 
                     <!-- SQL Editor View -->
                     <div id="editor-view" class="view-container hidden">
-                        <div id="sqlEditor"></div>
+                        <div id="sqlEditor" style="height:100%; width:100%;"></div>
                         <div class="editor-actions">
-                            <button id="updateMindmapBtn" class="update_Mindmap">
-                                <i class="fas fa-sync-alt"></i> Mettre à jour le Mindmap
-                            </button>
                         </div>
                     </div>
 
@@ -143,13 +152,15 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-        console.log("V2 en cours...");
+        Swal.fire("Debug en cour merci de votre comprehension.");
+        console.log('Bug Abyssal fin ?');
+        import Swal from "https://esm.sh/sweetalert2"
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
         let parsedSchema = { tables: [] };
-        let currentColor = '#a395f2';
+        let currentColor = '#ab9ff2';
         let currentView = 'mindmap';
 
         // Initialisation de Monaco Editor
@@ -177,18 +188,36 @@ require_once '../includes/header.php';
         // Fonction pour sauvegarder le fichier
         async function saveSQLFile() {
             if (!currentSql.trim()) {
-                alert("Aucun SQL à enregistrer !");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Aucun SQL à enregistrer !',
+                    confirmButtonColor: '#ab9ff2'
+                });
                 return;
             }
 
-            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            const { value: fileName } = await Swal.fire({
+                html: '<div style="display:flex;flex-direction:column;align-items:center">' +
+                    '<img src="https://agora-dataviz.com/assets/img/agora-logo.png" style="width:100px;height:100px;margin-bottom:15px">' +
+                    '<p>Nommez votre schéma SQL sans extension</p></div>',
+
+                input: 'text',
+                inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
+                showCancelButton: true,
+                confirmButtonColor: '#ab9ff2',
+                cancelButtonColor: '#333',
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez donner un nom !';
+                }
+            });
             if (!fileName) return;
 
             try {
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                //enlever ça en local merci gaeeeeeeel putzaOIBJ 
+                console.log('formdata ok');
                 formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
                 const response = await fetch('save_sql_file.php', {
@@ -199,18 +228,33 @@ require_once '../includes/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    alert("Fichier enregistré avec succès !");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès !',
+                        text: 'Fichier enregistré avec succès !',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
-                    alert("Erreur: " + result.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        html: `<strong>${result.message}</strong>`,
+                        confirmButtonColor: '#ee6055'
+                    });
                 }
             } catch (error) {
                 console.error("Erreur:", error);
-                alert("Erreur lors de l'enregistrement");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de l enregistrement',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
 
-        // Ajoute l'événement au bouton
-        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
 
         // Parser SQL amélioré
         function parseSQL(sql) {
@@ -313,10 +357,16 @@ require_once '../includes/header.php';
                 switchToView(currentView);
             } catch (error) {
                 console.error("Erreur lors de la génération de la visualisation:", error);
-                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
-
+        // testnouvelle version
         function createMindMap() {
             allNodes = [];
             allEdges = [];
@@ -333,7 +383,7 @@ require_once '../includes/header.php';
             // Nœud racine
             allNodes.push({
                 id: 'root',
-                label: 'BDD SQL',
+                label: 'agora_dataviz_com/SQLeditor',
                 level: 0,
                 color: {
                     background: currentColor,
@@ -548,30 +598,29 @@ require_once '../includes/header.php';
 
         function loadSampleData() {
             const sampleSQL = `
-                CREATE TABLE users (
-                    id INT PRIMARY KEY,
-                    username VARCHAR(50) NOT NULL,
-                    email VARCHAR(100) UNIQUE,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
-                
-                CREATE TABLE posts (
-                    id INT PRIMARY KEY,
-                    user_id INT,
-                    title VARCHAR(255),
-                    content TEXT,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                );
-                
-                CREATE TABLE comments (
-                    id INT PRIMARY KEY,
-                    post_id INT,
-                    user_id INT,
-                    comment TEXT,
-                    FOREIGN KEY (post_id) REFERENCES posts(id),
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                );
-            `;
+-- Pensez à 🔄️ Mettre à jour la map aprés vos modif
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS agora_dataviz_com/SQLeditor;
+USE agora_dataviz_com/SQLeditor;
+
+-- Table des utilisateurs
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des commentaires
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+`;
 
             generateVisualization(sampleSQL);
         }
@@ -586,11 +635,23 @@ require_once '../includes/header.php';
                     generateVisualization(e.target.result);
                 } catch (error) {
                     console.error("Erreur lors de la lecture du fichier:", error);
-                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Vérifiez qu il s agit d un fichier SQL valide.',
+                        confirmButtonColor: '#ab9ff2'
+                    });
+
                 }
             };
             reader.onerror = () => {
-                alert("Erreur lors de la lecture du fichier.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de la lecture du fichier.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             };
             reader.readAsText(file);
         }
@@ -642,7 +703,7 @@ require_once '../includes/header.php';
             if (!canvas) return;
 
             const link = document.createElement('a');
-            link.download = `sql-schema-${new Date().toISOString().slice(0, 10)}.png`;
+            link.download = `agora-dataviz.com/${new Date().toISOString().slice(0, 10)}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
@@ -654,7 +715,7 @@ require_once '../includes/header.php';
             const url = URL.createObjectURL(blob);
 
             const link = document.createElement('a');
-            link.download = `schema-${new Date().toISOString().slice(0, 10)}.sql`;
+            link.download = `agora-dataviz.com/${new Date().toISOString().slice(0, 10)}.sql`;
             link.href = url;
             link.click();
         }
@@ -764,6 +825,7 @@ require_once '../includes/header.php';
                 }
             }
         });
+
     </script>
 </body>
 
