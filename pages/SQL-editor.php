@@ -20,7 +20,9 @@ require_once '../includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/jsonto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
+    <script src="https://unpkg.com/monaco-editor@0.36.1/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
@@ -149,21 +151,15 @@ require_once '../includes/header.php';
         </div>
     </div>
 
-    <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
-    <script src="https://unpkg.com/monaco-editor@0.36.1/min/vs/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>Swal.fire("Debug en cour merci de votre comprehension.");</script>
-
     <script>
-        import Swal from "https://esm.sh/sweetalert2?no-deps";
-        console.log('balise js bien lu dans le php');
+        Swal.fire("Debug en cour merci de votre comprehension.");
+        import Swal from "https://esm.sh/sweetalert2"
         // Configuration globale
-      
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
         let parsedSchema = { tables: [] };
-        let currentColor = '#a395f2';
+        let currentColor = '#ab9ff2';
         let currentView = 'mindmap';
 
         // Initialisation de Monaco Editor
@@ -195,17 +191,21 @@ require_once '../includes/header.php';
                     icon: 'warning',
                     title: 'Oops...',
                     text: 'Aucun SQL à enregistrer !',
-                    confirmButtonColor: '#a395f2'
+                    confirmButtonColor: '#ab9ff2'
                 });
                 return;
             }
 
             const { value: fileName } = await Swal.fire({
-                title: 'Nom du fichier',
+                html: '<div style="display:flex;flex-direction:column;align-items:center">' +
+                    '<img src="https://agora-dataviz.com/assets/img/agora-logo.png" style="width:100px;height:100px;margin-bottom:15px">' +
+                    '<p>Nommez votre schéma SQL sans extension</p></div>',
+
                 input: 'text',
-                inputLabel: 'Sans extension',
                 inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
                 showCancelButton: true,
+                confirmButtonColor: '#ab9ff2',
+                cancelButtonColor: '#333',
                 inputValidator: (value) => {
                     if (!value) return 'Vous devez donner un nom !';
                 }
@@ -216,8 +216,8 @@ require_once '../includes/header.php';
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                //a enlever sur codepen
-                //formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
+                console.log('formdata ok');
+                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
@@ -239,7 +239,7 @@ require_once '../includes/header.php';
                         icon: 'error',
                         title: 'Erreur',
                         html: `<strong>${result.message}</strong>`,
-                        confirmButtonColor: '#ef4444'
+                        confirmButtonColor: '#ee6055'
                     });
                 }
             } catch (error) {
@@ -248,14 +248,12 @@ require_once '../includes/header.php';
                     icon: 'warning',
                     title: 'Oops...',
                     text: 'Erreur lors de l enregistrement',
-                    confirmButtonColor: '#a395f2'
+                    confirmButtonColor: '#ab9ff2'
                 });
 
             }
         }
 
-        // Ajoute l'événement au bouton
-        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
 
         // Parser SQL amélioré
         function parseSQL(sql) {
@@ -362,7 +360,7 @@ require_once '../includes/header.php';
                     icon: 'warning',
                     title: 'Oops...',
                     text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
-                    confirmButtonColor: '#a395f2'
+                    confirmButtonColor: '#ab9ff2'
                 });
 
             }
@@ -640,7 +638,7 @@ CREATE TABLE comments (
                         icon: 'warning',
                         title: 'Oops...',
                         text: 'Vérifiez qu il s agit d un fichier SQL valide.',
-                        confirmButtonColor: '#a395f2'
+                        confirmButtonColor: '#ab9ff2'
                     });
 
                 }
@@ -650,7 +648,7 @@ CREATE TABLE comments (
                     icon: 'warning',
                     title: 'Oops...',
                     text: 'Erreur lors de la lecture du fichier.',
-                    confirmButtonColor: '#a395f2'
+                    confirmButtonColor: '#ab9ff2'
                 });
 
             };
@@ -826,8 +824,8 @@ CREATE TABLE comments (
                 }
             }
         });
-    </script>
 
+    </script>
 </body>
 
 </html>
