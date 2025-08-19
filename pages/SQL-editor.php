@@ -150,11 +150,12 @@ require_once '../includes/header.php';
             </div>
         </div>
     </div>
-    <script>alert("debug en cour");</script>
+    <script>Swal.fire("Debug en cour merci de votre comprehension.");</script>
 
     <script>
-        import Swal from "https://esm.sh/sweetalert2"
-        console.log('js bien lu');
+        import Swal from "https://esm.sh/sweetalert2";
+        console.log('balise js bien lu dans le php');
+        // Configuration globale
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
@@ -213,7 +214,8 @@ require_once '../includes/header.php';
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
+                //a enlever sur codepen
+                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
 
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
@@ -822,6 +824,7 @@ CREATE TABLE comments (
                 }
             }
         });
+
 
     </script>
 </body>
