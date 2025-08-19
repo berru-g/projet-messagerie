@@ -170,7 +170,7 @@ require_once __DIR__ . '/functions.php';
       </div>
     </div>
     <script>
-      console.log('easter egg sur gael-berru.com');
+      console.log('micro saas by gael-berru.com');
       // Service Worker pour PWA
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

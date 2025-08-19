@@ -9,9 +9,9 @@ if (!isLoggedIn()) {
 
 $user = getUserById($_SESSION['user_id']);
 
-//$page_title = "Éditeur SQL - Outil de visualisation";
-//$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
-//$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
+$page_title = "Éditeur SQL - Outil de visualisation";
+$meta_description = "Outil avancé pour visualiser et éditer vos schémas SQL sous forme de mind maps interactives";
+$meta_keywords = "SQL, visualisation, base de données, éditeur, outil développeur";
 
 require_once '../includes/header.php';
 ?>
@@ -153,8 +153,7 @@ require_once '../includes/header.php';
 
     <script>
         import Swal from "https://esm.sh/sweetalert2";
-        console.log('Octopute de maj de merde');
-        // Configuration globale
+        console.log('fonctionne pas en ligne fdp');
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
@@ -214,7 +213,7 @@ require_once '../includes/header.php';
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
                 formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
-                console.log('quatrieme jours de debug ');
+
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
                     body: formData
@@ -822,7 +821,6 @@ CREATE TABLE comments (
                 }
             }
         });
-
 
     </script>
 </body>
