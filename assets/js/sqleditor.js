@@ -1,8 +1,4 @@
-console.log('maj succes');
-// Version 1.0.0
-// Agora Dataviz - SQL Editor
-// Auteur: Agora Dataviz Team github.com/berru-g
-// Date: 2023-10-01
+// Configuration globale
 let network, monacoEditor;
 let allNodes = [], allEdges = [];
 let currentSql = '';
@@ -35,18 +31,32 @@ function initSQLEditor() {
 // Fonction pour sauvegarder le fichier
 async function saveSQLFile() {
     if (!currentSql.trim()) {
-        alert("Aucun SQL à enregistrer !");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Aucun SQL à enregistrer !',
+            confirmButtonColor: '#a395f2'
+        });
         return;
     }
 
-    const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+    const { value: fileName } = await Swal.fire({
+        title: 'Nom du fichier',
+        input: 'text',
+        inputLabel: 'Sans extension',
+        inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) return 'Vous devez donner un nom !';
+        }
+    });
     if (!fileName) return;
 
     try {
         const formData = new FormData();
         formData.append('sql_content', currentSql);
         formData.append('file_name', fileName + '.sql');
-        formData.append('user_id', <? php echo $_SESSION['user_id']; ?>);
+        formData.append('user_id', <?php echo $_SESSION['user_id']; ?>); 
 
         const response = await fetch('save_sql_file.php', {
             method: 'POST',
@@ -56,13 +66,30 @@ async function saveSQLFile() {
         const result = await response.json();
 
         if (result.success) {
-            alert("Fichier enregistré avec succès !");
+            Swal.fire({
+                icon: 'success',
+                title: 'Succès !',
+                text: 'Fichier enregistré avec succès !',
+                showConfirmButton: false,
+                timer: 2000
+            });
         } else {
-            alert("Erreur: " + result.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                html: `<strong>${result.message}</strong>`,
+                confirmButtonColor: '#ef4444'
+            });
         }
     } catch (error) {
         console.error("Erreur:", error);
-        alert("Erreur lors de l'enregistrement");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Erreur lors de l enregistrement',
+            confirmButtonColor: '#a395f2'
+        });
+
     }
 }
 
@@ -170,7 +197,13 @@ function generateVisualization(sql) {
         switchToView(currentView);
     } catch (error) {
         console.error("Erreur lors de la génération de la visualisation:", error);
-        alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
+            confirmButtonColor: '#a395f2'
+        });
+
     }
 }
 // testnouvelle version
@@ -442,11 +475,23 @@ function handleFileSelect(event) {
             generateVisualization(e.target.result);
         } catch (error) {
             console.error("Erreur lors de la lecture du fichier:", error);
-            alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Vérifiez qu il s agit d un fichier SQL valide.',
+                confirmButtonColor: '#a395f2'
+            });
+
         }
     };
     reader.onerror = () => {
-        alert("Erreur lors de la lecture du fichier.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Erreur lors de la lecture du fichier.',
+            confirmButtonColor: '#a395f2'
+        });
+
     };
     reader.readAsText(file);
 }
