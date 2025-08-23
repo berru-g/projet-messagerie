@@ -167,14 +167,13 @@ require_once '../includes/header.php';
     </div>
 
     <script>
-        console.log("V2");
-        import Swal from "https://esm.sh/sweetalert2"
+        console.log("V2 de l'editeur SQL");
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
         let parsedSchema = { tables: [] };
-        let currentColor = '#ab9ff2';
+        let currentColor = '#a395f2';
         let currentView = 'mindmap';
 
         // Initialisation de Monaco Editor
@@ -185,7 +184,7 @@ require_once '../includes/header.php';
                 monacoEditor = monaco.editor.create(document.getElementById('sqlEditor'), {
                     value: currentSql,
                     language: 'sql',
-                    theme: 'vs-dark',
+                    theme: 'vs',
                     automaticLayout: true,
                     minimap: { enabled: false },
                     fontSize: 14,
@@ -202,36 +201,20 @@ require_once '../includes/header.php';
         // Fonction pour sauvegarder le fichier
         async function saveSQLFile() {
             if (!currentSql.trim()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Aucun SQL à enregistrer !',
-                    confirmButtonColor: '#ab9ff2'
-                });
+                alert("Aucun SQL à enregistrer !");
                 return;
             }
 
-            const { value: fileName } = await Swal.fire({
-                html: '<div style="display:flex;flex-direction:column;align-items:center">' +
-                    '<img src="https://agora-dataviz.com/assets/img/agora-logo.png" style="width:100px;height:100px;margin-bottom:15px">' +
-                    '<p>Nommez votre schéma SQL sans extension</p></div>',
-
-                input: 'text',
-                inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
-                showCancelButton: true,
-                confirmButtonColor: '#ab9ff2',
-                cancelButtonColor: '#333',
-                inputValidator: (value) => {
-                    if (!value) return 'Vous devez donner un nom !';
-                }
-            });
+            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
             if (!fileName) return;
 
             try {
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                //formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
+                //a enlever en local octopute
+                console.log("octopute de V2");
+                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
@@ -241,33 +224,18 @@ require_once '../includes/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Succès !',
-                        text: 'Fichier enregistré avec succès !',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
+                    alert("Fichier enregistré avec succès !");
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        html: `<strong>${result.message}</strong>`,
-                        confirmButtonColor: '#ee6055'
-                    });
+                    alert("Erreur: " + result.message);
                 }
             } catch (error) {
                 console.error("Erreur:", error);
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Erreur lors de l enregistrement',
-                    confirmButtonColor: '#ab9ff2'
-                });
-
+                alert("Erreur lors de l'enregistrement");
             }
         }
 
+        // Ajoute l'événement au bouton
+        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
 
         // Parser SQL amélioré
         function parseSQL(sql) {
@@ -370,13 +338,7 @@ require_once '../includes/header.php';
                 switchToView(currentView);
             } catch (error) {
                 console.error("Erreur lors de la génération de la visualisation:", error);
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
-                    confirmButtonColor: '#ab9ff2'
-                });
-
+                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
             }
         }
         // testnouvelle version
@@ -396,7 +358,7 @@ require_once '../includes/header.php';
             // Nœud racine
             allNodes.push({
                 id: 'root',
-                label: 'agora-dataviz.com',
+                label: 'agora_dataviz_com/SQLeditor',
                 level: 0,
                 color: {
                     background: currentColor,
@@ -613,8 +575,8 @@ require_once '../includes/header.php';
             const sampleSQL = `
 -- Pensez à 🔄️ Mettre à jour la map aprés vos modif
 -- Création de la base de données
-CREATE DATABASE IF NOT EXISTS agora-dataviz.com;
-USE agora-dataviz.com;
+CREATE DATABASE IF NOT EXISTS agora_dataviz_com/SQLeditor;
+USE agora_dataviz_com/SQLeditor;
 
 -- Table des utilisateurs
 CREATE TABLE users (
@@ -648,23 +610,11 @@ CREATE TABLE comments (
                     generateVisualization(e.target.result);
                 } catch (error) {
                     console.error("Erreur lors de la lecture du fichier:", error);
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops...',
-                        text: 'Vérifiez qu il s agit d un fichier SQL valide.',
-                        confirmButtonColor: '#ab9ff2'
-                    });
-
+                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
                 }
             };
             reader.onerror = () => {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Erreur lors de la lecture du fichier.',
-                    confirmButtonColor: '#ab9ff2'
-                });
-
+                alert("Erreur lors de la lecture du fichier.");
             };
             reader.readAsText(file);
         }
