@@ -184,7 +184,7 @@ require_once '../includes/header.php';
                 monacoEditor = monaco.editor.create(document.getElementById('sqlEditor'), {
                     value: currentSql,
                     language: 'sql',
-                    theme: 'vs',
+                    theme: 'vs-dark',
                     automaticLayout: true,
                     minimap: { enabled: false },
                     fontSize: 14,
@@ -790,5 +790,4 @@ CREATE TABLE comments (
         });
     </script>
 </body>
-
-</html>
+<?php require_once '../includes/footer.php'; ?>
