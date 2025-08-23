@@ -18,11 +18,12 @@ require_once '../includes/header.php';
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/jsonto.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sqleditor.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
-    <!-- Monaco Editor Loader -->
     <script src="https://unpkg.com/monaco-editor@0.36.1/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -33,7 +34,6 @@ require_once '../includes/header.php';
                 <button class="outline" id="toggleEditorBtn">
                     <i class="fas fa-code"></i> Éditeur SQL
                 </button>
-
             </div>
         </div>
     </section>
@@ -43,21 +43,21 @@ require_once '../includes/header.php';
     </button>
 
     <div class="main-container">
-        <!-- Sidebar -->
+        <!-- Sidebar redesignée -->
         <div class="sidebar" id="sidebar">
-            <div class="tool-section">
+            <div class="tool-section" style="--animation-order: 0">
                 <h3><i class="fas fa-upload"></i> Importation</h3>
                 <input type="file" id="sqlFileInput" accept=".sql" class="mb-4">
                 <button id="sampleDataBtn" class="outline">
-                    <i class="fas fa-vial"></i> Charger un exemple
+                    <i class="fas fa-vial"></i> Exemple
                 </button>
                 <button id="pasteSqlBtn">
-                    <i class="fas fa-paste"></i> Coller du SQL
+                    <i class="fas fa-paste"></i> Coller SQL
                 </button>
             </div>
 
-            <div class="tool-section">
-                <h3><i class="fas fa-palette"></i> Mind Map</h3>
+            <div class="tool-section" style="--animation-order: 1">
+                <h3><i class="fas fa-palette"></i> Couleurs</h3>
                 <div class="color-palette">
                     <div class="color-option active" style="background: #a395f2;" data-color="#a395f2"></div>
                     <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
@@ -67,9 +67,9 @@ require_once '../includes/header.php';
                 </div>
             </div>
 
-            <div class="tool-section">
-                <h3><i class="fas fa-sliders-h"></i> Options de visualisation</h3>
-                <label for="nodeShape">Forme des nœuds</label>
+            <div class="tool-section" style="--animation-order: 2">
+                <h3><i class="fas fa-sliders-h"></i> Visualisation</h3>
+                <label for="nodeShape">Forme</label>
                 <select id="nodeShape">
                     <option value="box">Boîte</option>
                     <option value="database">Base de données</option>
@@ -77,71 +77,89 @@ require_once '../includes/header.php';
                     <option value="circle">Cercle</option>
                 </select>
 
-                <label for="layoutType">Type de disposition</label>
+                <label for="layoutType">Layout</label>
                 <select id="layoutType">
                     <option value="hierarchical">Hiérarchique</option>
                     <option value="standard">Standard</option>
                 </select>
             </div>
 
-            <div class="tool-section">
+            <div class="tool-section" style="--animation-order: 3">
                 <h3><i class="fas fa-tools"></i> Actions</h3>
-                
                 <button id="resetBtn" class="outline">
-                    <i class="fas fa-trash-alt"></i> Réinitialiser
+                    <i class="fas fa-trash-alt"></i> Reset
                 </button>
                 <button id="saveFileBtn" class="primary">
-                    <i class="fas fa-save"></i> Enregistrer
+                    <i class="fas fa-save"></i> Sauver
                 </button>
-                <div class="editor-toolbar-actions mt-2">
-                    <button id="exportPngBtn" class="secondary">
-                        <i class="fas fa-image"></i> Exporter PNG
-                    </button>
-                    <button id="exportSqlBtn">
-                        <i class="fas fa-database"></i> Exporter SQL
-                    </button>
-                </div>
+                <button id="exportPngBtn" class="secondary">
+                    <i class="fas fa-image"></i> Export PNG
+                </button>
+                <button id="exportSqlBtn">
+                    <i class="fas fa-database"></i> Export SQL
+                </button>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="content" id="mainContent">
+            <!-- Zone d'upload -->
             <div class="upload-container" id="uploadContainer">
                 <div class="upload-dropzone" id="dropZone">
-                    <i class="fas fa-file-upload fa-3x" style="color: #a395f2; margin-bottom: 1rem;"></i>
+                    <i class="fas fa-file-upload fa-3x" style="margin-bottom: 1rem;"></i>
                     <h3>Déposez un fichier SQL ici</h3>
                     <p>Ou cliquez pour sélectionner un fichier</p>
                     <input type="file" id="sqlUpload" accept=".sql" style="display: none;">
                 </div>
             </div>
 
+            <!-- Zone de visualisation split -->
             <div id="visualizationArea" class="hidden">
-
-                <div class="tabs">
-                    <div class="tab active" data-view="mindmap">Mind Map</div>
-                    <div class="tab" data-view="editor">Éditeur SQL</div>
-                    <div class="tab" data-view="tables">Tables</div>
-                    <button id="updateMindmapBtn" class="refreshmap">
-                    <i class="fas fa-sync-alt"></i> Mettre à jour la map
-                </button>
-                </div>
-
-                <div class="visualization-container">
-                    <!-- Mind Map View -->
-                    <div id="mindmap-view" class="view-container">
-                        <div id="mindMap"></div>
-                    </div>
-
-                    <!-- SQL Editor View -->
-                    <div id="editor-view" class="view-container hidden">
-                        <div id="sqlEditor" style="height:100%; width:100%;"></div>
-                        <div class="editor-actions">
+                <!-- Section Éditeur -->
+                <div class="editor-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-code"></i> Éditeur SQL
+                        </div>
+                        <div class="section-actions">
+                            <button id="updateMindmapBtn">
+                                <i class="fas fa-sync-alt"></i> MAJ Map
+                            </button>
                         </div>
                     </div>
+                    <div class="section-content">
+                        <div id="sqlEditor"></div>
+                    </div>
+                </div>
 
-                    <!-- Tables View -->
-                    <div id="tables-view" class="view-container hidden">
-                        <div id="tablesList"></div>
+                <!-- Section Map -->
+                <div class="map-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-project-diagram"></i> Mind Map
+                        </div>
+                        <div class="section-actions">
+                            <button id="showTablesBtn">
+                                <i class="fas fa-table"></i> Tables
+                            </button>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div id="mindMap"></div>
+
+                        <!-- Overlay Tables -->
+                        <div class="tables-overlay" id="tablesView">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <h3 style="color: var(--text-primary);">
+                                    <i class="fas fa-table"></i> Structure des tables
+                                </h3>
+                                <button id="hideTablesBtn" class="outline" style="width: auto;">
+                                    <i class="fas fa-times"></i> Fermer
+                                </button>
+                            </div>
+                            <div id="tablesList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,12 +167,14 @@ require_once '../includes/header.php';
     </div>
 
     <script>
+        console.log("V2");
+        import Swal from "https://esm.sh/sweetalert2"
         // Configuration globale
         let network, monacoEditor;
         let allNodes = [], allEdges = [];
         let currentSql = '';
         let parsedSchema = { tables: [] };
-        let currentColor = '#a395f2';
+        let currentColor = '#ab9ff2';
         let currentView = 'mindmap';
 
         // Initialisation de Monaco Editor
@@ -165,7 +185,7 @@ require_once '../includes/header.php';
                 monacoEditor = monaco.editor.create(document.getElementById('sqlEditor'), {
                     value: currentSql,
                     language: 'sql',
-                    theme: 'vs',
+                    theme: 'vs-dark',
                     automaticLayout: true,
                     minimap: { enabled: false },
                     fontSize: 14,
@@ -182,20 +202,36 @@ require_once '../includes/header.php';
         // Fonction pour sauvegarder le fichier
         async function saveSQLFile() {
             if (!currentSql.trim()) {
-                alert("Aucun SQL à enregistrer !");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Aucun SQL à enregistrer !',
+                    confirmButtonColor: '#ab9ff2'
+                });
                 return;
             }
 
-            const fileName = prompt("Nommez votre fichier (sans extension):", "schema_" + new Date().toISOString().slice(0, 10));
+            const { value: fileName } = await Swal.fire({
+                html: '<div style="display:flex;flex-direction:column;align-items:center">' +
+                    '<img src="https://agora-dataviz.com/assets/img/agora-logo.png" style="width:100px;height:100px;margin-bottom:15px">' +
+                    '<p>Nommez votre schéma SQL sans extension</p></div>',
+
+                input: 'text',
+                inputValue: `schema_${new Date().toISOString().slice(0, 10)}`,
+                showCancelButton: true,
+                confirmButtonColor: '#ab9ff2',
+                cancelButtonColor: '#333',
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez donner un nom !';
+                }
+            });
             if (!fileName) return;
 
             try {
                 const formData = new FormData();
                 formData.append('sql_content', currentSql);
                 formData.append('file_name', fileName + '.sql');
-                //a enlever en local octopute
-                console.log("octopute de V2");
-                formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
+                //formData.append('user_id', <?php echo $_SESSION['user_id']; ?>);
 
                 const response = await fetch('save_sql_file.php', {
                     method: 'POST',
@@ -205,18 +241,33 @@ require_once '../includes/header.php';
                 const result = await response.json();
 
                 if (result.success) {
-                    alert("Fichier enregistré avec succès !");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès !',
+                        text: 'Fichier enregistré avec succès !',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
-                    alert("Erreur: " + result.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        html: `<strong>${result.message}</strong>`,
+                        confirmButtonColor: '#ee6055'
+                    });
                 }
             } catch (error) {
                 console.error("Erreur:", error);
-                alert("Erreur lors de l'enregistrement");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de l enregistrement',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
 
-        // Ajoute l'événement au bouton
-        //document.getElementById('saveFileBtn').addEventListener('click', saveSQLFile);
 
         // Parser SQL amélioré
         function parseSQL(sql) {
@@ -319,7 +370,13 @@ require_once '../includes/header.php';
                 switchToView(currentView);
             } catch (error) {
                 console.error("Erreur lors de la génération de la visualisation:", error);
-                alert("Une erreur est survenue lors de l'analyse du SQL. Vérifiez la syntaxe.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Une erreur est survenue lors de l analyse du SQL. Vérifiez la syntaxe.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             }
         }
         // testnouvelle version
@@ -339,7 +396,7 @@ require_once '../includes/header.php';
             // Nœud racine
             allNodes.push({
                 id: 'root',
-                label: 'agora_dataviz_com/SQLeditor',
+                label: 'agora-dataviz.com',
                 level: 0,
                 color: {
                     background: currentColor,
@@ -556,8 +613,8 @@ require_once '../includes/header.php';
             const sampleSQL = `
 -- Pensez à 🔄️ Mettre à jour la map aprés vos modif
 -- Création de la base de données
-CREATE DATABASE IF NOT EXISTS agora_dataviz_com/SQLeditor;
-USE agora_dataviz_com/SQLeditor;
+CREATE DATABASE IF NOT EXISTS agora-dataviz.com;
+USE agora-dataviz.com;
 
 -- Table des utilisateurs
 CREATE TABLE users (
@@ -591,11 +648,23 @@ CREATE TABLE comments (
                     generateVisualization(e.target.result);
                 } catch (error) {
                     console.error("Erreur lors de la lecture du fichier:", error);
-                    alert("Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit d'un fichier SQL valide.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Vérifiez qu il s agit d un fichier SQL valide.',
+                        confirmButtonColor: '#ab9ff2'
+                    });
+
                 }
             };
             reader.onerror = () => {
-                alert("Erreur lors de la lecture du fichier.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Erreur lors de la lecture du fichier.',
+                    confirmButtonColor: '#ab9ff2'
+                });
+
             };
             reader.readAsText(file);
         }
